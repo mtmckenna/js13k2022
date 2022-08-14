@@ -11,9 +11,6 @@ import SpriteAnimation from "./sprite_animation";
 const MAX_WALKING_SPEED = 1;
 const MAX_RUNNING_SPEED = 3;
 
-const WALKING_ANIMATION_SPEED = 10;
-const RUNNING_ANIMATION_SPEED = 2;
-
 export default class Person extends Sprite {
   public pos: Vector;
 
@@ -24,16 +21,15 @@ export default class Person extends Sprite {
     const scale = 6;
     const size = new Vector(8 * scale, 16 * scale, 1);
     const originalSize = new Vector(8, 16, 1);
-    const walk_right = new SpriteAnimation("walk_left", 2, 4);
-    const walk_left = new SpriteAnimation("walk_left", 2, 6);
-    const run_right = new SpriteAnimation("run_right", 2, 0);
-    const run_left = new SpriteAnimation("run_left", 2, 2);
+    const walk_right = new SpriteAnimation("walk_left", 2, 4, 10);
+    const walk_left = new SpriteAnimation("walk_left", 2, 6, 10);
+    const run_right = new SpriteAnimation("run_right", 2, 0, 5);
+    const run_left = new SpriteAnimation("run_left", 2, 2, 5);
     const props: ISpriteProps = {
       name: "person",
       pos,
       imageDataUrl: personImageDataUrl,
       numFrames: 2,
-      animationSpeed: WALKING_ANIMATION_SPEED,
       originalSize,
       size,
       debugColor: "#70c4db",
@@ -74,7 +70,10 @@ export default class Person extends Sprite {
     }
   }
 
-  scare(scareAmount: number) {
+  scare(scareLocation: Vector, scareAmount: number) {
+    const steering = scareLocation.copy().mult(-1).sub(this.vel);
+    const SCARE_FORCE_MULTIPLIER = 2;
+    this.acc.add(steering.mult(SCARE_FORCE_MULTIPLIER));
     this.fearTimer = Math.max(scareAmount, this.fearTimer);
     this.afraid = true;
   }

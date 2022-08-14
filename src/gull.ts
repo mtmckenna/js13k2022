@@ -20,19 +20,26 @@ export default class Gull extends Sprite {
     const scale = 4;
     const size = new Vector(16 * scale, 16 * scale, 1);
     const originalSize = new Vector(16, 16, 1);
-    const fly_right = new SpriteAnimation("fly_right", 2, 0);
-    const fly_left = new SpriteAnimation("fly_left", 2, 2);
+    const fly_right = new SpriteAnimation("fly_right", 2, 0, 7);
+    const fly_left = new SpriteAnimation("fly_left", 2, 2, 7);
+    const attack_right = new SpriteAnimation("attack_right", 2, 4, 5);
+    const attack_left = new SpriteAnimation("attack_left", 2, 6, 5);
     const props: ISpriteProps = {
       name: "gull",
       pos,
       imageDataUrl: gullImageDataUrl,
       numFrames: 2,
-      animationSpeed: 5,
       originalSize,
       size,
       debugColor: "#70c4db",
       stage,
-      spriteAnimations: { fly_right, fly_left, default: fly_right },
+      spriteAnimations: {
+        fly_right,
+        fly_left,
+        attack_right,
+        attack_left,
+        default: fly_right,
+      },
     };
 
     super(props);
@@ -65,10 +72,15 @@ export default class Gull extends Sprite {
       this.vel.setMag(MIN_SPEED);
     }
 
-    if (this.vel.x <= 0 && this.currentAnimation.name !== "fly_left") {
-      this.changeAnimation(this.spriteAnimations["fly_left"]);
-    } else if (this.vel.x > 0 && this.currentAnimation.name !== "fly_right") {
-      this.changeAnimation(this.spriteAnimations["fly_right"]);
+    // const left_anim = "attack_left";
+    // const right_anim = "attack_right";
+    const left_anim = "fly_left";
+    const right_anim = "fly_right";
+
+    if (this.vel.x <= 0 && this.currentAnimation.name !== left_anim) {
+      this.changeAnimation(this.spriteAnimations[left_anim]);
+    } else if (this.vel.x > 0 && this.currentAnimation.name !== right_anim) {
+      this.changeAnimation(this.spriteAnimations[right_anim]);
     }
   }
 }

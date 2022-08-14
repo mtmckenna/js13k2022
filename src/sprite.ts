@@ -16,7 +16,6 @@ export default class Sprite {
   name: string;
   imageDataUrl: string;
   numFrames: number;
-  animationSpeed: number;
   timeOffset: number;
   zoom: Vector;
   id: string;
@@ -39,7 +38,6 @@ export default class Sprite {
     this.cacheImage();
     this._currentFrame = 0;
     this.numFrames = props.numFrames;
-    this.animationSpeed = props.animationSpeed;
     this.renderer = Renderer.getInstance();
     this.timeOffset = randomIntBetween(0, 999999999);
     this.zoom = this.size.copy().mult(this.originalSize);
@@ -60,7 +58,8 @@ export default class Sprite {
   updateCurrentFrame(time: number) {
     const numFrames = this.currentAnimation.numFrames;
     const offset = this.currentAnimation.offset;
-    if (!(time % this.animationSpeed)) {
+    const animationSpeed = this.currentAnimation.speed;
+    if (!(time % animationSpeed)) {
       this._currentFrame = offset + ((this._currentFrame + 1) % numFrames);
     }
   }
@@ -126,7 +125,6 @@ export interface ISpriteProps {
   originalSize: Vector;
   imageDataUrl: string;
   numFrames: number;
-  animationSpeed: number;
   debugColor: string;
   stage: Stage;
   spriteAnimations: {

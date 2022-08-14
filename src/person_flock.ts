@@ -14,7 +14,8 @@ export default class PersonFlock extends Flock {
   flipOut(pos: Vector) {
     this.afraid = true;
     this.sprites.forEach((sprite: Person) => {
-      sprite.scare(100);
+      const scareAmount = 100;
+      sprite.scare(pos, scareAmount);
     });
   }
 }
