@@ -38,7 +38,7 @@ export function align(owner: Sprite, sprites: Sprite[]): Vector {
   // steering = desired - velocity
   const steering = new Vector(0, 0, 0);
 
-  for (let sprite of sprites) {
+  for (const sprite of sprites) {
     if (owner.id !== sprite.id) {
       steering.add(sprite.vel);
       total++;
@@ -60,14 +60,14 @@ export function cohere(
   owner: Sprite,
   gulls: Sprite[],
   posToCircle?: Vector,
-  multiplier: number = 1
+  multiplier = 1
 ): Vector {
   let total = 0;
 
   // steering = desired - velocity
   const steering = new Vector(0, 0, 0);
 
-  for (let gull of gulls) {
+  for (const gull of gulls) {
     if (!posToCircle) posToCircle = gull.pos;
 
     if (owner.id !== gull.id) {
@@ -91,18 +91,18 @@ export function separate(
   owner: Sprite,
   gulls: Sprite[],
   radius: number,
-  multiplier: number = 1
+  multiplier = 1
 ): Vector {
   let total = 0;
 
   // steering = desired - velocity
   const steering = new Vector(0, 0, 0);
 
-  for (let gull of gulls) {
+  for (const gull of gulls) {
     const d = dist(owner.pos, gull.pos);
 
     if (owner.id !== gull.id && d < radius) {
-      let diff = Vector.sub(owner.pos, gull.pos);
+      const diff = Vector.sub(owner.pos, gull.pos);
       if (d !== 0) diff.div(d);
       steering.add(diff);
       total++;
@@ -115,7 +115,6 @@ export function separate(
     steering.sub(owner.vel);
 
     steering.limit(MAX_STEERING_FORCE);
-    // console.log(premag, steering.mag());
   }
 
   return steering.mult(multiplier);

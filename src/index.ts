@@ -8,6 +8,7 @@ import Debug from "./debug";
 import RallyPoint from "./rally_point";
 import { registerClickCallback, addEventListeners } from "./input";
 import Renderer from "./renderer";
+import Ui from "./ui";
 
 const canvas: HTMLCanvasElement = document.getElementById(
   "game"
@@ -46,6 +47,9 @@ const rallyPoints: RallyPoint[] = [
 ];
 const people: Person[] = [];
 const personFlock = new PersonFlock(people);
+
+const ui = new Ui();
+ui.createUi(gullFlock);
 
 Debug.start();
 const debug = Debug.getInstance();
@@ -114,6 +118,8 @@ function tick(t: number) {
   if (personGullFlockDistance <= personFlock.fearDistance) {
     personFlock.flipOut(gullFlock.center);
   }
+
+  ui.update(gullFlock);
 }
 
 function clickCallback(pos: Vector) {
