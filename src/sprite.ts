@@ -6,6 +6,7 @@ import SpriteAnimation from "./sprite_animation";
 
 export default class Sprite {
   public static imageCache: ImageCache = {};
+  public renderer: Renderer;
 
   pos: Vector;
   vel: Vector;
@@ -24,7 +25,6 @@ export default class Sprite {
   currentAnimation: SpriteAnimation;
 
   private _currentFrame: number;
-  private renderer: Renderer;
 
   constructor(props: ISpriteProps) {
     this.name = props.name;
