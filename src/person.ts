@@ -111,10 +111,6 @@ export default class Person extends Sprite {
       this.vel.setMag(MAX_WALKING_SPEED);
     }
 
-    if (this.health === 0) {
-      console.log("dead");
-    }
-
     let animation = null;
 
     if (this.vel.x <= 0 && this.afraid) {

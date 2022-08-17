@@ -3,12 +3,13 @@ import Person from "./person";
 import PersonFlock from "./person_flock";
 import GullFlock from "./gull_flock";
 import Stage from "./stage";
-import { randomFloatBetween, Vector, dist } from "./math";
+import { randomFloatBetween, Vector, dist, overlaps } from "./math";
 import Debug from "./debug";
 import RallyPoint from "./rally_point";
 import { registerClickCallback, addEventListeners } from "./input";
 import Renderer from "./renderer";
 import Ui from "./ui";
+import { AttackState } from "./gull_flock_states";
 
 const canvas: HTMLCanvasElement = document.getElementById(
   "game"
@@ -115,8 +116,18 @@ function tick(t: number) {
   });
 
   const personGullFlockDistance = dist(personFlock.center, gullFlock.center);
-  if (personGullFlockDistance <= personFlock.fearDistance) {
+  if (
+    gullFlock.modeState instanceof AttackState &&
+    personGullFlockDistance <= personFlock.fearDistance
+  ) {
     personFlock.flipOut(gullFlock.center);
+    gullFlock.sprites.forEach((gull: Gull) => {
+      personFlock.sprites.forEach((person: Person) => {
+        if (overlaps(gull, person)) {
+          person.damage(1);
+        }
+      });
+    });
   }
 
   ui.update(gullFlock);
