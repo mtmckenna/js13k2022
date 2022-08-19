@@ -7,7 +7,9 @@
     "build": "webpack --config webpack.prod.js",
     "check-file-size": "yarn node ./scripts/check-file-size.js",
     "build-zipped": "yarn run build && yarn node ./scripts/zip-file.js",
-    "party": "yarn run build-zipped && yarn run check-file-size"
+    "party": "yarn run build-zipped && yarn run check-file-size",
+    "ngrok": "ngrok http --host-header=rewrite 8080"
+
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.33.1",

@@ -128,7 +128,10 @@ export default class Person extends Sprite {
   }
 
   healthBarWidth(): number {
-    return (MAX_HEALTH_BAR_WIDTH * this.health) / MAX_HEALTH;
+    return (
+      (MAX_HEALTH_BAR_WIDTH * this.health) / MAX_HEALTH -
+      HEALTH_BAR_INSIDE_OFFSET * 2
+    );
   }
 
   drawHealthBar() {

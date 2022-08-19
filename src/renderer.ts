@@ -43,12 +43,12 @@ export default class Renderer {
       sprite.image,
       sprite.currentFrame * sprite.originalSize.x,
       0,
-      sprite.originalSize.x,
-      sprite.originalSize.y,
-      sprite.pos.x,
-      sprite.pos.y,
-      sprite.size.x,
-      sprite.size.y
+      Math.floor(sprite.originalSize.x),
+      Math.floor(sprite.originalSize.y),
+      Math.floor(sprite.pos.x),
+      Math.floor(sprite.pos.y),
+      Math.floor(sprite.size.x),
+      Math.floor(sprite.size.y)
     );
   }
 
