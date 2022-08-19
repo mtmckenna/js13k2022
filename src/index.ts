@@ -10,18 +10,21 @@ import { registerClickCallback, addEventListeners } from "./input";
 import Renderer from "./renderer";
 import Ui from "./ui";
 import { AttackState } from "./gull_flock_states";
+import Camera from "./camera";
 
 const canvas: HTMLCanvasElement = document.getElementById(
   "game"
 ) as HTMLCanvasElement;
 const ctx: CanvasRenderingContext2D = canvas.getContext("2d");
 
+const mapWidth = 640;
+const mapHeight = 480;
+
 const width = 640;
 const height = 480;
-let aspectRatio = window.innerWidth / window.innerHeight;
 
-let scaledWidth = width;
-let scaledHeight = height;
+let aspectRatio = window.innerWidth / window.innerHeight;
+let canvasWindowScale = 0;
 
 const skyPos: Vector = new Vector(0, 0, 0);
 const skySize: Vector = new Vector(width, 50, 0);
@@ -36,6 +39,8 @@ const lotPos: Vector = new Vector(0, beachPos.y + beachSize.y, 0);
 const lotSize: Vector = new Vector(width, height - beachSize.y - skySize.y, 0);
 
 const renderer = Renderer.getInstance();
+const camera = new Camera(new Vector(0, 0, 1));
+renderer.camera = camera;
 
 canvas.width = width;
 canvas.height = height;
@@ -85,6 +90,7 @@ for (let i = 0; i < 4; i++) {
 
 function tick(t: number) {
   requestAnimationFrame(tick);
+  resize();
   renderer.renderTick();
 
   ctx.imageSmoothingEnabled = false;
@@ -136,18 +142,19 @@ function tick(t: number) {
 function clickCallback(pos: Vector) {
   // rallyPoints.push(new RallyPoint(pos));
   // rallyPoints[0] = new RallyPoint(pos.mult(aspectRatio));
+  pos.set(pos.x / canvasWindowScale, pos.y / canvasWindowScale, 0);
+
   rallyPoints[0] = new RallyPoint(pos);
-  console.log(pos);
 }
 
 registerClickCallback(clickCallback);
 
-// resize();
 requestAnimationFrame(tick);
 
 function drawBackground() {
+  const scale = camera.pos.z;
   ctx.fillStyle = "#42bfe8";
-  ctx.fillRect(skyPos.x, skyPos.y, skySize.x, skySize.y);
+  ctx.fillRect(skyPos.x, skyPos.y, skySize.x * scale, skySize.y * scale);
 
   ctx.beginPath();
   ctx.fillStyle = "#f8f644";
@@ -162,24 +169,31 @@ function drawBackground() {
 }
 
 function resize() {
-  aspectRatio = window.innerWidth / window.innerHeight;
-  scaledWidth = width;
-  scaledHeight = height;
-  console.log(aspectRatio);
+  const newAspectRatio = window.innerWidth / window.innerHeight;
+
+  // If we haven't changed or it's the first time
+  if (aspectRatio === newAspectRatio && canvasWindowScale !== 0) {
+    return;
+  } else {
+    aspectRatio = newAspectRatio;
+  }
+
+  let scaledWidth = width;
+  let scaledHeight = height;
 
   if (aspectRatio >= 1) {
     scaledWidth = width;
-    // if wider than it is tall, scale the width
     scaledHeight = width / aspectRatio;
-    console.log("wide", scaledWidth, scaledHeight);
   } else {
     scaledHeight = height;
     scaledWidth = height * aspectRatio;
-    console.log("tall", scaledWidth, scaledHeight);
   }
 
   canvas.width = scaledWidth;
   canvas.height = scaledHeight;
+
+  // How much have we stretched the canvas to fit the screen
+  canvasWindowScale = window.innerHeight / scaledHeight;
 }
 
 // window.addEventListener("resize", resize);

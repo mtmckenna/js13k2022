@@ -1,5 +1,6 @@
 import Sprite from "./sprite";
 import Debug from "./debug";
+import Camera from "./camera";
 
 export default class Renderer {
   private static instance: Renderer;
@@ -9,6 +10,7 @@ export default class Renderer {
   debug: boolean;
   previousRenderNumber: number;
   currentRenderNumber: number;
+  camera: Camera;
 
   private constructor() {
     this.canvas = document.getElementById("game") as HTMLCanvasElement;
@@ -16,6 +18,7 @@ export default class Renderer {
     this.debug = Debug.getInstance().gullSpritesEnabled;
     this.previousRenderNumber = 0;
     this.currentRenderNumber = 0;
+    this.camera = new Camera();
   }
 
   public renderTick() {
@@ -39,16 +42,18 @@ export default class Renderer {
   private drawSprite(sprite: Sprite) {
     sprite.updateCurrentFrame(this.previousRenderNumber);
 
+    const scale = this.camera.pos.z;
+
     this.ctx.drawImage(
       sprite.image,
       sprite.currentFrame * sprite.originalSize.x,
       0,
-      Math.floor(sprite.originalSize.x),
-      Math.floor(sprite.originalSize.y),
-      Math.floor(sprite.pos.x),
-      Math.floor(sprite.pos.y),
-      Math.floor(sprite.size.x),
-      Math.floor(sprite.size.y)
+      sprite.originalSize.x,
+      sprite.originalSize.y,
+      Math.floor(sprite.pos.x * scale),
+      Math.floor(sprite.pos.y * scale),
+      Math.floor(sprite.size.x * scale),
+      Math.floor(sprite.size.y * scale)
     );
   }
 

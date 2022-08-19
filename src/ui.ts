@@ -7,8 +7,8 @@ export default class Ui {
 
   createUi(gullFlock: GullFlock) {
     const uiWrapper = document.getElementById("ui-wrapper");
-    const attack = createButton("Attack", uiWrapper);
-    const circle = createButton("Circle target", uiWrapper);
+    const attack = createButton("Attack", uiWrapper, []);
+    const circle = createButton("Circle target", uiWrapper, []);
 
     attack.addEventListener("click", gullFlock.attack.bind(gullFlock));
     circle.addEventListener("click", gullFlock.circleTarget.bind(gullFlock));
