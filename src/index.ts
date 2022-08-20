@@ -20,20 +20,8 @@ const ctx: CanvasRenderingContext2D = canvas.getContext("2d");
 const width = 640;
 const height = 480;
 
-let aspectRatio = window.innerWidth / window.innerHeight;
+let aspectRatio = null;
 let canvasWindowScale = 0;
-
-// const skyPos: Vector = new Vector(0, 0, 0);
-// const skySize: Vector = new Vector(width, 50, 0);
-
-// const beachPos: Vector = new Vector(0, skyPos.y + skySize.y, 0);
-// const beachSize: Vector = new Vector(width, 100, 0);
-
-// const sunPos: Vector = new Vector(width / 2, skyPos.y + skySize.y, 0);
-// const sunSize: Vector = new Vector(beachSize.y / 2.5, beachSize.y / 2.5, 0);
-
-// const lotPos: Vector = new Vector(0, beachPos.y + beachSize.y, 0);
-// const lotSize: Vector = new Vector(width, height - beachSize.y - skySize.y, 0);
 
 const renderer = Renderer.getInstance();
 const camera = new Camera(new Vector(0, 0, 1));
@@ -148,28 +136,11 @@ registerClickCallback(clickCallback);
 
 requestAnimationFrame(tick);
 
-// function drawBackground() {
-//   const scale = camera.pos.z;
-//   ctx.fillStyle = "#42bfe8";
-//   ctx.fillRect(skyPos.x, skyPos.y, skySize.x * scale, skySize.y * scale);
-
-//   ctx.beginPath();
-//   ctx.fillStyle = "#f8f644";
-//   ctx.arc(sunPos.x, sunPos.y, sunSize.x, 0, 2 * Math.PI);
-//   ctx.fill();
-
-//   ctx.fillStyle = "#e3d6b1";
-//   ctx.fillRect(beachPos.x, beachPos.y, beachSize.x, beachSize.y);
-
-//   ctx.fillStyle = "#bdbdbd";
-//   ctx.fillRect(lotPos.x, lotPos.y, lotSize.x, lotSize.y);
-// }
-
 function resize() {
   const newAspectRatio = window.innerWidth / window.innerHeight;
 
   // If we haven't changed or it's the first time
-  if (aspectRatio === newAspectRatio && canvasWindowScale !== 0) {
+  if (aspectRatio === newAspectRatio) {
     return;
   } else {
     aspectRatio = newAspectRatio;
