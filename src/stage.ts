@@ -47,11 +47,11 @@ export default class Stage {
   public draw() {
     const ctx = this.renderer.ctx;
 
-    const scale = this.camera.pos.z;
+    const scale = this.renderer.offset.z;
     ctx.fillStyle = "#42bfe8";
     ctx.fillRect(
-      this.sky.pos.x + this.renderer.offset.x,
-      this.sky.pos.y + this.renderer.offset.y,
+      (this.sky.pos.x + this.renderer.offset.x) * scale,
+      (this.sky.pos.y + this.renderer.offset.y) * scale,
       this.sky.size.x * scale,
       this.sky.size.y * scale
     );
@@ -59,9 +59,9 @@ export default class Stage {
     ctx.beginPath();
     ctx.fillStyle = "#f8f644";
     ctx.arc(
-      this.sun.pos.x + this.renderer.offset.x,
-      this.sun.pos.y + this.renderer.offset.y,
-      this.sun.size.x,
+      (this.sun.pos.x + this.renderer.offset.x) * scale,
+      (this.sun.pos.y + this.renderer.offset.y) * scale,
+      this.sun.size.x * scale,
       0,
       2 * Math.PI
     );
@@ -69,18 +69,18 @@ export default class Stage {
 
     ctx.fillStyle = "#e3d6b1";
     ctx.fillRect(
-      this.beach.pos.x + this.renderer.offset.x,
-      this.beach.pos.y + this.renderer.offset.y,
-      this.beach.size.x,
-      this.beach.size.y
+      (this.beach.pos.x + this.renderer.offset.x) * scale,
+      (this.beach.pos.y + this.renderer.offset.y) * scale,
+      this.beach.size.x * scale,
+      this.beach.size.y * scale
     );
 
     ctx.fillStyle = "#bdbdbd";
     ctx.fillRect(
-      this.lot.pos.x + this.renderer.offset.x,
-      this.lot.pos.y + this.renderer.offset.y,
-      this.lot.size.x,
-      this.lot.size.y
+      (this.lot.pos.x + this.renderer.offset.x) * scale,
+      (this.lot.pos.y + this.renderer.offset.y) * scale,
+      this.lot.size.x * scale,
+      this.lot.size.y * scale
     );
   }
 }

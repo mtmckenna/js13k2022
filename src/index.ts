@@ -24,7 +24,7 @@ let aspectRatio = null;
 let canvasWindowScale = 0;
 
 const renderer = Renderer.getInstance();
-const camera = new Camera(new Vector(0, 0, 1));
+const camera = new Camera(new Vector(0, 0, 1.5));
 renderer.camera = camera;
 
 canvas.width = width;

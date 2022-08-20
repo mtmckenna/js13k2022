@@ -2,7 +2,6 @@ import Sprite from "./sprite";
 import Debug from "./debug";
 import Camera from "./camera";
 import { Vector } from "./math";
-import Stage from "./stage";
 
 export default class Renderer {
   private static instance: Renderer;
@@ -51,7 +50,7 @@ export default class Renderer {
   private drawSprite(sprite: Sprite) {
     sprite.updateCurrentFrame(this.previousRenderNumber);
 
-    const scale = this.camera.pos.z;
+    const scale = this.offset.z;
 
     this.ctx.drawImage(
       sprite.image,

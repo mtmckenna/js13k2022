@@ -92,11 +92,11 @@ function keydown(e: KeyboardEvent) {
       break;
     case "ArrowUp":
       console.log("up");
-      renderer.camera.pos.set(pos.x, pos.y - 1, pos.z);
+      renderer.camera.pos.set(pos.x, pos.y + 1, pos.z);
       break;
     case "ArrowDown":
       console.log("down");
-      renderer.camera.pos.set(pos.x, pos.y + 1, pos.z);
+      renderer.camera.pos.set(pos.x, pos.y - 1, pos.z);
       break;
   }
 }
