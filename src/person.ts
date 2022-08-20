@@ -138,13 +138,19 @@ export default class Person extends Sprite {
     const ctx = this.renderer.ctx;
     const x = this.pos.x - (MAX_HEALTH_BAR_WIDTH - this.size.x) / 2;
     const y = this.pos.y + this.size.y + HEALTH_BAR_Y_OFFSET;
+    const offset = this.renderer.offset;
     ctx.fillStyle = "white";
-    ctx.fillRect(x, y, MAX_HEALTH_BAR_WIDTH, HEALTH_BAR_OUTSIDE_HEIGHT);
+    ctx.fillRect(
+      x + offset.x,
+      y + offset.y,
+      MAX_HEALTH_BAR_WIDTH,
+      HEALTH_BAR_OUTSIDE_HEIGHT
+    );
 
     ctx.fillStyle = "red";
     ctx.fillRect(
-      x + HEALTH_BAR_INSIDE_OFFSET,
-      y + HEALTH_BAR_INSIDE_OFFSET,
+      x + HEALTH_BAR_INSIDE_OFFSET + offset.x,
+      y + HEALTH_BAR_INSIDE_OFFSET + offset.y,
       this.healthBarWidth(),
       HEALTH_BAR_INSIDE_HEIGHT
     );

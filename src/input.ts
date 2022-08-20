@@ -17,6 +17,8 @@ export function addEventListeners(element: HTMLElement) {
   element.addEventListener("touchend", inputReleased);
   // element.addEventListener("touchmove", touchMoved);
   element.addEventListener("touchcancel", preventDefault);
+  window.addEventListener("keydown", keydown);
+  // window.addEventListener("keyup", keyup);
 }
 
 export function userHasInteracted(): boolean {
@@ -73,6 +75,47 @@ function mouseMoved(e: MouseEvent) {
 function touchMoved(e: TouchEvent) {
   inputReleased(e);
   touchPressed(e);
+}
+
+function keydown(e: KeyboardEvent) {
+  const pos = renderer.camera.pos;
+  // console.log(pos);
+
+  switch (e.key) {
+    case "ArrowLeft":
+      console.log("left");
+      renderer.camera.pos.set(pos.x + 1, pos.y, pos.z);
+      break;
+    case "ArrowRight":
+      console.log("right");
+      renderer.camera.pos.set(pos.x - 1, pos.y, pos.z);
+      break;
+    case "ArrowUp":
+      console.log("up");
+      renderer.camera.pos.set(pos.x, pos.y - 1, pos.z);
+      break;
+    case "ArrowDown":
+      console.log("down");
+      renderer.camera.pos.set(pos.x, pos.y + 1, pos.z);
+      break;
+  }
+}
+
+function keyup(e: KeyboardEvent) {
+  switch (e.key) {
+    case "ArrowLeft":
+      console.log("left");
+      break;
+    case "ArrowRight":
+      console.log("right");
+      break;
+    case "ArrowUp":
+      console.log("up");
+      break;
+    case "ArrowDown":
+      console.log("down");
+      break;
+  }
 }
 
 function preventDefault(e: TouchEvent) {

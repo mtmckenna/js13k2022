@@ -1,6 +1,8 @@
 import Sprite from "./sprite";
 import Debug from "./debug";
 import Camera from "./camera";
+import { Vector } from "./math";
+import Stage from "./stage";
 
 export default class Renderer {
   private static instance: Renderer;
@@ -11,6 +13,7 @@ export default class Renderer {
   previousRenderNumber: number;
   currentRenderNumber: number;
   camera: Camera;
+  offset: Vector;
 
   private constructor() {
     this.canvas = document.getElementById("game") as HTMLCanvasElement;
@@ -19,11 +22,17 @@ export default class Renderer {
     this.previousRenderNumber = 0;
     this.currentRenderNumber = 0;
     this.camera = new Camera();
+    this.offset = new Vector(0, 0, 0);
   }
 
   public renderTick() {
     this.previousRenderNumber = this.currentRenderNumber;
     this.currentRenderNumber++;
+    this.offset.set(
+      this.camera.pos.x * this.camera.speed,
+      this.camera.pos.y * this.camera.speed,
+      this.camera.pos.z
+    );
   }
 
   public static getInstance(): Renderer {
@@ -50,10 +59,10 @@ export default class Renderer {
       0,
       sprite.originalSize.x,
       sprite.originalSize.y,
-      Math.floor(sprite.pos.x * scale),
-      Math.floor(sprite.pos.y * scale),
-      Math.floor(sprite.size.x * scale),
-      Math.floor(sprite.size.y * scale)
+      Math.round((this.offset.x + sprite.pos.x) * scale),
+      Math.round((this.offset.y + sprite.pos.y) * scale),
+      Math.round(sprite.size.x * scale),
+      Math.round(sprite.size.y * scale)
     );
   }
 
