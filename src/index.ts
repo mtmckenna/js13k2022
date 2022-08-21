@@ -149,18 +149,27 @@ function dragCallback(pos: Vector) {
     clamp(pos.y, -1 * MAX_DRAG, MAX_DRAG),
     0
   );
+  document.body.style.cursor = "grab";
+}
+
+function releaseCallback(pos: Vector) {
+  document.body.style.cursor = "default";
 }
 
 function clickCallback(pos: Vector) {
-  // rallyPoints.push(new RallyPoint(pos));
-  // rallyPoints[0] = new RallyPoint(pos.mult(aspectRatio));
-  pos.set(pos.x / canvasWindowScale, pos.y / canvasWindowScale, 0);
+  // Transform point to deal with 1) scaling and 2) moving the camera around
+  pos.set(
+    (pos.x / canvasWindowScale - renderer.offset.x) * renderer.offset.z,
+    (pos.y / canvasWindowScale - renderer.offset.y) * renderer.offset.z,
+    0
+  );
 
   rallyPoints[0] = new RallyPoint(pos);
 }
 
 input.registerClickCallback(clickCallback);
 input.registerDragCallback(dragCallback);
+input.registerReleaseCallback(releaseCallback);
 
 requestAnimationFrame(tick);
 

@@ -17,6 +17,7 @@ export default class Input {
   clickCallbacks: Array<(pos: Vector) => void> = [];
   moveCallbacks: Array<(pos: Vector) => void> = [];
   dragCallbacks: Array<(pos: Vector) => void> = [];
+  releaseCallbacks: Array<(pos: Vector) => void> = [];
 
   public static getInstance(): Input {
     if (!Input.instance) Input.instance = new Input();
@@ -61,6 +62,10 @@ export default class Input {
 
   registerDragCallback(callback: (pos: Vector) => void) {
     this.dragCallbacks.push(callback);
+  }
+
+  registerReleaseCallback(callback: (pos: Vector) => void) {
+    this.releaseCallbacks.push(callback);
   }
 
   userHasInteracted(): boolean {
@@ -111,6 +116,10 @@ export default class Input {
         callback(new Vector(currPos.x, currPos.y, 0))
       );
     }
+
+    this.releaseCallbacks.forEach((callback) =>
+      callback(new Vector(currPos.x, currPos.y, 0))
+    );
 
     this.inputHash.downAt = null;
   }
