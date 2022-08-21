@@ -1,134 +1,189 @@
 import { Vector } from "./math";
 import Renderer from "./renderer";
 
-let inputPressedOnce = false;
+export default class Input {
+  private static instance: Input;
 
-const clickCallbacks: Array<(pos: Vector) => void> = [];
+  inputHash: IInputMap;
 
-const renderer = Renderer.getInstance();
-const canvas = renderer.canvas;
+  inputPressedOnce = false;
+  canvas: HTMLCanvasElement;
+  renderer: Renderer;
 
-export function addEventListeners(element: HTMLElement) {
-  element.addEventListener("mousedown", mousePressed);
-  // element.addEventListener("mousemove", mouseMoved);
-  element.addEventListener("mouseup", inputReleased);
+  // private posFromEventTempVec = new Vector(0, 0, 0);
 
-  element.addEventListener("touchstart", touchPressed);
-  element.addEventListener("touchend", inputReleased);
-  // element.addEventListener("touchmove", touchMoved);
-  element.addEventListener("touchcancel", preventDefault);
-  window.addEventListener("keydown", keydown);
-  // window.addEventListener("keyup", keyup);
-}
+  clickCallbacks: Array<(pos: Vector) => void> = [];
+  moveCallbacks: Array<(pos: Vector) => void> = [];
 
-export function userHasInteracted(): boolean {
-  return inputPressedOnce;
-}
+  public static getInstance(): Input {
+    if (!Input.instance) Input.instance = new Input();
+    return Input.instance;
+  }
 
-export function resetInput() {}
+  constructor() {
+    this.inputHash = {
+      downAt: null,
+      downPos: new Vector(0, 0, 0),
+      currPos: new Vector(0, 0, 0),
+    };
 
-function touchPressed(e: TouchEvent) {
-  e.preventDefault();
+    this.renderer = Renderer.getInstance();
+    this.canvas = this.renderer.canvas;
+  }
 
-  const rect = canvas.getBoundingClientRect();
+  addEventListeners(element: HTMLElement) {
+    element.addEventListener("mousedown", this.mousePressed.bind(this));
+    element.addEventListener("mousemove", this.mouseMoved.bind(this));
+    element.addEventListener("mouseup", this.inputReleased.bind(this));
 
-  const x = e.changedTouches[0].clientX - rect.left;
-  const y = e.changedTouches[0].clientY - rect.top;
+    element.addEventListener("touchstart", this.touchPressed.bind(this));
+    element.addEventListener("touchend", this.inputReleased.bind(this));
+    element.addEventListener("touchmove", this.touchMoved.bind(this));
+    element.addEventListener("touchcancel", this.preventDefault.bind(this));
+    window.addEventListener("keydown", this.keydown.bind(this));
+    // window.addEventListener("keyup", keyup);
+  }
 
-  inputPressed(x, y);
-}
+  registerClickCallback(callback: (pos: Vector) => void) {
+    this.clickCallbacks.push(callback);
+  }
 
-function mousePressed(e: MouseEvent) {
-  e.preventDefault();
+  registerMoveCallback(callback: (pos: Vector) => void) {
+    this.moveCallbacks.push(callback);
+  }
 
-  const rect = canvas.getBoundingClientRect();
+  userHasInteracted(): boolean {
+    return this.inputPressedOnce;
+  }
 
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
-  inputPressed(x, y);
-}
+  handleInitialInput() {
+    if (!this.inputPressedOnce) {
+      this.inputPressedOnce = true;
+      // createAudioContext();
+      // setVolume(gameState.audio ? VOLUME : 0.0);
+    }
+  }
 
-function inputPressed(xInput: number, yInput: number) {
-  handleInitialInput();
-  clickCallbacks.forEach((callback) => callback(new Vector(xInput, yInput, 0)));
-}
+  inputPressed(x: number, y: number) {
+    this.handleInitialInput();
+    this.clickCallbacks.forEach((callback) => callback(new Vector(x, y, 0)));
+  }
 
-function handleInitialInput() {
-  if (!inputPressedOnce) {
-    inputPressedOnce = true;
-    // createAudioContext();
-    // setVolume(gameState.audio ? VOLUME : 0.0);
+  inputMoved(x, y) {
+    this.inputHash.currPos.set(x, y, 0);
+    this.moveCallbacks.forEach((callback) => callback(new Vector(x, y, 0)));
+  }
+
+  inputReleased(e: MouseEvent | TouchEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  mousePressed(e: MouseEvent) {
+    e.preventDefault();
+
+    // const rect = this.canvas.getBoundingClientRect();
+    // const x = e.clientX - rect.left;
+    // const y = e.clientY - rect.top;
+    const pos = this.positionFromEvent(e);
+    this.inputPressed(pos.x, pos.y);
+  }
+
+  positionFromEvent(e: MouseEvent | TouchEvent) {
+    const rect = this.canvas.getBoundingClientRect();
+    const pos = new Vector(0, 0, 0);
+
+    if (e instanceof MouseEvent) {
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      // this.posFromEventTempVec.set(x, y, 0);
+      pos.set(x, y, 0);
+    } else if (e instanceof TouchEvent) {
+      const x = e.changedTouches[0].clientX - rect.left;
+      const y = e.changedTouches[0].clientY - rect.top;
+      // this.posFromEventTempVec.set(x, y, 0);
+      pos.set(x, y, 0);
+    }
+
+    // return this.posFromEventTempVec;
+    return pos;
+  }
+
+  touchPressed(e: TouchEvent) {
+    e.preventDefault();
+    const pos = this.positionFromEvent(e);
+    this.inputPressed(pos.x, pos.y);
+  }
+
+  mouseMoved(e: MouseEvent) {
+    // this.inputReleased(e);
+    // this.mousePressed(e);
+
+    const pos = this.positionFromEvent(e);
+    this.inputMoved(pos.x, pos.y);
+  }
+
+  touchMoved(e: TouchEvent) {
+    // this.inputReleased(e);
+    // this.touchPressed(e);
+    const pos = this.positionFromEvent(e);
+    this.inputMoved(pos.x, pos.y);
+  }
+
+  preventDefault(e: TouchEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  keydown(e: KeyboardEvent) {
+    switch (e.key) {
+      case "ArrowLeft":
+        console.log("left");
+        this.renderer.camera.moveBy(1, 0, 0);
+        break;
+      case "ArrowRight":
+        console.log("right");
+        this.renderer.camera.moveBy(-1, 0, 0);
+        break;
+      case "ArrowUp":
+        console.log("up");
+        this.renderer.camera.moveBy(0, 1, 0);
+        break;
+      case "ArrowDown":
+        console.log("down");
+        this.renderer.camera.moveBy(0, -1, 0);
+        break;
+      case "-":
+        console.log("zoom out");
+        this.renderer.camera.moveBy(0, 0, -0.1);
+        break;
+      case "+":
+        console.log("zoom in");
+        this.renderer.camera.moveBy(0, 0, 0.1);
+        break;
+    }
+  }
+
+  keyup(e: KeyboardEvent) {
+    switch (e.key) {
+      case "ArrowLeft":
+        console.log("left");
+        break;
+      case "ArrowRight":
+        console.log("right");
+        break;
+      case "ArrowUp":
+        console.log("up");
+        break;
+      case "ArrowDown":
+        console.log("down");
+        break;
+    }
   }
 }
 
-function inputReleased(e: MouseEvent | TouchEvent) {
-  e.preventDefault();
-  e.stopPropagation();
-}
-
-function mouseMoved(e: MouseEvent) {
-  // if (!anyInputPressed()) return;
-  inputReleased(e);
-  mousePressed(e);
-}
-
-function touchMoved(e: TouchEvent) {
-  inputReleased(e);
-  touchPressed(e);
-}
-
-function keydown(e: KeyboardEvent) {
-  const pos = renderer.camera.pos;
-  // console.log(pos);
-
-  switch (e.key) {
-    case "ArrowLeft":
-      console.log("left");
-      renderer.camera.pos.set(pos.x + 1, pos.y, pos.z);
-      break;
-    case "ArrowRight":
-      console.log("right");
-      renderer.camera.pos.set(pos.x - 1, pos.y, pos.z);
-      break;
-    case "ArrowUp":
-      console.log("up");
-      renderer.camera.pos.set(pos.x, pos.y + 1, pos.z);
-      break;
-    case "ArrowDown":
-      console.log("down");
-      renderer.camera.pos.set(pos.x, pos.y - 1, pos.z);
-      break;
-  }
-}
-
-function keyup(e: KeyboardEvent) {
-  switch (e.key) {
-    case "ArrowLeft":
-      console.log("left");
-      break;
-    case "ArrowRight":
-      console.log("right");
-      break;
-    case "ArrowUp":
-      console.log("up");
-      break;
-    case "ArrowDown":
-      console.log("down");
-      break;
-  }
-}
-
-function preventDefault(e: TouchEvent) {
-  e.preventDefault();
-  e.stopPropagation();
-}
-
-export class GameInputManager {
-  constructor() {}
-
-  register() {}
-}
-
-export function registerClickCallback(callback: (pos: Vector) => void) {
-  clickCallbacks.push(callback);
+interface IInputMap {
+  downAt: Date | null;
+  downPos: Vector;
+  currPos: Vector;
 }

@@ -6,7 +6,7 @@ import Stage from "./stage";
 import { randomFloatBetween, Vector, dist, overlaps } from "./math";
 import Debug from "./debug";
 import RallyPoint from "./rally_point";
-import { registerClickCallback, addEventListeners } from "./input";
+import Input from "./input";
 import Renderer from "./renderer";
 import Ui from "./ui";
 import { AttackState } from "./gull_flock_states";
@@ -44,9 +44,9 @@ ui.createUi(gullFlock);
 
 Debug.start();
 const debug = Debug.getInstance();
-addEventListeners(canvas);
 
-// const rallyPoint = new RallyPoint(new Vector(width / 2, height / 2, 0));
+const input = Input.getInstance();
+input.addEventListeners(canvas);
 
 for (let i = 0; i < 5; i++) {
   const pos = new Vector(
@@ -122,7 +122,29 @@ function tick(t: number) {
   }
 
   ui.update(gullFlock);
+
+  const threshold = 15;
+  if (input.inputHash.currPos.x <= threshold) {
+    camera.moveBy(1, 0, 0);
+  } else if (input.inputHash.currPos.x >= window.innerWidth - threshold) {
+    camera.moveBy(-1, 0, 0);
+  } else if (input.inputHash.currPos.y <= threshold) {
+    camera.moveBy(0, 1, 0);
+  } else if (input.inputHash.currPos.y >= window.innerHeight - threshold) {
+    camera.moveBy(0, -1, 0);
+  }
 }
+
+// function moveCallback(pos: Vector) {
+//   const threshold = 50;
+//   console.log(pos);
+
+//   if (pos.x <= threshold) {
+//     camera.moveBy(1, 0, 0);
+//   } else if (pos.x >= window.innerWidth - threshold) {
+//     camera.moveBy(-1, 0, 0);
+//   }
+// }
 
 function clickCallback(pos: Vector) {
   // rallyPoints.push(new RallyPoint(pos));
@@ -132,7 +154,7 @@ function clickCallback(pos: Vector) {
   rallyPoints[0] = new RallyPoint(pos);
 }
 
-registerClickCallback(clickCallback);
+input.registerClickCallback(clickCallback);
 
 requestAnimationFrame(tick);
 
