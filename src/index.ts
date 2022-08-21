@@ -3,7 +3,7 @@ import Person from "./person";
 import PersonFlock from "./person_flock";
 import GullFlock from "./gull_flock";
 import Stage from "./stage";
-import { randomFloatBetween, Vector, dist, overlaps } from "./math";
+import { randomFloatBetween, Vector, dist, overlaps, clamp } from "./math";
 import Debug from "./debug";
 import RallyPoint from "./rally_point";
 import Input from "./input";
@@ -24,7 +24,7 @@ let aspectRatio = null;
 let canvasWindowScale = 0;
 
 const renderer = Renderer.getInstance();
-const camera = new Camera(new Vector(0, 0, 1.5));
+const camera = new Camera(new Vector(0, 0, 1));
 renderer.camera = camera;
 
 canvas.width = width;
@@ -123,6 +123,13 @@ function tick(t: number) {
 
   ui.update(gullFlock);
 
+  moveStage();
+}
+
+function moveStage() {
+  if (Input.isTouchDevice()) return;
+  if (input.inputHash.currPos.x === -1) return;
+
   const threshold = 15;
   if (input.inputHash.currPos.x <= threshold) {
     camera.moveBy(1, 0, 0);
@@ -135,16 +142,14 @@ function tick(t: number) {
   }
 }
 
-// function moveCallback(pos: Vector) {
-//   const threshold = 50;
-//   console.log(pos);
-
-//   if (pos.x <= threshold) {
-//     camera.moveBy(1, 0, 0);
-//   } else if (pos.x >= window.innerWidth - threshold) {
-//     camera.moveBy(-1, 0, 0);
-//   }
-// }
+function dragCallback(pos: Vector) {
+  const MAX_DRAG = 2;
+  renderer.camera.moveBy(
+    clamp(pos.x, -1 * MAX_DRAG, MAX_DRAG),
+    clamp(pos.y, -1 * MAX_DRAG, MAX_DRAG),
+    0
+  );
+}
 
 function clickCallback(pos: Vector) {
   // rallyPoints.push(new RallyPoint(pos));
@@ -155,6 +160,7 @@ function clickCallback(pos: Vector) {
 }
 
 input.registerClickCallback(clickCallback);
+input.registerDragCallback(dragCallback);
 
 requestAnimationFrame(tick);
 

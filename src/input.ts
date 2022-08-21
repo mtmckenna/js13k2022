@@ -1,5 +1,7 @@
-import { Vector } from "./math";
+import { Vector, dist } from "./math";
 import Renderer from "./renderer";
+
+const DRAG_THRESHOLD = 50;
 
 export default class Input {
   private static instance: Input;
@@ -14,6 +16,7 @@ export default class Input {
 
   clickCallbacks: Array<(pos: Vector) => void> = [];
   moveCallbacks: Array<(pos: Vector) => void> = [];
+  dragCallbacks: Array<(pos: Vector) => void> = [];
 
   public static getInstance(): Input {
     if (!Input.instance) Input.instance = new Input();
@@ -24,11 +27,15 @@ export default class Input {
     this.inputHash = {
       downAt: null,
       downPos: new Vector(0, 0, 0),
-      currPos: new Vector(0, 0, 0),
+      currPos: new Vector(-1, -1, -1),
     };
 
     this.renderer = Renderer.getInstance();
     this.canvas = this.renderer.canvas;
+  }
+
+  static isTouchDevice() {
+    return "ontouchstart" in window || navigator.maxTouchPoints > 0;
   }
 
   addEventListeners(element: HTMLElement) {
@@ -52,6 +59,10 @@ export default class Input {
     this.moveCallbacks.push(callback);
   }
 
+  registerDragCallback(callback: (pos: Vector) => void) {
+    this.dragCallbacks.push(callback);
+  }
+
   userHasInteracted(): boolean {
     return this.inputPressedOnce;
   }
@@ -66,17 +77,42 @@ export default class Input {
 
   inputPressed(x: number, y: number) {
     this.handleInitialInput();
-    this.clickCallbacks.forEach((callback) => callback(new Vector(x, y, 0)));
+    this.inputHash.downAt = performance.now();
+    this.inputHash.downPos.set(x, y, 0);
+    // this.clickCallbacks.forEach((callback) => callback(new Vector(x, y, 0)));
   }
 
   inputMoved(x, y) {
+    const oldX = this.inputHash.currPos.x;
+    const oldY = this.inputHash.currPos.y;
+    // const oldZ = this.inputHash.currPos.z;
     this.inputHash.currPos.set(x, y, 0);
     this.moveCallbacks.forEach((callback) => callback(new Vector(x, y, 0)));
+    if (this.inputHash.downAt) {
+      this.dragCallbacks.forEach((callback) =>
+        callback(new Vector(x - oldX, y - oldY, 0))
+      );
+    }
   }
 
   inputReleased(e: MouseEvent | TouchEvent) {
     e.preventDefault();
     e.stopPropagation();
+
+    const currPos = this.positionFromEvent(e);
+    const distBetweenDownAndUp = dist(currPos, this.inputHash.downPos);
+    // const clicked =
+    //   performance.now() - this.inputHash.downAt <= CLICK_THRESHOLD;
+    const dragged = distBetweenDownAndUp >= DRAG_THRESHOLD;
+
+    // Don't click if we're dragging
+    if (!dragged) {
+      this.clickCallbacks.forEach((callback) =>
+        callback(new Vector(currPos.x, currPos.y, 0))
+      );
+    }
+
+    this.inputHash.downAt = null;
   }
 
   mousePressed(e: MouseEvent) {
@@ -183,7 +219,7 @@ export default class Input {
 }
 
 interface IInputMap {
-  downAt: Date | null;
+  downAt: DOMHighResTimeStamp | null;
   downPos: Vector;
   currPos: Vector;
 }
