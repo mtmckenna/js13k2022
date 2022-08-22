@@ -127,8 +127,26 @@ function tick(t: number) {
 }
 
 function moveStage() {
+  // console.log(camera.pos.x, camera.pos.y);
   if (Input.isTouchDevice()) return;
   if (input.inputHash.currPos.x === -1) return;
+
+  const limitRight = camera.pos.x + canvas.width;
+  const limitBottom = camera.pos.y + canvas.height;
+  // console.log(camera.pos);
+
+  // if (camera.pos.x >= 0) {
+  //   camera.pos.set(0, camera.pos.y, camera.pos.z);
+  // }
+  // // } else if (limitRight >= currentStage.size.x) {
+  // //   camera.pos.set(limitRight, camera.pos.y, camera.pos.z);
+  // // }
+
+  // if (camera.pos.y >= 0) {
+  //   camera.pos.set(camera.pos.y, 0, camera.pos.z);
+  // } else if (limitBottom >= currentStage.size.y) {
+  //   camera.pos.set(camera.pos.x, limitBottom, camera.pos.z);
+  // }
 
   const threshold = 15;
   if (input.inputHash.currPos.x <= threshold) {

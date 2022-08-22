@@ -184,19 +184,19 @@ export default class Input {
     switch (e.key) {
       case "ArrowLeft":
         console.log("left");
-        this.renderer.camera.moveBy(1, 0, 0);
+        this.renderer.camera.moveBy(-1, 0, 0);
         break;
       case "ArrowRight":
         console.log("right");
-        this.renderer.camera.moveBy(-1, 0, 0);
+        this.renderer.camera.moveBy(1, 0, 0);
         break;
       case "ArrowUp":
         console.log("up");
-        this.renderer.camera.moveBy(0, 1, 0);
+        this.renderer.camera.moveBy(0, -1, 0);
         break;
       case "ArrowDown":
         console.log("down");
-        this.renderer.camera.moveBy(0, -1, 0);
+        this.renderer.camera.moveBy(0, 1, 0);
         break;
       case "-":
         console.log("zoom out");

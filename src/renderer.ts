@@ -58,8 +58,8 @@ export default class Renderer {
       0,
       sprite.originalSize.x,
       sprite.originalSize.y,
-      Math.round((this.offset.x + sprite.pos.x) * scale),
-      Math.round((this.offset.y + sprite.pos.y) * scale),
+      Math.round((sprite.pos.x - this.offset.x) * scale),
+      Math.round((sprite.pos.y - this.offset.y) * scale),
       Math.round(sprite.size.x * scale),
       Math.round(sprite.size.y * scale)
     );
