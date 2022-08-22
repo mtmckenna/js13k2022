@@ -18,6 +18,7 @@ export default class Input {
   moveCallbacks: Array<(pos: Vector) => void> = [];
   dragCallbacks: Array<(pos: Vector) => void> = [];
   releaseCallbacks: Array<(pos: Vector) => void> = [];
+  keydownCallbacks: Array<(keyCode: string) => void> = [];
 
   public static getInstance(): Input {
     if (!Input.instance) Input.instance = new Input();
@@ -66,6 +67,10 @@ export default class Input {
 
   registerReleaseCallback(callback: (pos: Vector) => void) {
     this.releaseCallbacks.push(callback);
+  }
+
+  registerKeydownCallback(callback: (keyCode: string) => void) {
+    this.keydownCallbacks.push(callback);
   }
 
   userHasInteracted(): boolean {
@@ -181,32 +186,7 @@ export default class Input {
   }
 
   keydown(e: KeyboardEvent) {
-    switch (e.key) {
-      case "ArrowLeft":
-        console.log("left");
-        this.renderer.camera.moveBy(-1, 0, 0);
-        break;
-      case "ArrowRight":
-        console.log("right");
-        this.renderer.camera.moveBy(1, 0, 0);
-        break;
-      case "ArrowUp":
-        console.log("up");
-        this.renderer.camera.moveBy(0, -1, 0);
-        break;
-      case "ArrowDown":
-        console.log("down");
-        this.renderer.camera.moveBy(0, 1, 0);
-        break;
-      case "-":
-        console.log("zoom out");
-        this.renderer.camera.moveBy(0, 0, -0.1);
-        break;
-      case "+":
-        console.log("zoom in");
-        this.renderer.camera.moveBy(0, 0, 0.1);
-        break;
-    }
+    this.keydownCallbacks.forEach((callback) => callback(e.key));
   }
 
   keyup(e: KeyboardEvent) {

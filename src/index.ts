@@ -126,27 +126,29 @@ function tick(t: number) {
   moveStage();
 }
 
-function moveStage() {
-  // console.log(camera.pos.x, camera.pos.y);
-  if (Input.isTouchDevice()) return;
-  if (input.inputHash.currPos.x === -1) return;
-
+function resetCameraWhenAtLimit() {
   const limitRight = camera.pos.x + canvas.width;
   const limitBottom = camera.pos.y + canvas.height;
   // console.log(camera.pos);
 
-  // if (camera.pos.x >= 0) {
-  //   camera.pos.set(0, camera.pos.y, camera.pos.z);
+  if (camera.pos.x <= 0) {
+    camera.pos.set(0, camera.pos.y, camera.pos.z);
+  }
+  // } else if (limitRight >= currentStage.size.x) {
+  //   camera.pos.set(limitRight, camera.pos.y, camera.pos.z);
   // }
-  // // } else if (limitRight >= currentStage.size.x) {
-  // //   camera.pos.set(limitRight, camera.pos.y, camera.pos.z);
-  // // }
 
-  // if (camera.pos.y >= 0) {
-  //   camera.pos.set(camera.pos.y, 0, camera.pos.z);
-  // } else if (limitBottom >= currentStage.size.y) {
-  //   camera.pos.set(camera.pos.x, limitBottom, camera.pos.z);
-  // }
+  if (camera.pos.y >= 0) {
+    camera.pos.set(camera.pos.y, 0, camera.pos.z);
+  } else if (limitBottom >= currentStage.size.y) {
+    camera.pos.set(camera.pos.x, limitBottom, camera.pos.z);
+  }
+}
+
+function moveStage() {
+  // console.log(camera.pos.x, camera.pos.y);
+  if (Input.isTouchDevice()) return;
+  if (input.inputHash.currPos.x === -1) return;
 
   const threshold = 15;
   if (input.inputHash.currPos.x <= threshold) {
@@ -185,9 +187,39 @@ function clickCallback(pos: Vector) {
   rallyPoints[0] = new RallyPoint(pos);
 }
 
+function keydownCallback(keyCode: string) {
+  switch (keyCode) {
+    case "ArrowLeft":
+      console.log("left");
+      renderer.camera.moveBy(-1, 0, 0);
+      break;
+    case "ArrowRight":
+      console.log("right");
+      renderer.camera.moveBy(1, 0, 0);
+      break;
+    case "ArrowUp":
+      console.log("up");
+      renderer.camera.moveBy(0, -1, 0);
+      break;
+    case "ArrowDown":
+      console.log("down");
+      renderer.camera.moveBy(0, 1, 0);
+      break;
+    case "-":
+      console.log("zoom out");
+      renderer.camera.moveBy(0, 0, -0.1);
+      break;
+    case "+":
+      console.log("zoom in");
+      renderer.camera.moveBy(0, 0, 0.1);
+      break;
+  }
+}
+
 input.registerClickCallback(clickCallback);
 input.registerDragCallback(dragCallback);
 input.registerReleaseCallback(releaseCallback);
+input.registerKeydownCallback(keydownCallback);
 
 requestAnimationFrame(tick);
 
