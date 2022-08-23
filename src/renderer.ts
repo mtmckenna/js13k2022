@@ -2,6 +2,7 @@ import Sprite from "./sprite";
 import Debug from "./debug";
 import Camera from "./camera";
 import { Vector } from "./math";
+import Stage from "./stage";
 
 export default class Renderer {
   private static instance: Renderer;
@@ -41,6 +42,62 @@ export default class Renderer {
     } else {
       this.drawSprite(sprite);
     }
+  }
+
+  drawGrid(stage: Stage) {
+    const gridSize = 10;
+    this.ctx.strokeStyle = "red";
+    this.ctx.lineWidth = 2;
+    this.ctx.font = "12px serif";
+    const scale = this.offset.z;
+    const fontSpacing = 50;
+
+    for (let i = 0; i < stage.size.x; i += gridSize) {
+      this.ctx.beginPath();
+
+      this.ctx.moveTo(
+        (i * gridSize - this.offset.x) * scale,
+        (0 - this.offset.y) * scale
+      );
+
+      this.ctx.lineTo(
+        (i * gridSize - this.offset.x) * scale,
+        (stage.size.y - this.offset.y) * scale
+      );
+
+      this.ctx.stroke();
+    }
+
+    for (let j = 0; j < stage.size.y; j += gridSize) {
+      this.ctx.beginPath();
+      this.ctx.moveTo(
+        (0 - this.offset.x) * scale,
+        (j * gridSize - this.offset.y) * scale
+      );
+      this.ctx.lineTo(
+        (stage.size.x - this.offset.x) * scale,
+        (j * gridSize - this.offset.y) * scale
+      );
+      this.ctx.stroke();
+    }
+
+    for (let i = 0; i < stage.size.x; i += fontSpacing) {
+      for (let j = 0; j < stage.size.y; j += fontSpacing) {
+        this.ctx.fillText(
+          `${i},${j}`,
+          (i - this.offset.x) * scale,
+          (j - this.offset.y) * scale
+        );
+      }
+    }
+
+    this.ctx.strokeStyle = "yellow";
+    this.ctx.strokeRect(
+      0,
+      0,
+      (stage.size.x - this.offset.x) * scale,
+      (stage.size.y - this.offset.y) * scale
+    );
   }
 
   private drawSprite(sprite: Sprite) {

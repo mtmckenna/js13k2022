@@ -86,6 +86,7 @@ function tick(t: number) {
   if (debug.gridEnabled) {
     ctx.fillStyle = "red";
     ctx.fillRect(0, 0, 5, 5);
+    renderer.drawGrid(currentStage);
   }
 
   const flockCenter = rallyPoints[0].pos;
@@ -123,18 +124,19 @@ function tick(t: number) {
 
   ui.update(gullFlock);
 
-  // moveStage();
+  moveStage();
 }
 
 function resetCameraWhenAtLimit() {
+  const scale = camera.pos.z;
   if (camera.pos.x < 0) {
     camera.pos.set(0, camera.pos.y, camera.pos.z);
   } else if (
-    currentStage.size.x >= canvas.width &&
-    camera.pos.x + canvas.width > currentStage.size.x
+    currentStage.size.x * scale >= canvas.width &&
+    camera.pos.x * scale + canvas.width > currentStage.size.x * scale
   ) {
     camera.pos.set(
-      currentStage.size.x - canvas.width,
+      currentStage.size.x - canvas.width / scale,
       camera.pos.y,
       camera.pos.z
     );
@@ -143,12 +145,12 @@ function resetCameraWhenAtLimit() {
   if (camera.pos.y < 0) {
     camera.pos.set(camera.pos.x, 0, camera.pos.z);
   } else if (
-    currentStage.size.y >= canvas.height &&
-    camera.pos.y + canvas.height > currentStage.size.y
+    currentStage.size.y * scale >= canvas.height &&
+    camera.pos.y * scale + canvas.height > currentStage.size.y * scale
   ) {
     camera.pos.set(
       camera.pos.x,
-      currentStage.size.y - canvas.height,
+      currentStage.size.y - canvas.height / scale,
       camera.pos.z
     );
   }
