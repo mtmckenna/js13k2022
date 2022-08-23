@@ -27,8 +27,8 @@ export default class RallyPoint implements Drawable {
 
     this.ctx.fillStyle = this.color;
     this.ctx.fillRect(
-      (this.pos.x + offset.x - this.size.x / 2) * offset.z,
-      (this.pos.y + offset.y - this.size.y / 2) * offset.z,
+      (this.pos.x - offset.x - this.size.x / 2) * offset.z,
+      (this.pos.y - offset.y - this.size.y / 2) * offset.z,
       this.size.x,
       this.size.y
     );

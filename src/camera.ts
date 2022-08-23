@@ -11,8 +11,8 @@ export default class Camera {
 
   moveBy(horizontal = 0, veritcal = 0, zoom = 0) {
     this.pos.set(
-      this.pos.x + horizontal,
-      this.pos.y + veritcal,
+      this.pos.x + horizontal * this.speed,
+      this.pos.y + veritcal * this.speed,
       this.pos.z + zoom
     );
   }

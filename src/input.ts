@@ -1,7 +1,7 @@
 import { Vector, dist } from "./math";
 import Renderer from "./renderer";
 
-const DRAG_THRESHOLD = 50;
+const DRAG_THRESHOLD = 30;
 
 export default class Input {
   private static instance: Input;

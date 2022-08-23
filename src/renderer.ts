@@ -27,11 +27,7 @@ export default class Renderer {
   public renderTick() {
     this.previousRenderNumber = this.currentRenderNumber;
     this.currentRenderNumber++;
-    this.offset.set(
-      this.camera.pos.x * this.camera.speed,
-      this.camera.pos.y * this.camera.speed,
-      this.camera.pos.z
-    );
+    this.offset.set(this.camera.pos.x, this.camera.pos.y, this.camera.pos.z);
   }
 
   public static getInstance(): Renderer {

@@ -123,53 +123,63 @@ function tick(t: number) {
 
   ui.update(gullFlock);
 
-  moveStage();
+  // moveStage();
 }
 
 function resetCameraWhenAtLimit() {
-  const limitRight = camera.pos.x + canvas.width;
-  const limitBottom = camera.pos.y + canvas.height;
-  // console.log(camera.pos);
-
-  if (camera.pos.x <= 0) {
+  if (camera.pos.x < 0) {
     camera.pos.set(0, camera.pos.y, camera.pos.z);
+  } else if (
+    currentStage.size.x >= canvas.width &&
+    camera.pos.x + canvas.width > currentStage.size.x
+  ) {
+    camera.pos.set(
+      currentStage.size.x - canvas.width,
+      camera.pos.y,
+      camera.pos.z
+    );
   }
-  // } else if (limitRight >= currentStage.size.x) {
-  //   camera.pos.set(limitRight, camera.pos.y, camera.pos.z);
-  // }
 
-  if (camera.pos.y >= 0) {
-    camera.pos.set(camera.pos.y, 0, camera.pos.z);
-  } else if (limitBottom >= currentStage.size.y) {
-    camera.pos.set(camera.pos.x, limitBottom, camera.pos.z);
+  if (camera.pos.y < 0) {
+    camera.pos.set(camera.pos.x, 0, camera.pos.z);
+  } else if (
+    currentStage.size.y >= canvas.height &&
+    camera.pos.y + canvas.height > currentStage.size.y
+  ) {
+    camera.pos.set(
+      camera.pos.x,
+      currentStage.size.y - canvas.height,
+      camera.pos.z
+    );
   }
 }
 
 function moveStage() {
-  // console.log(camera.pos.x, camera.pos.y);
   if (Input.isTouchDevice()) return;
   if (input.inputHash.currPos.x === -1) return;
 
   const threshold = 15;
   if (input.inputHash.currPos.x <= threshold) {
-    camera.moveBy(1, 0, 0);
-  } else if (input.inputHash.currPos.x >= window.innerWidth - threshold) {
     camera.moveBy(-1, 0, 0);
+  } else if (input.inputHash.currPos.x >= window.innerWidth - threshold) {
+    camera.moveBy(1, 0, 0);
   } else if (input.inputHash.currPos.y <= threshold) {
-    camera.moveBy(0, 1, 0);
-  } else if (input.inputHash.currPos.y >= window.innerHeight - threshold) {
     camera.moveBy(0, -1, 0);
+  } else if (input.inputHash.currPos.y >= window.innerHeight - threshold) {
+    camera.moveBy(0, 1, 0);
   }
+  resetCameraWhenAtLimit();
 }
 
 function dragCallback(pos: Vector) {
   const MAX_DRAG = 2;
   renderer.camera.moveBy(
-    clamp(pos.x, -1 * MAX_DRAG, MAX_DRAG),
-    clamp(pos.y, -1 * MAX_DRAG, MAX_DRAG),
+    clamp(-pos.x, -1 * MAX_DRAG, MAX_DRAG),
+    clamp(-pos.y, -1 * MAX_DRAG, MAX_DRAG),
     0
   );
   document.body.style.cursor = "grab";
+  resetCameraWhenAtLimit();
 }
 
 function releaseCallback(pos: Vector) {
@@ -179,8 +189,8 @@ function releaseCallback(pos: Vector) {
 function clickCallback(pos: Vector) {
   // Transform point to deal with 1) scaling and 2) moving the camera around
   pos.set(
-    (pos.x / canvasWindowScale - renderer.offset.x) * renderer.offset.z,
-    (pos.y / canvasWindowScale - renderer.offset.y) * renderer.offset.z,
+    (pos.x / canvasWindowScale + renderer.offset.x) * renderer.offset.z,
+    (pos.y / canvasWindowScale + renderer.offset.y) * renderer.offset.z,
     0
   );
 
@@ -214,6 +224,8 @@ function keydownCallback(keyCode: string) {
       renderer.camera.moveBy(0, 0, 0.1);
       break;
   }
+
+  resetCameraWhenAtLimit();
 }
 
 input.registerClickCallback(clickCallback);
@@ -248,6 +260,7 @@ function resize() {
   canvas.height = scaledHeight;
 
   // How much have we stretched the canvas to fit the screen
+
   canvasWindowScale = window.innerHeight / scaledHeight;
 }
 
