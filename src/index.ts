@@ -24,7 +24,7 @@ let aspectRatio = null;
 let canvasWindowScale = 0;
 
 const renderer = Renderer.getInstance();
-const camera = new Camera(new Vector(0, 0, 1));
+const camera = new Camera(new Vector(0, 0, 1.5));
 renderer.camera = camera;
 
 canvas.width = width;
@@ -190,11 +190,16 @@ function releaseCallback(pos: Vector) {
 
 function clickCallback(pos: Vector) {
   // Transform point to deal with 1) scaling and 2) moving the camera around
+  // I don't know how this works
   pos.set(
-    (pos.x / canvasWindowScale + renderer.offset.x) * renderer.offset.z,
-    (pos.y / canvasWindowScale + renderer.offset.y) * renderer.offset.z,
+    (pos.x / canvasWindowScale + renderer.offset.x * renderer.offset.z) /
+      renderer.offset.z,
+    (pos.y / canvasWindowScale + renderer.offset.y * renderer.offset.z) /
+      renderer.offset.z,
     0
   );
+
+  // console.log(pos.x, canvasWindowScale, renderer.offset.x);
 
   rallyPoints[0] = new RallyPoint(pos);
 }
@@ -218,12 +223,14 @@ function keydownCallback(keyCode: string) {
       renderer.camera.moveBy(0, 1, 0);
       break;
     case "-":
-      console.log("zoom out");
       renderer.camera.moveBy(0, 0, -0.1);
+      console.log("zoom out", renderer.camera.pos.z);
+      resize(true);
       break;
     case "+":
-      console.log("zoom in");
       renderer.camera.moveBy(0, 0, 0.1);
+      console.log("zoom in", renderer.camera.pos.z);
+      resize(true);
       break;
   }
 
@@ -237,11 +244,11 @@ input.registerKeydownCallback(keydownCallback);
 
 requestAnimationFrame(tick);
 
-function resize() {
+function resize(force = false) {
   const newAspectRatio = window.innerWidth / window.innerHeight;
 
   // If we haven't changed or it's the first time
-  if (aspectRatio === newAspectRatio) {
+  if (aspectRatio === newAspectRatio && force === false) {
     return;
   } else {
     aspectRatio = newAspectRatio;

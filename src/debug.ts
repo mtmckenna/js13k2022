@@ -29,7 +29,7 @@ export default class Debug {
       cohesion: 0.1,
       separation: 0.1,
     };
-    this.gullSlidersEnabled = true;
+    this.gullSlidersEnabled = false;
     this.gullSpritesEnabled = false;
     this.gridEnabled = true;
     this.peopleFlockStrengths = {
@@ -37,9 +37,8 @@ export default class Debug {
       cohesion: 0.1,
       separation: 0.1,
     };
-    this.peopleSlidersEnabled = true;
+    this.peopleSlidersEnabled = false;
     this.peopleSpritesEnabled = false;
-    this.gridEnabled = true;
   }
 
   public static getInstance(): Debug {
