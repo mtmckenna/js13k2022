@@ -52,7 +52,7 @@ export default class Renderer {
     const scale = this.offset.z;
     const fontSpacing = 50;
 
-    for (let i = 0; i < stage.size.x; i += gridSize) {
+    for (let i = 0; i < stage.size.x / gridSize; i += gridSize) {
       this.ctx.beginPath();
 
       this.ctx.moveTo(
@@ -68,7 +68,7 @@ export default class Renderer {
       this.ctx.stroke();
     }
 
-    for (let j = 0; j < stage.size.y; j += gridSize) {
+    for (let j = 0; j < stage.size.y / gridSize; j += gridSize) {
       this.ctx.beginPath();
       this.ctx.moveTo(
         (0 - this.offset.x) * scale,
