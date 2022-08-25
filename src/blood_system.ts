@@ -1,14 +1,14 @@
 import Blood from "./blood";
 import { Vector } from "./math";
-import Person from "./person";
 import Renderer from "./renderer";
+import { IBox } from "./interfaces";
 
 const POOL_SIZE = 1000;
 
 export default class BloodSystem {
   private static instance: BloodSystem;
 
-  private bloods: Blood[] = [];
+  public bloods: Blood[] = [];
 
   constructor(renderer: Renderer, poolSize = POOL_SIZE) {
     for (let i = 0; i < poolSize; i++) {
@@ -17,8 +17,18 @@ export default class BloodSystem {
     }
   }
 
-  getBlood(person: Person) {
-    return this.bloods.find((blood) => !blood.inUse()).regen(person);
+  getBlood(box: IBox) {
+    let blood: Blood | null = null;
+    for (let i = 0; i < this.bloods.length; i++) {
+      blood = this.bloods[i];
+      if (!blood.inUse()) {
+        blood.regen(box);
+        break;
+      }
+    }
+
+    return blood;
+    // return this.bloods.find((blood) => !blood.inUse()).regen(person);
   }
 
   public static getInstance(): BloodSystem {

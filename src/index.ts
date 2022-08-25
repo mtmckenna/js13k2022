@@ -11,6 +11,7 @@ import Renderer from "./renderer";
 import Ui from "./ui";
 import { AttackState } from "./gull_flock_states";
 import Camera from "./camera";
+import BloodSystem from "./blood_system";
 
 const canvas: HTMLCanvasElement = document.getElementById(
   "game"
@@ -24,7 +25,8 @@ let aspectRatio = null;
 let canvasWindowScale = 0;
 
 const renderer = Renderer.getInstance();
-const camera = new Camera(new Vector(0, 0, 1.5));
+const zoom = 1.5;
+const camera = new Camera(new Vector(0, 0, zoom));
 renderer.camera = camera;
 
 canvas.width = width;
@@ -34,8 +36,12 @@ const currentStage = new Stage(new Vector(width, height, 0));
 const gulls: Gull[] = [];
 const gullFlock: GullFlock = new GullFlock(gulls);
 const rallyPoints: RallyPoint[] = [
-  new RallyPoint(new Vector(width / 4, height / 4, 0)),
+  new RallyPoint(new Vector(width / 4, height / 2, 0)),
 ];
+
+rallyPoints[0].bleed();
+
+const bloodSystem = BloodSystem.getInstance();
 const people: Person[] = [];
 const personFlock = new PersonFlock(people);
 
@@ -99,6 +105,14 @@ function tick(t: number) {
     person.update();
     person.draw();
   });
+
+  for (let i = 0; i < bloodSystem.bloods.length; i++) {
+    const blood = bloodSystem.bloods[i];
+    if (blood.inUse()) {
+      blood.update();
+      blood.draw();
+    }
+  }
 
   gulls.forEach((gull) => {
     gull.flock(gulls, flockCenter);

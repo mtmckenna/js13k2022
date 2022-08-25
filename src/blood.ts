@@ -3,8 +3,9 @@ import { Vector, randomFloatBetween } from "./math";
 import Renderer from "./renderer";
 
 const LIFE_SPAN = 200;
-const GRAVITY = 10;
-const START_VEL = 4;
+const GRAVITY = 0.75;
+const START_X_VEL = 1;
+const START_Y_VEL = 6;
 
 export default class Blood implements Drawable, IBox {
   pos: Vector;
@@ -21,7 +22,7 @@ export default class Blood implements Drawable, IBox {
     this.acc = new Vector(0, GRAVITY, 0);
     this.size = new Vector(3, 3, 0);
     this.renderer = renderer;
-    this.timeLeft = LIFE_SPAN;
+    this.timeLeft = 0;
   }
 
   inUse() {
@@ -36,21 +37,30 @@ export default class Blood implements Drawable, IBox {
     const { pos, size } = box;
     this.timeLeft = LIFE_SPAN;
     this.pos.set(pos.x, pos.y, pos.z);
+    this.acc.set(0, GRAVITY, 0);
     this.vel.set(
-      randomFloatBetween(-1 * START_VEL, START_VEL),
-      0.5 * START_VEL,
+      randomFloatBetween(-1 * START_X_VEL, START_X_VEL),
+      randomFloatBetween(-START_Y_VEL, -START_Y_VEL),
       0
     );
-    this.groundLevel = pos.y + size.y;
+    this.groundLevel = pos.y + size.y / 2;
   }
 
   update() {
     this.vel.add(this.acc);
     this.pos.add(this.vel);
+    // console.log(this.vel);
+
+    if (this.pos.y >= this.groundLevel) {
+      // console.log("ground", this.pos.y, this.groundLevel);
+      this.vel.set(0, 0, 0);
+      this.acc.set(0, 0, 0);
+    }
   }
 
   draw(): void {
     const { ctx, offset } = this.renderer;
+    // console.log(this.pos);
 
     ctx.fillStyle = "#a12f18";
     ctx.fillRect(

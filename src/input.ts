@@ -45,9 +45,13 @@ export default class Input {
     element.addEventListener("mousemove", this.mouseMoved.bind(this));
     element.addEventListener("mouseup", this.inputReleased.bind(this));
 
-    element.addEventListener("touchstart", this.touchPressed.bind(this));
+    element.addEventListener("touchstart", this.touchPressed.bind(this), {
+      passive: true,
+    });
     element.addEventListener("touchend", this.inputReleased.bind(this));
-    element.addEventListener("touchmove", this.touchMoved.bind(this));
+    element.addEventListener("touchmove", this.touchMoved.bind(this), {
+      passive: true,
+    });
     element.addEventListener("touchcancel", this.preventDefault.bind(this));
     window.addEventListener("keydown", this.keydown.bind(this));
     // window.addEventListener("keyup", keyup);

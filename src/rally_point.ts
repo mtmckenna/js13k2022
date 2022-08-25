@@ -1,6 +1,10 @@
 import { Vector } from "./math";
 import { Drawable } from "./interfaces";
 import Renderer from "./renderer";
+import BloodSystem from "./blood_system";
+import Blood from "./blood";
+
+const bloodSystem = BloodSystem.getInstance();
 
 export default class RallyPoint implements Drawable {
   pos: Vector;
@@ -15,6 +19,14 @@ export default class RallyPoint implements Drawable {
     this.renderer = Renderer.getInstance();
     this.ctx = this.renderer.ctx;
     this.color = "pink";
+  }
+
+  bleed() {
+    const bloods: Blood[] = [];
+
+    for (let i = 0; i < 10; i++) {
+      bloods.push(bloodSystem.getBlood(this));
+    }
   }
 
   draw() {
