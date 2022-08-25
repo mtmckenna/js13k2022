@@ -136,9 +136,11 @@ export default class Person extends Sprite {
 
   drawHealthBar() {
     const ctx = this.renderer.ctx;
+    const h = this.stage.size.y;
     const x = this.pos.x - (MAX_HEALTH_BAR_WIDTH - this.size.x) / 2;
-    const y = this.pos.y + this.size.y + HEALTH_BAR_Y_OFFSET;
+    const y = h - this.pos.y + this.size.y + HEALTH_BAR_Y_OFFSET;
     const offset = this.renderer.offset;
+
     ctx.fillStyle = "white";
     ctx.fillRect(
       (x - offset.x) * offset.z,

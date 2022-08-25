@@ -6,7 +6,6 @@ import Box from "./box";
 export default class Stage {
   public size: Vector;
 
-  private camera: Camera;
   private renderer: Renderer;
 
   private sky: Box;
@@ -14,9 +13,9 @@ export default class Stage {
   private sun: Box;
   private lot: Box;
 
-  constructor(size: Vector, camera: Camera) {
+  constructor(size: Vector) {
     this.size = size;
-    this.camera = camera;
+    // this.camera = camera;
     this.renderer = Renderer.getInstance();
 
     const width = this.size.x;

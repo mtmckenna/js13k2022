@@ -30,7 +30,7 @@ renderer.camera = camera;
 canvas.width = width;
 canvas.height = height;
 
-const currentStage = new Stage(new Vector(width, height, 0), camera);
+const currentStage = new Stage(new Vector(width, height, 0));
 const gulls: Gull[] = [];
 const gullFlock: GullFlock = new GullFlock(gulls);
 const rallyPoints: RallyPoint[] = [
@@ -76,7 +76,7 @@ for (let i = 0; i < 4; i++) {
 function tick(t: number) {
   requestAnimationFrame(tick);
   resize();
-  renderer.renderTick();
+  renderer.renderTick(currentStage);
 
   ctx.imageSmoothingEnabled = false;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -85,8 +85,7 @@ function tick(t: number) {
 
   if (debug.gridEnabled) {
     ctx.fillStyle = "red";
-    ctx.fillRect(0, 0, 5, 5);
-    renderer.drawGrid(currentStage);
+    renderer.drawGrid();
   }
 
   const flockCenter = rallyPoints[0].pos;

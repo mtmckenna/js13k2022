@@ -32,8 +32,11 @@ export class AttackState implements IState<GullFlock, GULL_FLOCK_INPUTS> {
 }
 
 export class CircleTargetState implements IState<GullFlock, GULL_FLOCK_INPUTS> {
-  enter(gullFock: GullFlock) {
-    gullFock.sprites.forEach((gull: Gull) => gull.circleTarget());
+  enter(gullFlock: GullFlock) {
+    for (let i = 0; i < gullFlock.sprites.length; i++) {
+      const gull: Gull = gullFlock.sprites[i] as Gull;
+      gull.circleTarget();
+    }
   }
 
   exit() {

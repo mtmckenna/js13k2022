@@ -93,6 +93,7 @@ export default class Input {
   }
 
   inputMoved(x, y) {
+    const speedFactor = 0.3;
     const oldX = this.inputHash.currPos.x;
     const oldY = this.inputHash.currPos.y;
     // const oldZ = this.inputHash.currPos.z;
@@ -100,7 +101,9 @@ export default class Input {
     this.moveCallbacks.forEach((callback) => callback(new Vector(x, y, 0)));
     if (this.inputHash.downAt) {
       this.dragCallbacks.forEach((callback) =>
-        callback(new Vector(x - oldX, y - oldY, 0))
+        callback(
+          new Vector((x - oldX) * speedFactor, (y - oldY) * speedFactor, 0)
+        )
       );
     }
   }

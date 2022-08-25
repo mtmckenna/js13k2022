@@ -1,10 +1,10 @@
 import Stage from "./stage";
-import { ImageCache } from "./interfaces";
+import { Drawable, ImageCache } from "./interfaces";
 import { Vector, randomIntBetween } from "./math";
 import Renderer from "./renderer";
 import SpriteAnimation from "./sprite_animation";
 
-export default class Sprite {
+export default class Sprite implements Drawable {
   public static imageCache: ImageCache = {};
   public renderer: Renderer;
 
@@ -75,8 +75,8 @@ export default class Sprite {
   }
 
   update() {
-    this.pos.add(this.vel);
     this.vel.add(this.acc);
+    this.pos.add(this.vel);
 
     this.acc.set(0, 0, 0);
   }
