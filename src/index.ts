@@ -102,12 +102,6 @@ function tick(t: number) {
     rallyPoint.draw();
   });
 
-  people.forEach((person) => {
-    person.flock(people);
-    person.update(t);
-    if (!person.dead) person.draw();
-  });
-
   for (let i = 0; i < bloodSystem.bloods.length; i++) {
     const blood = bloodSystem.bloods[i];
     if (blood.inUse()) {
@@ -115,6 +109,12 @@ function tick(t: number) {
       blood.draw();
     }
   }
+
+  people.forEach((person) => {
+    person.flock(people);
+    person.update(t);
+    if (!person.dead) person.draw();
+  });
 
   gulls.forEach((gull) => {
     gull.flock(gulls, flockCenter);
@@ -254,7 +254,7 @@ function keydownCallback(keyCode: string) {
 }
 
 input.registerClickCallback(clickCallback);
-input.registerDragCallback(dragCallback);
+// input.registerDragCallback(dragCallback);
 input.registerReleaseCallback(releaseCallback);
 input.registerKeydownCallback(keydownCallback);
 
@@ -299,14 +299,9 @@ function resize(force = false) {
     0
   );
 
-  console.log(renderer.canvasOffset);
-
   // How much have we stretched the canvas to fit the screen
-
   canvasWindowScale = window.innerHeight / scaledHeight;
 }
-
-// window.addEventListener("resize", resize);
 
 document.body.onkeyup = function (e) {
   if (e.key == " " || e.code == "Space" || e.keyCode == 32) {
