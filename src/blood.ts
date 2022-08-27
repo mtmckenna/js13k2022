@@ -66,14 +66,12 @@ export default class Blood implements Drawable, IBox {
   draw(): void {
     const { ctx, offset } = this.renderer;
     const h = this.renderer.stage.size.y;
-    // console.log(this.pos);
-
     ctx.fillStyle = "#a12f18";
     ctx.fillRect(
       (this.pos.x - offset.x) * offset.z,
       (h - this.pos.y - offset.y) * offset.z,
-      this.size.x,
-      this.size.y
+      this.size.x * offset.z,
+      this.size.y * offset.z
     );
   }
 }

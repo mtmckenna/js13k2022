@@ -21,6 +21,7 @@ const ctx: CanvasRenderingContext2D = canvas.getContext("2d");
 const width = 640;
 const height = 480;
 
+const desiredAspectRatio = width / height;
 let aspectRatio = null;
 let canvasWindowScale = 0;
 
@@ -270,13 +271,21 @@ function resize(force = false) {
   let scaledWidth = width;
   let scaledHeight = height;
 
-  if (aspectRatio >= 1) {
-    scaledWidth = width;
-    scaledHeight = width / aspectRatio;
-  } else {
+  if (aspectRatio >= desiredAspectRatio) {
     scaledHeight = height;
     scaledWidth = height * aspectRatio;
+  } else {
+    scaledHeight = width / aspectRatio;
+    scaledWidth = width;
   }
+
+  // if (aspectRatio >= 1) {
+  //   scaledWidth = width;
+  //   scaledHeight = width / aspectRatio;
+  // } else {
+  //   scaledHeight = height;
+  //   scaledWidth = height * aspectRatio;
+  // }
 
   canvas.width = scaledWidth;
   canvas.height = scaledHeight;
