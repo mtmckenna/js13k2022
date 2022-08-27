@@ -17,11 +17,15 @@ export default class Flock {
   get center(): Vector {
     this._center.set(0, 0, 0);
 
-    for (const person of this.sprites) {
-      this._center.add(person.pos);
+    for (let i = 0; i < this.sprites.length; i++) {
+      const sprite = this.sprites[i];
+      this._center.add(sprite.pos);
     }
 
     this._center.div(this.sprites.length);
+
+    // Why did I pick 3D vectors :|
+    this._center.set(this._center.x, this._center.y, 0);
 
     return this._center;
   }

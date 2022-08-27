@@ -6,6 +6,11 @@ export interface Drawable {
   draw: () => void;
 }
 
+export interface Damagable {
+  lastDamagedAt: number;
+  lifeLeft: number;
+}
+
 export interface Updatable {
   update: (t: number) => void;
 }

@@ -25,7 +25,7 @@ let aspectRatio = null;
 let canvasWindowScale = 0;
 
 const renderer = Renderer.getInstance();
-const zoom = 1.5;
+const zoom = 1;
 const camera = new Camera(new Vector(0, 0, zoom));
 renderer.camera = camera;
 
@@ -36,7 +36,7 @@ const currentStage = new Stage(new Vector(width, height, 0));
 const gulls: Gull[] = [];
 const gullFlock: GullFlock = new GullFlock(gulls);
 const rallyPoints: RallyPoint[] = [
-  new RallyPoint(new Vector(width / 4, height / 2, 0)),
+  new RallyPoint(new Vector(width / 4, height / 2, 0), currentStage),
 ];
 
 const bloodSystem = BloodSystem.getInstance();
@@ -52,7 +52,7 @@ const debug = Debug.getInstance();
 const input = Input.getInstance();
 input.addEventListeners(canvas);
 
-for (let i = 0; i < 5; i++) {
+for (let i = 0; i < 4; i++) {
   const pos = new Vector(
     randomFloatBetween(0, canvas.width),
     randomFloatBetween(0, canvas.height),
@@ -64,7 +64,7 @@ for (let i = 0; i < 5; i++) {
   gulls.push(gull);
 }
 
-for (let i = 0; i < 4; i++) {
+for (let i = 0; i < 2; i++) {
   const randomOffset = 50;
   const pos = new Vector(
     width / 2 + randomFloatBetween(-1 * randomOffset, randomOffset),
@@ -120,10 +120,12 @@ function tick(t: number) {
   });
 
   const personGullFlockDistance = dist(personFlock.center, gullFlock.center);
+  // console.log(personFlock.center, gullFlock.center);
   if (
     gullFlock.modeState instanceof AttackState &&
     personGullFlockDistance <= personFlock.fearDistance
   ) {
+    console.log("flip");
     personFlock.flipOut(gullFlock.center);
     gullFlock.sprites.forEach((gull: Gull) => {
       personFlock.sprites.forEach((person: Person) => {
@@ -201,8 +203,7 @@ function releaseCallback(pos: Vector) {
 }
 
 function clickCallback(pos: Vector) {
-  // Transform point to deal with 1) scaling and 2) moving the camera around
-  // I don't know how this works
+  // I don't know how this works but it's supposed to scale from screen to game
   pos.set(
     (pos.x / canvasWindowScale + renderer.offset.x * renderer.offset.z) /
       renderer.offset.z,
@@ -211,9 +212,9 @@ function clickCallback(pos: Vector) {
     0
   );
 
-  // console.log(pos.x, canvasWindowScale, renderer.offset.x);
-
-  rallyPoints[0] = new RallyPoint(pos);
+  const h = currentStage.size.y;
+  pos.set(pos.x, h - pos.y, pos.z);
+  rallyPoints[0] = new RallyPoint(pos, currentStage);
 }
 
 function keydownCallback(keyCode: string) {

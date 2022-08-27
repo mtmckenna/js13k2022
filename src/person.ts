@@ -80,9 +80,15 @@ export default class Person extends Sprite {
   }
 
   scare(scareLocation: Vector, scareAmount: number) {
-    const steering = scareLocation.copy().mult(-1).sub(this.vel);
+    // const steering = scareLocation.copy().sub(this.vel);
     const SCARE_FORCE_MULTIPLIER = 2;
-    this.acc.add(steering.mult(SCARE_FORCE_MULTIPLIER));
+    const steering = scareLocation
+      .copy()
+      .sub(this.pos)
+      .mult(-1)
+      .setMag(SCARE_FORCE_MULTIPLIER);
+    // steering.mult(SCARE_FORCE_MULTIPLIER);
+    this.acc.add(steering);
     this.fearTimer = Math.max(scareAmount, this.fearTimer);
     this.afraid = true;
   }

@@ -75,8 +75,8 @@ export default class Sprite implements Drawable {
   }
 
   update() {
-    this.vel.add(this.acc);
     this.pos.add(this.vel);
+    this.vel.add(this.acc);
 
     this.acc.set(0, 0, 0);
   }
@@ -93,8 +93,8 @@ export default class Sprite implements Drawable {
   }
 
   edgesMirror2() {
-    if (this.pos.x > this.stage.size.x) {
-      this.pos.x = this.stage.size.x - 1;
+    if (this.pos.x + this.size.x >= this.stage.size.x) {
+      this.pos.x = this.stage.size.x - this.size.x - 1;
       this.acc.x = -1 * Math.abs(this.acc.x);
       this.vel.x = -1 * Math.abs(this.vel.x);
     }
@@ -104,16 +104,16 @@ export default class Sprite implements Drawable {
       this.vel.x = Math.abs(this.vel.x);
     }
 
-    if (this.pos.y > this.stage.size.y) {
-      this.pos.y = this.stage.size.y - 1;
-      this.acc.y = -1 * Math.abs(this.acc.y);
-      this.vel.y = -1 * Math.abs(this.vel.y);
-    }
-
-    if (this.pos.y < 0) {
-      this.pos.y = 1;
+    if (this.pos.y + this.size.y >= this.stage.size.y) {
+      this.pos.y = this.stage.size.y - this.size.y - 1;
       this.acc.y = Math.abs(this.acc.y);
       this.vel.y = Math.abs(this.vel.y);
+    }
+
+    if (this.pos.y - this.size.y <= 0) {
+      this.pos.y = this.size.y + 1;
+      this.acc.y = -Math.abs(this.acc.y);
+      this.vel.y = -Math.abs(this.vel.y);
     }
   }
 }

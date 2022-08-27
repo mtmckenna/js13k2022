@@ -3,6 +3,7 @@ import { Bleedable, Drawable, Updatable } from "./interfaces";
 import Renderer from "./renderer";
 import BloodSystem from "./blood_system";
 import Blood from "./blood";
+import Stage from "./stage";
 
 const bloodSystem = BloodSystem.getInstance();
 
@@ -19,8 +20,9 @@ export default class RallyPoint implements Drawable, Bleedable, Updatable {
   maxDeathBloods = 20;
   bloodTimeDelta = 1;
   dead: boolean;
+  stage: Stage;
 
-  constructor(pos: Vector) {
+  constructor(pos: Vector, stage: Stage) {
     this.pos = pos;
     this.size = new Vector(10, 10, 0);
     this.renderer = Renderer.getInstance();
@@ -29,6 +31,7 @@ export default class RallyPoint implements Drawable, Bleedable, Updatable {
     this.lastBleedAt = 0;
     this.bloods = [];
     this.dead = false;
+    this.stage = stage;
   }
 
   update(t: number) {
@@ -54,6 +57,7 @@ export default class RallyPoint implements Drawable, Bleedable, Updatable {
   }
 
   draw() {
+    const h = this.stage.size.y;
     // ctx.beginPath();
     // ctx.moveTo(75, 50);
     // ctx.lineTo(100, 75);
@@ -63,9 +67,11 @@ export default class RallyPoint implements Drawable, Bleedable, Updatable {
 
     this.ctx.fillStyle = this.color;
 
+    // Flip canvas coordinates upsideown
+    const y = (-1 * (this.pos.y - h) - offset.y - this.size.y / 2) * offset.z;
     this.ctx.fillRect(
       (this.pos.x - offset.x - this.size.x / 2) * offset.z,
-      (this.pos.y - offset.y - this.size.y / 2) * offset.z,
+      y,
       this.size.x * offset.z,
       this.size.y * offset.z
     );
