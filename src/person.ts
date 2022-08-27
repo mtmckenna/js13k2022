@@ -91,7 +91,7 @@ export default class Person extends Sprite implements Bleedable {
   }
 
   flock(people: Person[]) {
-    const alignment = align(this, people, 2);
+    const alignment = align(this, people);
     const cohesion = cohere(this, people);
     const separation = separate(this, people, 30);
 
