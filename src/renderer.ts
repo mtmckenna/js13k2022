@@ -14,6 +14,7 @@ export default class Renderer {
   currentRenderNumber: number;
   camera: Camera;
   offset: Vector;
+  canvasOffset: Vector;
   stage: Stage;
 
   private constructor() {
@@ -25,13 +26,18 @@ export default class Renderer {
     const camera = new Camera();
     this.camera = camera;
     this.offset = new Vector(0, 0, 0);
+    this.canvasOffset = new Vector(0, 0, 0);
   }
 
   public renderTick(stage: Stage) {
     this.stage = stage;
     this.previousRenderNumber = this.currentRenderNumber;
     this.currentRenderNumber++;
-    this.offset.set(this.camera.pos.x, this.camera.pos.y, this.camera.pos.z);
+    this.offset.set(
+      this.camera.pos.x - this.canvasOffset.x,
+      this.camera.pos.y - this.canvasOffset.y,
+      this.camera.pos.z
+    );
   }
 
   public static getInstance(): Renderer {

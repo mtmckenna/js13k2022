@@ -18,8 +18,10 @@ const canvas: HTMLCanvasElement = document.getElementById(
 ) as HTMLCanvasElement;
 const ctx: CanvasRenderingContext2D = canvas.getContext("2d");
 
-const width = 640;
-const height = 480;
+const desiredWidth = 640;
+const desiredHeight = 480;
+const width = desiredWidth;
+const height = desiredHeight;
 
 const desiredAspectRatio = width / height;
 let aspectRatio = null;
@@ -289,6 +291,15 @@ function resize(force = false) {
 
   canvas.width = scaledWidth;
   canvas.height = scaledHeight;
+  console.log(scaledWidth);
+
+  renderer.canvasOffset.set(
+    (scaledWidth - desiredWidth) / 2,
+    (scaledHeight - desiredHeight) / 2,
+    0
+  );
+
+  console.log(renderer.canvasOffset);
 
   // How much have we stretched the canvas to fit the screen
 
