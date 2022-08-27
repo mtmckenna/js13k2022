@@ -14,8 +14,20 @@ export default class Flock {
     this.afraid = false;
   }
 
+  update(t: number) {
+    const currentSprites = [];
+
+    // Remove dead members from flock
+    for (let i = 0; i < this.sprites.length; i++) {
+      const sprite = this.sprites[i];
+      if (!sprite.dead) currentSprites.push(sprite);
+    }
+    this.sprites = currentSprites;
+  }
+
   get center(): Vector {
     this._center.set(0, 0, 0);
+    if (this.sprites.length === 0) return this._center;
 
     for (let i = 0; i < this.sprites.length; i++) {
       const sprite = this.sprites[i];

@@ -3,7 +3,7 @@ import { Vector } from "./math";
 import Renderer from "./renderer";
 import { IBox } from "./interfaces";
 
-const POOL_SIZE = 1000;
+const POOL_SIZE = 10000;
 
 export default class BloodSystem {
   private static instance: BloodSystem;

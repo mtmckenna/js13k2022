@@ -1,11 +1,12 @@
 import Stage from "./stage";
-import { Drawable, ImageCache, Updatable } from "./interfaces";
+import { Damagable, Drawable, ImageCache, Updatable } from "./interfaces";
 import { Vector, randomIntBetween } from "./math";
 import Renderer from "./renderer";
 import SpriteAnimation from "./sprite_animation";
 
-export default class Sprite implements Drawable, Updatable {
+export default class Sprite implements Drawable, Updatable, Damagable {
   public static imageCache: ImageCache = {};
+  public static MAX_HEALTH = 100;
   public renderer: Renderer;
 
   pos: Vector;
@@ -19,10 +20,14 @@ export default class Sprite implements Drawable, Updatable {
   numFrames: number;
   timeOffset: number;
   zoom: Vector;
+  health = Sprite.MAX_HEALTH;
+  lastDamagedAt = 0;
+  damageProtectionTimeDelta = 50;
   id: string;
   stage: Stage;
   spriteAnimations: { [key: string]: SpriteAnimation };
   currentAnimation: SpriteAnimation;
+  dead = false;
 
   private _currentFrame: number;
 

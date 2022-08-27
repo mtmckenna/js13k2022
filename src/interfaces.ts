@@ -8,7 +8,9 @@ export interface Drawable {
 
 export interface Damagable {
   lastDamagedAt: number;
-  lifeLeft: number;
+  health: number;
+  damageProtectionTimeDelta: number;
+  dead: boolean;
 }
 
 export interface Updatable {
@@ -27,7 +29,6 @@ export interface IBox {
 export interface Bleedable {
   lastBleedAt: number;
   bleeding: boolean;
-  dead: boolean;
   bloods: Blood[];
   maxBleedBloods: number;
   maxDeathBloods: number;

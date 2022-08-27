@@ -2,7 +2,7 @@ import { Vector } from "./math";
 import Sprite, { ISpriteProps } from "./sprite";
 import Stage from "./stage";
 import Debug from "./debug";
-import { Bleedable } from "./interfaces";
+import { Bleedable, Damagable } from "./interfaces";
 import BloodSystem from "./blood_system";
 
 import personImageDataUrl from "../assets/person2.png";
@@ -17,18 +17,23 @@ const MAX_WALKING_SPEED = 1;
 const MAX_RUNNING_SPEED = 3;
 const MAX_HEALTH_BAR_WIDTH = 50;
 const HEALTH_BAR_Y_OFFSET = 5;
-const MAX_HEALTH = 100;
 const HEALTH_BAR_OUTSIDE_HEIGHT = 10;
 const HEALTH_BAR_BORDER = 4;
+// const DAMAGE_BLOOD_DIVISOR = 5;
 const HEALTH_BAR_INSIDE_HEIGHT = HEALTH_BAR_OUTSIDE_HEIGHT - HEALTH_BAR_BORDER;
 const HEALTH_BAR_INSIDE_OFFSET = HEALTH_BAR_BORDER / 2;
 
-export default class Person extends Sprite implements Bleedable {
+export default class Person extends Sprite implements Bleedable, Damagable {
   public pos: Vector;
 
   afraid: boolean;
   fearTimer: number;
-  health: number;
+  lastBleedAt: number;
+  bleeding: boolean;
+  bloods: blood[];
+  maxBleedBloods = Sprite.MAX_HEALTH;
+  maxDeathBloods = 50;
+  bloodTimeDelta = 5;
 
   constructor(pos: Vector, stage: Stage) {
     const scale = 6;
@@ -60,19 +65,10 @@ export default class Person extends Sprite implements Bleedable {
 
     this.afraid = false;
     this.fearTimer = 0;
-    this.health = MAX_HEALTH;
     this.bloods = [];
     this.bleeding = false;
-    this.dead = false;
     this.lastBleedAt = 0;
   }
-  lastBleedAt: number;
-  bleeding: boolean;
-  dead: boolean;
-  bloods: blood[];
-  maxBleedBloods = 20;
-  maxDeathBloods = 50;
-  bloodTimeDelta = 5;
 
   bleed() {
     this.bleeding = true;
@@ -119,15 +115,20 @@ export default class Person extends Sprite implements Bleedable {
       .sub(this.pos)
       .mult(-1)
       .setMag(SCARE_FORCE_MULTIPLIER);
-    // steering.mult(SCARE_FORCE_MULTIPLIER);
     this.acc.add(steering);
     this.fearTimer = Math.max(scareAmount, this.fearTimer);
     this.afraid = true;
   }
 
-  damage(amount: number) {
+  damage(amount: number, t: number) {
+    if (t < this.lastDamagedAt + this.damageProtectionTimeDelta) return;
     this.health = Math.max(0, this.health - amount);
-    this.bleed();
+
+    for (let i = 0; i < Math.floor(amount); i++) {
+      this.bloods.push(bloodSystem.regenBlood(this));
+    }
+
+    this.lastDamagedAt = t;
   }
 
   updateFear() {
@@ -180,7 +181,7 @@ export default class Person extends Sprite implements Bleedable {
 
   healthBarWidth(): number {
     return (
-      (MAX_HEALTH_BAR_WIDTH * this.health) / MAX_HEALTH -
+      (MAX_HEALTH_BAR_WIDTH * this.health) / Sprite.MAX_HEALTH -
       HEALTH_BAR_INSIDE_OFFSET * 2
     );
   }

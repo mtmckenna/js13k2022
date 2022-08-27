@@ -43,7 +43,7 @@ const rallyPoints: RallyPoint[] = [
 ];
 
 const bloodSystem = BloodSystem.getInstance();
-const people: Person[] = [];
+let people: Person[] = [];
 const personFlock = new PersonFlock(people);
 
 const ui = new Ui();
@@ -110,11 +110,17 @@ function tick(t: number) {
     }
   }
 
-  people.forEach((person) => {
+  const alivePeople = [];
+  for (let i = 0; i < people.length; i++) {
+    const person = people[i];
     person.flock(people);
     person.update(t);
-    if (!person.dead) person.draw();
-  });
+    if (!person.dead) {
+      alivePeople.push(person);
+      person.draw();
+    }
+  }
+  people = alivePeople;
 
   gulls.forEach((gull) => {
     gull.flock(gulls, flockCenter);
@@ -122,18 +128,20 @@ function tick(t: number) {
     gull.draw();
   });
 
+  personFlock.update(t);
+  gullFlock.update(t);
+
   const personGullFlockDistance = dist(personFlock.center, gullFlock.center);
   // console.log(personFlock.center, gullFlock.center);
   if (
     gullFlock.modeState instanceof AttackState &&
     personGullFlockDistance <= personFlock.fearDistance
   ) {
-    console.log("flip");
     personFlock.flipOut(gullFlock.center);
     gullFlock.sprites.forEach((gull: Gull) => {
       personFlock.sprites.forEach((person: Person) => {
         if (overlaps(gull, person)) {
-          person.damage(1);
+          person.damage(1, t);
         }
       });
     });
