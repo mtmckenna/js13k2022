@@ -39,8 +39,6 @@ const rallyPoints: RallyPoint[] = [
   new RallyPoint(new Vector(width / 4, height / 2, 0)),
 ];
 
-rallyPoints[0].bleed();
-
 const bloodSystem = BloodSystem.getInstance();
 const people: Person[] = [];
 const personFlock = new PersonFlock(people);
@@ -97,6 +95,7 @@ function tick(t: number) {
   const flockCenter = rallyPoints[0].pos;
 
   rallyPoints.forEach((rallyPoint) => {
+    rallyPoint.update(t);
     rallyPoint.draw();
   });
 

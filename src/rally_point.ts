@@ -1,17 +1,24 @@
 import { Vector } from "./math";
-import { Drawable } from "./interfaces";
+import { Bleedable, Drawable, Updatable } from "./interfaces";
 import Renderer from "./renderer";
 import BloodSystem from "./blood_system";
 import Blood from "./blood";
 
 const bloodSystem = BloodSystem.getInstance();
 
-export default class RallyPoint implements Drawable {
+export default class RallyPoint implements Drawable, Bleedable, Updatable {
   pos: Vector;
   size: Vector;
   renderer: Renderer;
   ctx: CanvasRenderingContext2D;
   color: string;
+  bloods: Blood[];
+  bleeding: boolean;
+  lastBleedAt: number;
+  maxBleedBloods = 20;
+  maxDeathBloods = 20;
+  bloodTimeDelta = 1;
+  dead: boolean;
 
   constructor(pos: Vector) {
     this.pos = pos;
@@ -19,13 +26,30 @@ export default class RallyPoint implements Drawable {
     this.renderer = Renderer.getInstance();
     this.ctx = this.renderer.ctx;
     this.color = "pink";
+    this.lastBleedAt = 0;
+    this.bloods = [];
+    this.dead = false;
+  }
+
+  update(t: number) {
+    if (
+      this.bleeding &&
+      this.bloods.length < this.maxBleedBloods &&
+      t > this.lastBleedAt + this.bloodTimeDelta
+    ) {
+      this.bloods.push(bloodSystem.regenBlood(this));
+      this.lastBleedAt = t;
+    }
   }
 
   bleed() {
-    const bloods: Blood[] = [];
+    this.bleeding = true;
+  }
 
-    for (let i = 0; i < 10; i++) {
-      bloods.push(bloodSystem.getBlood(this));
+  die() {
+    this.dead = true;
+    for (let i = 0; i < this.maxDeathBloods; i++) {
+      this.bloods.push(bloodSystem.regenBlood(this));
     }
   }
 
@@ -38,14 +62,6 @@ export default class RallyPoint implements Drawable {
     const offset = this.renderer.offset;
 
     this.ctx.fillStyle = this.color;
-
-    // TODO: scale size
-    // this.ctx.fillRect(
-    //   (this.pos.x - offset.x) * offset.z,
-    //   (this.pos.y - offset.y) * offset.z,
-    //   this.size.x,
-    //   this.size.y
-    // );
 
     this.ctx.fillRect(
       (this.pos.x - offset.x - this.size.x / 2) * offset.z,

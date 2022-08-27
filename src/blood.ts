@@ -4,8 +4,8 @@ import Renderer from "./renderer";
 
 const LIFE_SPAN = 200;
 const GRAVITY = 0.75;
-const START_X_VEL = 1;
-const START_Y_VEL = 6;
+const START_X_VEL = 3;
+const START_Y_VEL = 3;
 
 export default class Blood implements Drawable, IBox {
   pos: Vector;
@@ -36,7 +36,9 @@ export default class Blood implements Drawable, IBox {
   regen(box: IBox) {
     const { pos, size } = box;
     this.timeLeft = LIFE_SPAN;
-    this.pos.set(pos.x, pos.y, pos.z);
+    const x = randomFloatBetween(pos.x + 2, pos.x - 2);
+    const y = randomFloatBetween(pos.y + 2, pos.y - 2);
+    this.pos.set(x, y, pos.z);
     this.acc.set(0, GRAVITY, 0);
     this.vel.set(
       randomFloatBetween(-1 * START_X_VEL, START_X_VEL),

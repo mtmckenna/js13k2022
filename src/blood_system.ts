@@ -17,7 +17,7 @@ export default class BloodSystem {
     }
   }
 
-  getBlood(box: IBox) {
+  regenBlood(box: IBox) {
     let blood: Blood | null = null;
     for (let i = 0; i < this.bloods.length; i++) {
       blood = this.bloods[i];
