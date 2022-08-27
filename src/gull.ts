@@ -74,8 +74,8 @@ export default class Gull extends Sprite {
     this.attacking = false;
   }
 
-  update() {
-    super.update();
+  update(t) {
+    super.update(t);
     this.vel.limit(MAX_SPEED);
 
     if (this.vel.mag() < MIN_SPEED) {

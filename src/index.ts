@@ -101,8 +101,8 @@ function tick(t: number) {
 
   people.forEach((person) => {
     person.flock(people);
-    person.update();
-    person.draw();
+    person.update(t);
+    if (!person.dead) person.draw();
   });
 
   for (let i = 0; i < bloodSystem.bloods.length; i++) {
@@ -115,7 +115,7 @@ function tick(t: number) {
 
   gulls.forEach((gull) => {
     gull.flock(gulls, flockCenter);
-    gull.update();
+    gull.update(t);
     gull.draw();
   });
 

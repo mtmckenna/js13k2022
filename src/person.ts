@@ -2,11 +2,16 @@ import { Vector } from "./math";
 import Sprite, { ISpriteProps } from "./sprite";
 import Stage from "./stage";
 import Debug from "./debug";
+import { Bleedable } from "./interfaces";
+import BloodSystem from "./blood_system";
 
 import personImageDataUrl from "../assets/person2.png";
 
 import { align, cohere, separate } from "./flock";
 import SpriteAnimation from "./sprite_animation";
+import blood from "./blood";
+
+const bloodSystem = BloodSystem.getInstance();
 
 const MAX_WALKING_SPEED = 1;
 const MAX_RUNNING_SPEED = 3;
@@ -18,7 +23,7 @@ const HEALTH_BAR_BORDER = 4;
 const HEALTH_BAR_INSIDE_HEIGHT = HEALTH_BAR_OUTSIDE_HEIGHT - HEALTH_BAR_BORDER;
 const HEALTH_BAR_INSIDE_OFFSET = HEALTH_BAR_BORDER / 2;
 
-export default class Person extends Sprite {
+export default class Person extends Sprite implements Bleedable {
   public pos: Vector;
 
   afraid: boolean;
@@ -56,10 +61,37 @@ export default class Person extends Sprite {
     this.afraid = false;
     this.fearTimer = 0;
     this.health = MAX_HEALTH;
+    this.bloods = [];
+    this.bleeding = false;
+    this.dead = false;
+    this.lastBleedAt = 0;
+  }
+  lastBleedAt: number;
+  bleeding: boolean;
+  dead: boolean;
+  bloods: blood[];
+  maxBleedBloods = 20;
+  maxDeathBloods = 50;
+  bloodTimeDelta = 5;
+
+  bleed() {
+    this.bleeding = true;
+  }
+
+  stopBleeding() {
+    this.bleeding = false;
+  }
+
+  die() {
+    if (this.dead) return;
+    this.dead = true;
+    for (let i = 0; i < this.maxDeathBloods; i++) {
+      this.bloods.push(bloodSystem.regenBlood(this));
+    }
   }
 
   flock(people: Person[]) {
-    const alignment = align(this, people);
+    const alignment = align(this, people, 2);
     const cohesion = cohere(this, people);
     const separation = separate(this, people, 30);
 
@@ -95,6 +127,7 @@ export default class Person extends Sprite {
 
   damage(amount: number) {
     this.health = Math.max(0, this.health - amount);
+    this.bleed();
   }
 
   updateFear() {
@@ -104,11 +137,12 @@ export default class Person extends Sprite {
     } else {
       this.fearTimer = 0;
       this.afraid = false;
+      this.stopBleeding();
     }
   }
 
-  update() {
-    super.update();
+  update(t: number) {
+    super.update(t);
     this.updateFear();
 
     if (this.afraid) {
@@ -128,6 +162,17 @@ export default class Person extends Sprite {
     } else if (this.vel.x > 0 && !this.afraid) {
       animation = this.spriteAnimations["walk_right"];
     }
+
+    if (
+      this.bleeding &&
+      this.bloods.length < this.maxBleedBloods &&
+      t > this.lastBleedAt + this.bloodTimeDelta
+    ) {
+      this.bloods.push(bloodSystem.regenBlood(this));
+      this.lastBleedAt = t;
+    }
+
+    if (this.health <= 0) this.die();
 
     this.changeAnimation(animation);
     this.edgesMirror2();
