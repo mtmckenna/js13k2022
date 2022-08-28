@@ -3,7 +3,7 @@ import Blood from "./blood";
 
 export interface Drawable {
   pos: Vector;
-  draw: () => void;
+  draw: (t: number) => void;
 }
 
 export interface Damagable {

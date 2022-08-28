@@ -85,7 +85,8 @@ export default class Sprite implements Drawable, Updatable, Damagable {
     this.acc.set(0, 0, 0);
   }
 
-  draw() {
+  draw(t: number) {
+    if (t < this.lastDamagedAt + this.damageProtectionTimeDelta) return;
     this.renderer.draw(this);
   }
 

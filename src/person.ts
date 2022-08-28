@@ -210,8 +210,8 @@ export default class Person extends Sprite implements Bleedable, Damagable {
     );
   }
 
-  draw() {
-    super.draw();
+  draw(t: number) {
+    super.draw(t);
     this.drawHealthBar();
   }
 }

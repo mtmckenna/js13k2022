@@ -117,7 +117,7 @@ function tick(t: number) {
     person.update(t);
     if (!person.dead) {
       alivePeople.push(person);
-      person.draw();
+      person.draw(t);
     }
   }
   people = alivePeople;
@@ -125,7 +125,7 @@ function tick(t: number) {
   gulls.forEach((gull) => {
     gull.flock(gulls, flockCenter);
     gull.update(t);
-    gull.draw();
+    gull.draw(t);
   });
 
   personFlock.update(t);
