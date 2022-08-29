@@ -94,11 +94,13 @@ export function cohere(
 
   if (total > 0) {
     steering.div(total);
-    steering.sub(owner.pos);
     // steering.setMag(MAX_SPEED);
-
-    steering.limit(MAX_STEERING_FORCE);
+  } else {
+    steering.set(posToCircle.x, posToCircle.y, posToCircle.z);
   }
+
+  steering.sub(owner.pos);
+  steering.limit(MAX_STEERING_FORCE);
 
   return steering.mult(multiplier);
 }
