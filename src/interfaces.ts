@@ -1,9 +1,11 @@
 import { Vector } from "./math";
 import Blood from "./blood";
+import Renderer from "./renderer";
 
 export interface Drawable {
   pos: Vector;
   draw: (t: number) => void;
+  renderer: Renderer;
 }
 
 export interface Damagable {

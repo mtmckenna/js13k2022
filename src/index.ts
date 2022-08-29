@@ -12,6 +12,7 @@ import Ui from "./ui";
 import { AttackState } from "./gull_flock_states";
 import Camera from "./camera";
 import BloodSystem from "./blood_system";
+import SafeHouse from "./safe_house";
 
 const canvas: HTMLCanvasElement = document.getElementById(
   "game"
@@ -42,9 +43,11 @@ const rallyPoints: RallyPoint[] = [
   new RallyPoint(new Vector(width / 4, height / 2, 0), currentStage),
 ];
 
+const safeHouse = new SafeHouse(new Vector(width / 2, height / 2, 0));
+
 const bloodSystem = BloodSystem.getInstance();
 let people: Person[] = [];
-const personFlock = new PersonFlock(people);
+const personFlock = new PersonFlock(people, safeHouse);
 
 const ui = new Ui();
 ui.createUi(gullFlock);
@@ -109,6 +112,8 @@ function tick(t: number) {
       blood.draw();
     }
   }
+
+  safeHouse.draw(t);
 
   const alivePeople = [];
   for (let i = 0; i < people.length; i++) {

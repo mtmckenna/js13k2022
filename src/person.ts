@@ -27,13 +27,13 @@ export default class Person extends Sprite implements Bleedable, Damagable {
   public pos: Vector;
 
   afraid: boolean;
-  fearTimer: number;
   lastBleedAt: number;
   bleeding: boolean;
   bloods: blood[];
   maxBleedBloods = Sprite.MAX_HEALTH;
   maxDeathBloods = 50;
   bloodTimeDelta = 5;
+  thingToCohere: Vector;
 
   constructor(pos: Vector, stage: Stage) {
     const scale = 6;
@@ -64,10 +64,10 @@ export default class Person extends Sprite implements Bleedable, Damagable {
     super(props);
 
     this.afraid = false;
-    this.fearTimer = 0;
     this.bloods = [];
     this.bleeding = false;
     this.lastBleedAt = 0;
+    this.thingToCohere = null;
   }
 
   bleed() {
@@ -88,7 +88,11 @@ export default class Person extends Sprite implements Bleedable, Damagable {
 
   flock(people: Person[]) {
     const alignment = align(this, people);
-    const cohesion = cohere(this, people);
+
+    // TODO: clean up this cohereMult sloppiness
+    let cohereMult = 1;
+    if (this.thingToCohere) cohereMult = 3;
+    const cohesion = cohere(this, people, this.thingToCohere, cohereMult);
     const separation = separate(this, people, 30);
 
     const debug = Debug.getInstance();
@@ -107,7 +111,7 @@ export default class Person extends Sprite implements Bleedable, Damagable {
     }
   }
 
-  scare(scareLocation: Vector, scareAmount: number) {
+  scare(scareLocation: Vector) {
     // const steering = scareLocation.copy().sub(this.vel);
     const SCARE_FORCE_MULTIPLIER = 2;
     const steering = scareLocation
@@ -116,7 +120,6 @@ export default class Person extends Sprite implements Bleedable, Damagable {
       .mult(-1)
       .setMag(SCARE_FORCE_MULTIPLIER);
     this.acc.add(steering);
-    this.fearTimer = Math.max(scareAmount, this.fearTimer);
     this.afraid = true;
   }
 
@@ -131,20 +134,8 @@ export default class Person extends Sprite implements Bleedable, Damagable {
     this.lastDamagedAt = t;
   }
 
-  updateFear() {
-    if (this.fearTimer > 0) {
-      this.afraid = true;
-      this.fearTimer--;
-    } else {
-      this.fearTimer = 0;
-      this.afraid = false;
-      this.stopBleeding();
-    }
-  }
-
   update(t: number) {
     super.update(t);
-    this.updateFear();
 
     if (this.afraid) {
       this.vel.setMag(MAX_RUNNING_SPEED);
