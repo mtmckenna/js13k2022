@@ -18,7 +18,7 @@ export default class Gull extends Sprite {
   private attacking: boolean;
 
   constructor(pos: Vector, stage: Stage) {
-    const scale = 4;
+    const scale = 2;
     const size = new Vector(16 * scale, 16 * scale, 1);
     const originalSize = new Vector(16, 16, 1);
     const fly_right = new SpriteAnimation("fly_right", 2, 0, 8);

@@ -3,18 +3,18 @@ import { Vector } from "./math";
 import Sprite, { ISpriteProps } from "./sprite";
 import Stage from "./stage";
 
-import houseImageDataUrl from "../assets/house_bottom.png";
+import houseTopImageDataUrl from "../assets/house_top.png";
 import SpriteAnimation from "./sprite_animation";
 
-export default class SafeHouse extends Sprite implements Drawable, IBox {
+export default class SafeHouseTop extends Sprite implements Drawable, IBox {
   constructor(pos: Vector, stage: Stage) {
     const scale = 3;
     const idle = new SpriteAnimation("idle", 1, 0, 0);
 
     const props: ISpriteProps = {
-      name: "safe_house",
+      name: "safe_house_top",
       pos,
-      imageDataUrl: houseImageDataUrl,
+      imageDataUrl: houseTopImageDataUrl,
       numFrames: 2,
       originalSize: new Vector(32, 16, 1),
       size: new Vector(scale * 32, scale * 16, 1),

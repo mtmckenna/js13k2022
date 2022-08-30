@@ -43,7 +43,7 @@ export default class Person extends Sprite implements Bleedable, Damagable {
   safeHoues: SafeHouse[] = [];
 
   constructor(pos: Vector, stage: Stage) {
-    const scale = 6;
+    const scale = 3;
     const size = new Vector(8 * scale, 16 * scale, 1);
     const originalSize = new Vector(8, 16, 1);
     const walk_right = new SpriteAnimation("walk_left", 2, 4, 10);
