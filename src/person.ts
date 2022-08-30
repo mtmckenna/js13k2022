@@ -9,6 +9,7 @@ import personImageDataUrl from "../assets/person2.png";
 import { align, cohere, separate } from "./flock";
 import SpriteAnimation from "./sprite_animation";
 import blood from "./blood";
+import SafeHouse from "./safe_house";
 
 const bloodSystem = BloodSystem.getInstance();
 
@@ -18,7 +19,6 @@ const MAX_HEALTH_BAR_WIDTH = 50;
 const HEALTH_BAR_Y_OFFSET = 5;
 const HEALTH_BAR_OUTSIDE_HEIGHT = 10;
 const HEALTH_BAR_BORDER = 4;
-// const DAMAGE_BLOOD_DIVISOR = 5;
 const HEALTH_BAR_INSIDE_HEIGHT = HEALTH_BAR_OUTSIDE_HEIGHT - HEALTH_BAR_BORDER;
 const HEALTH_BAR_INSIDE_OFFSET = HEALTH_BAR_BORDER / 2;
 
@@ -27,8 +27,8 @@ const PEOPLE_CALM_COHERENCE_STRENGTH = 0.1;
 const PEOPLE_CALM_SEPARATION_STRENGTH = 0.1;
 
 const PEOPLE_PANIC_ALIGNMENT_STRENGTH = 0.05;
-const PEOPLE_PANIC_COHERENCE_STRENGTH = 1;
-const PEOPLE_PANIC_SEPARATION_STRENGTH = 1;
+const PEOPLE_PANIC_COHERENCE_STRENGTH = 6;
+const PEOPLE_PANIC_SEPARATION_STRENGTH = 0.02;
 
 export default class Person extends Sprite implements Bleedable, Damagable {
   public pos: Vector;
@@ -40,7 +40,7 @@ export default class Person extends Sprite implements Bleedable, Damagable {
   maxBleedBloods = Sprite.MAX_HEALTH;
   maxDeathBloods = 50;
   bloodTimeDelta = 5;
-  thingToCohere: Vector;
+  safeHoues: SafeHouse[] = [];
 
   constructor(pos: Vector, stage: Stage) {
     const scale = 6;
@@ -74,7 +74,6 @@ export default class Person extends Sprite implements Bleedable, Damagable {
     this.bloods = [];
     this.bleeding = false;
     this.lastBleedAt = 0;
-    this.thingToCohere = null;
   }
 
   bleed() {
@@ -96,10 +95,10 @@ export default class Person extends Sprite implements Bleedable, Damagable {
   flock(people: Person[]) {
     const alignment = align(this, people);
 
-    // TODO: clean up this cohereMult sloppiness
-    let cohereMult = 1;
-    if (this.thingToCohere) cohereMult = 3;
-    const cohesion = cohere(this, people, this.thingToCohere, cohereMult);
+    let housePos: Vector = null;
+    if (this.afraid) housePos = this.safeHoues[0].pos;
+
+    const cohesion = cohere(this, people, housePos);
     const separation = separate(this, people, 30);
 
     let alignmentMult = PEOPLE_CALM_ALIGNMENT_STRENGTH;
@@ -119,7 +118,7 @@ export default class Person extends Sprite implements Bleedable, Damagable {
 
   scare(scareLocation: Vector) {
     // const steering = scareLocation.copy().sub(this.vel);
-    const SCARE_FORCE_MULTIPLIER = 2;
+    const SCARE_FORCE_MULTIPLIER = 0.3;
     const steering = scareLocation
       .copy()
       .sub(this.pos)
