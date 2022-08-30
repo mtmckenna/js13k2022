@@ -1,5 +1,6 @@
 import GullFlock from "./gull_flock";
 import Gull from "./Gull";
+import { IState } from "./interfaces";
 
 export class AttackState implements IState<GullFlock, GULL_FLOCK_INPUTS> {
   enter(gullFock: GullFlock) {
@@ -64,16 +65,6 @@ export class CircleTargetState implements IState<GullFlock, GULL_FLOCK_INPUTS> {
 
     return state;
   }
-}
-
-// TODO: make this generic for diff types of states?
-export interface IState<BThing, BInputEnum> {
-  enter: (thing: BThing) => void;
-  exit: (thing: BThing) => void;
-  handleInput: (
-    thing: BThing,
-    inputs: BInputEnum
-  ) => IState<BThing, BInputEnum>;
 }
 
 export enum GULL_FLOCK_INPUTS {

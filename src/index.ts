@@ -3,7 +3,7 @@ import Person from "./person";
 import PersonFlock from "./person_flock";
 import GullFlock from "./gull_flock";
 import Stage from "./stage";
-import { randomFloatBetween, Vector, dist, overlaps, clamp } from "./math";
+import { randomFloatBetween, Vector, overlaps, clamp } from "./math";
 import Debug from "./debug";
 import RallyPoint from "./rally_point";
 import Input from "./input";
@@ -80,6 +80,7 @@ for (let i = 0; i < 2; i++) {
   const person = new Person(pos, currentStage);
   person.vel.x = randomFloatBetween(-5, 5);
   person.vel.y = randomFloatBetween(-0.5, 5);
+  person.safeHoues = [safeHouse];
   people.push(person);
 }
 
@@ -136,13 +137,8 @@ function tick(t: number) {
   personFlock.update(t);
   gullFlock.update(t);
 
-  const personGullFlockDistance = dist(personFlock.center, gullFlock.center);
-  // console.log(personFlock.center, gullFlock.center);
-  if (
-    gullFlock.modeState instanceof AttackState &&
-    personGullFlockDistance <= personFlock.fearDistance
-  ) {
-    personFlock.flipOut(gullFlock.center);
+  if (gullFlock.modeState instanceof AttackState) {
+    personFlock.panic(gullFlock.center);
     gullFlock.sprites.forEach((gull: Gull) => {
       personFlock.sprites.forEach((person: Person) => {
         if (overlaps(gull, person)) {
@@ -150,6 +146,8 @@ function tick(t: number) {
         }
       });
     });
+  } else {
+    personFlock.calm();
   }
 
   ui.update(gullFlock);

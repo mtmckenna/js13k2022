@@ -1,10 +1,8 @@
 import Flock from "./flock";
 import Gull from "./gull";
-import {
-  IState,
-  CircleTargetState,
-  GULL_FLOCK_INPUTS,
-} from "./gull_flock_states";
+import { CircleTargetState, GULL_FLOCK_INPUTS } from "./gull_flock_states";
+
+import { IState } from "./interfaces";
 
 export default class GullFlock extends Flock {
   fearDistance: number;
@@ -16,13 +14,10 @@ export default class GullFlock extends Flock {
   }
 
   attack() {
-    console.log("attack button");
     this.modeState.handleInput(this, GULL_FLOCK_INPUTS.ATTACK);
-    console.log("and now we are in", this.modeState);
   }
 
   circleTarget() {
-    console.log("circle button");
     this.modeState.handleInput(this, GULL_FLOCK_INPUTS.CIRCLE_TARGET);
   }
 }

@@ -2,6 +2,16 @@ import { Vector } from "./math";
 import Blood from "./blood";
 import Renderer from "./renderer";
 
+// TODO: make this generic for diff types of states?
+export interface IState<BThing, BInputEnum> {
+  enter?: (thing: BThing) => void;
+  exit?: (thing: BThing) => void;
+  handleInput: (
+    thing: BThing,
+    inputs: BInputEnum
+  ) => IState<BThing, BInputEnum>;
+}
+
 export interface Drawable {
   pos: Vector;
   draw: (t: number) => void;
