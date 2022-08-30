@@ -6,17 +6,10 @@ export default class Debug {
     cohesion: number;
     separation: number;
   };
-  peopleFlockStrengths: {
-    alignment: number;
-    cohesion: number;
-    separation: number;
-  };
+
   gullAlignmentSlider?: HTMLInputElement;
   gullCohesionSlider?: HTMLInputElement;
   gullSeparationSlider?: HTMLInputElement;
-  peopleAlignmentSlider?: HTMLInputElement;
-  peopleCohesionSlider?: HTMLInputElement;
-  peopleSeparationSlider?: HTMLInputElement;
   gullSlidersEnabled: boolean;
   gullSpritesEnabled: boolean;
   peopleSlidersEnabled: boolean;
@@ -32,11 +25,6 @@ export default class Debug {
     this.gullSlidersEnabled = false;
     this.gullSpritesEnabled = false;
     this.gridEnabled = false;
-    this.peopleFlockStrengths = {
-      alignment: 0.1,
-      cohesion: 0.1,
-      separation: 0.1,
-    };
     this.peopleSlidersEnabled = false;
     this.peopleSpritesEnabled = false;
   }
@@ -54,7 +42,7 @@ export default class Debug {
 
   createSliders() {
     this.createGullSliders();
-    this.createPeopleSliders();
+    // this.createPeopleSliders();
   }
 
   createGullSliders() {
@@ -78,27 +66,27 @@ export default class Debug {
     );
   }
 
-  createPeopleSliders() {
-    const wrapper = document.createElement("div");
-    wrapper.classList.add("ui");
-    this.peopleAlignmentSlider = createSlider(0, 2, 0, 0.1, wrapper);
-    this.peopleCohesionSlider = createSlider(0, 2, 1, 0.1, wrapper);
-    this.peopleSeparationSlider = createSlider(0, 2, 1, 0.1, wrapper);
-    const uiWrapper = document.getElementById("ui-wrapper");
-    uiWrapper.appendChild(wrapper);
+  // createPeopleSliders() {
+  //   const wrapper = document.createElement("div");
+  //   wrapper.classList.add("ui");
+  //   this.peopleAlignmentSlider = createSlider(0, 2, 0, 0.1, wrapper);
+  //   this.peopleCohesionSlider = createSlider(0, 2, 1, 0.1, wrapper);
+  //   this.peopleSeparationSlider = createSlider(0, 2, 1, 0.1, wrapper);
+  //   const uiWrapper = document.getElementById("ui-wrapper");
+  //   uiWrapper.appendChild(wrapper);
 
-    this.peopleAlignmentSlider.addEventListener("change", (event: Event) =>
-      console.log((event.target as HTMLInputElement).value)
-    );
+  //   this.peopleAlignmentSlider.addEventListener("change", (event: Event) =>
+  //     console.log((event.target as HTMLInputElement).value)
+  //   );
 
-    this.peopleCohesionSlider.addEventListener("change", (event: Event) =>
-      console.log((event.target as HTMLInputElement).value)
-    );
+  //   this.peopleCohesionSlider.addEventListener("change", (event: Event) =>
+  //     console.log((event.target as HTMLInputElement).value)
+  //   );
 
-    this.peopleSeparationSlider.addEventListener("change", (event: Event) =>
-      console.log((event.target as HTMLInputElement).value)
-    );
-  }
+  //   this.peopleSeparationSlider.addEventListener("change", (event: Event) =>
+  //     console.log((event.target as HTMLInputElement).value)
+  //   );
+  // }
 }
 
 // https://github.com/processing/p5.js/blob/v1.4.2/src/dom/dom.js#L492

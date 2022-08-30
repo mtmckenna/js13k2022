@@ -121,16 +121,21 @@ export default class Renderer {
 
     const scale = this.offset.z;
 
+    const x = Math.round((sprite.pos.x - this.offset.x) * scale);
+    const y = Math.round((h - sprite.pos.y - this.offset.y) * scale);
+    const xSize = Math.round(sprite.size.x * scale);
+    const ySize = Math.round(sprite.size.y * scale);
+
     this.ctx.drawImage(
       sprite.image,
       sprite.currentFrame * sprite.originalSize.x,
       0,
       sprite.originalSize.x,
       sprite.originalSize.y,
-      Math.round((sprite.pos.x - this.offset.x) * scale),
-      Math.round((h - sprite.pos.y - this.offset.y) * scale),
-      Math.round(sprite.size.x * scale),
-      Math.round(sprite.size.y * scale)
+      x,
+      y,
+      xSize,
+      ySize
     );
   }
 

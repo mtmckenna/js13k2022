@@ -1,7 +1,6 @@
 import { Vector } from "./math";
 import Sprite, { ISpriteProps } from "./sprite";
 import Stage from "./stage";
-import Debug from "./debug";
 import { Bleedable, Damagable } from "./interfaces";
 import BloodSystem from "./blood_system";
 
@@ -22,6 +21,14 @@ const HEALTH_BAR_BORDER = 4;
 // const DAMAGE_BLOOD_DIVISOR = 5;
 const HEALTH_BAR_INSIDE_HEIGHT = HEALTH_BAR_OUTSIDE_HEIGHT - HEALTH_BAR_BORDER;
 const HEALTH_BAR_INSIDE_OFFSET = HEALTH_BAR_BORDER / 2;
+
+const PEOPLE_CALM_ALIGNMENT_STRENGTH = 0.1;
+const PEOPLE_CALM_COHERENCE_STRENGTH = 0.1;
+const PEOPLE_CALM_SEPARATION_STRENGTH = 0.1;
+
+const PEOPLE_PANIC_ALIGNMENT_STRENGTH = 0.05;
+const PEOPLE_PANIC_COHERENCE_STRENGTH = 1;
+const PEOPLE_PANIC_SEPARATION_STRENGTH = 1;
 
 export default class Person extends Sprite implements Bleedable, Damagable {
   public pos: Vector;
@@ -95,20 +102,19 @@ export default class Person extends Sprite implements Bleedable, Damagable {
     const cohesion = cohere(this, people, this.thingToCohere, cohereMult);
     const separation = separate(this, people, 30);
 
-    const debug = Debug.getInstance();
-    if (debug.peopleSlidersEnabled) {
-      this.acc.add(
-        alignment.mult(parseFloat(debug.peopleAlignmentSlider.value))
-      );
-      this.acc.add(cohesion.mult(parseFloat(debug.peopleCohesionSlider.value)));
-      this.acc.add(
-        separation.mult(parseFloat(debug.peopleSeparationSlider.value))
-      );
-    } else {
-      this.acc.add(alignment);
-      this.acc.add(cohesion);
-      this.acc.add(separation);
+    let alignmentMult = PEOPLE_CALM_ALIGNMENT_STRENGTH;
+    let coherenceMult = PEOPLE_CALM_COHERENCE_STRENGTH;
+    let separationMult = PEOPLE_CALM_SEPARATION_STRENGTH;
+
+    if (this.afraid) {
+      alignmentMult = PEOPLE_PANIC_ALIGNMENT_STRENGTH;
+      coherenceMult = PEOPLE_PANIC_COHERENCE_STRENGTH;
+      separationMult = PEOPLE_PANIC_SEPARATION_STRENGTH;
     }
+
+    this.acc.add(alignment.mult(alignmentMult));
+    this.acc.add(cohesion.mult(coherenceMult));
+    this.acc.add(separation.mult(separationMult));
   }
 
   scare(scareLocation: Vector) {

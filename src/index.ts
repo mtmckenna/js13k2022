@@ -159,6 +159,7 @@ function tick(t: number) {
 
 function resetCameraWhenAtLimit() {
   const scale = camera.pos.z;
+
   if (camera.pos.x < 0) {
     camera.pos.set(0, camera.pos.y, camera.pos.z);
   } else if (
@@ -304,11 +305,10 @@ function resize(force = false) {
 
   canvas.width = scaledWidth;
   canvas.height = scaledHeight;
-  console.log(scaledWidth);
 
   renderer.canvasOffset.set(
-    (scaledWidth - desiredWidth) / 2,
-    (scaledHeight - desiredHeight) / 2,
+    (scaledWidth / camera.pos.z - desiredWidth) / 2,
+    (scaledHeight / camera.pos.z - desiredHeight) / 2,
     0
   );
 
