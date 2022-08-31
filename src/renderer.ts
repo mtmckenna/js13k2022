@@ -54,7 +54,7 @@ export default class Renderer {
   }
 
   drawGrid() {
-    const gridSize = 10;
+    const gridSize = 4;
     this.ctx.lineWidth = 2;
     this.ctx.font = "12px serif";
     const scale = this.offset.z;
@@ -107,10 +107,10 @@ export default class Renderer {
     // Draw box around stage
     this.ctx.strokeStyle = "yellow";
     this.ctx.strokeRect(
-      0,
-      0,
-      (this.stage.size.x - this.offset.x) * scale,
-      (this.stage.size.y - this.offset.y) * scale
+      -this.offset.x * scale,
+      -this.offset.y * scale,
+      this.stage.size.x * scale,
+      this.stage.size.y * scale
     );
   }
 

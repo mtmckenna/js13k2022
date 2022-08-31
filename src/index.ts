@@ -238,7 +238,7 @@ function moveStage() {
   } else if (input.inputHash.currPos.y >= window.innerHeight - threshold) {
     camera.moveBy(0, 1, 0);
   }
-  resetCameraWhenAtLimit();
+  // resetCameraWhenAtLimit();
 }
 
 function dragCallback(pos: Vector) {
@@ -249,7 +249,7 @@ function dragCallback(pos: Vector) {
     0
   );
   document.body.style.cursor = "grab";
-  resetCameraWhenAtLimit();
+  // resetCameraWhenAtLimit();
 }
 
 function releaseCallback(pos: Vector) {
@@ -301,7 +301,7 @@ function keydownCallback(keyCode: string) {
       break;
   }
 
-  resetCameraWhenAtLimit();
+  // resetCameraWhenAtLimit();
 }
 
 input.registerClickCallback(clickCallback);
