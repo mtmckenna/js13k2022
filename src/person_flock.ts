@@ -1,19 +1,16 @@
 import Person from "./person";
 import Flock from "./flock";
 import { Vector } from "./math";
-import SafeHouse from "./safe_house";
 import { PERSON_FLOCK_INPUTS, CalmState } from "./person_flock_states";
 import { IState } from "./interfaces";
 
 export default class PersonFlock extends Flock {
   fearDistance: number;
-  safeHouse: SafeHouse;
   modeState: IState<PersonFlock, PERSON_FLOCK_INPUTS>;
 
-  constructor(people: Person[], safeHouse: SafeHouse) {
+  constructor(people: Person[]) {
     super(people);
     this.fearDistance = 120;
-    this.safeHouse = safeHouse;
     this.modeState = new CalmState();
   }
 
@@ -22,6 +19,7 @@ export default class PersonFlock extends Flock {
     this.sprites.forEach((sprite: Person) => {
       sprite.scare(pos);
     });
+    this.sprites = [];
   }
 
   calm() {

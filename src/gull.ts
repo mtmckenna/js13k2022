@@ -16,6 +16,7 @@ export default class Gull extends Sprite {
   stage: Stage;
 
   private attacking: boolean;
+  canBump = false;
 
   constructor(pos: Vector, stage: Stage) {
     const scale = 2;

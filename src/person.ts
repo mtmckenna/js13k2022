@@ -9,12 +9,12 @@ import personImageDataUrl from "../assets/person2.png";
 import { align, cohere, separate } from "./flock";
 import SpriteAnimation from "./sprite_animation";
 import blood from "./blood";
-import SafeHouse from "./safe_house";
+import SafeHouseDoors from "./safe_house_door";
 
 const bloodSystem = BloodSystem.getInstance();
 
-const MAX_WALKING_SPEED = 1;
-const MAX_RUNNING_SPEED = 3;
+const MAX_WALKING_SPEED = 0.5;
+const MAX_RUNNING_SPEED = 1;
 const MAX_HEALTH_BAR_WIDTH = 50;
 const HEALTH_BAR_Y_OFFSET = 5;
 const HEALTH_BAR_OUTSIDE_HEIGHT = 10;
@@ -40,7 +40,8 @@ export default class Person extends Sprite implements Bleedable, Damagable {
   maxBleedBloods = Sprite.MAX_HEALTH;
   maxDeathBloods = 50;
   bloodTimeDelta = 5;
-  safeHoues: SafeHouse[] = [];
+  safeHouseDoors: SafeHouseDoors[] = [];
+  canBump = true;
 
   constructor(pos: Vector, stage: Stage) {
     const scale = 3;
@@ -96,7 +97,7 @@ export default class Person extends Sprite implements Bleedable, Damagable {
     const alignment = align(this, people);
 
     let housePos: Vector = null;
-    if (this.afraid) housePos = this.safeHoues[0].pos;
+    if (this.afraid) housePos = this.safeHouseDoors[0].pos;
 
     const cohesion = cohere(this, people, housePos);
     const separation = separate(this, people, 30);

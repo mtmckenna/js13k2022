@@ -14,6 +14,7 @@ import Camera from "./camera";
 import BloodSystem from "./blood_system";
 import SafeHouse from "./safe_house";
 import SafeHouseTop from "./safe_house_top";
+import SafeHouseDoor from "./safe_house_door";
 
 const canvas: HTMLCanvasElement = document.getElementById(
   "game"
@@ -49,14 +50,28 @@ const safeHouse = new SafeHouse(
   currentStage
 );
 
+// const safeHouseDoor = new SafeHouseDoor(new Vector(0, 0, 0), currentStage);
+
+const safeHouseDoor = new SafeHouseDoor(
+  new Vector(
+    width / 2 + safeHouse.size.x / 2,
+    height / 2 - safeHouse.size.y / 2,
+    0
+  ),
+  currentStage
+);
+
 const safeHouseTop = new SafeHouseTop(
   new Vector(width / 2, height / 2 + safeHouse.size.y, 0),
   currentStage
 );
 
+const bumpables = [safeHouse, safeHouseTop];
+currentStage.bumpables = bumpables;
+
 const bloodSystem = BloodSystem.getInstance();
 let people: Person[] = [];
-const personFlock = new PersonFlock(people, safeHouse);
+const personFlock = new PersonFlock(people);
 
 const ui = new Ui();
 ui.createUi(gullFlock);
@@ -82,14 +97,14 @@ for (let i = 0; i < 4; i++) {
 for (let i = 0; i < 2; i++) {
   const randomOffset = 50;
   const pos = new Vector(
-    width / 2 + randomFloatBetween(-1 * randomOffset, randomOffset),
-    height / 2 + randomFloatBetween(-1 * randomOffset, randomOffset),
+    width + randomFloatBetween(-1 * randomOffset, randomOffset),
+    height + randomFloatBetween(-1 * randomOffset, randomOffset),
     10
   );
   const person = new Person(pos, currentStage);
   person.vel.x = randomFloatBetween(-5, 5);
   person.vel.y = randomFloatBetween(-0.5, 5);
-  person.safeHoues = [safeHouse];
+  person.safeHouseDoors = [safeHouseDoor];
   people.push(person);
 }
 
@@ -124,6 +139,7 @@ function tick(t: number) {
   }
 
   safeHouse.draw(t);
+  safeHouseDoor.draw();
 
   const alivePeople = [];
   for (let i = 0; i < people.length; i++) {
@@ -151,7 +167,7 @@ function tick(t: number) {
   if (gullFlock.modeState instanceof AttackState) {
     personFlock.panic(gullFlock.center);
     gullFlock.sprites.forEach((gull: Gull) => {
-      personFlock.sprites.forEach((person: Person) => {
+      people.forEach((person: Person) => {
         if (overlaps(gull, person)) {
           person.damage(1, t);
         }
@@ -160,6 +176,18 @@ function tick(t: number) {
   } else {
     personFlock.calm();
   }
+
+  // for (let i = 0; i < people.length; i++) {
+  //   const person = people[i];
+  //   for (let j = 0; j < bumpables.length; j++) {
+  //     const bumpable = bumpables[j];
+
+  //     if (overlaps(person, bumpable)) {
+  //       person.vel.mult(-1);
+  //       person.pos.set(person.oldPos.x, person.oldPos.y, person.oldPos.z);
+  //     }
+  //   }
+  // }
 
   ui.update(gullFlock);
 

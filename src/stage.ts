@@ -1,9 +1,11 @@
-import Camera from "./camera";
 import { Vector } from "./math";
 import Renderer from "./renderer";
 import Box from "./box";
+import Sprite from "./sprite";
 
 export default class Stage {
+  public bumpables: Sprite[];
+
   public size: Vector;
 
   private renderer: Renderer;

@@ -7,6 +7,7 @@ import houseTopImageDataUrl from "../assets/house_top.png";
 import SpriteAnimation from "./sprite_animation";
 
 export default class SafeHouseTop extends Sprite implements Drawable, IBox {
+  canBump = false;
   constructor(pos: Vector, stage: Stage) {
     const scale = 3;
     const idle = new SpriteAnimation("idle", 1, 0, 0);

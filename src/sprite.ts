@@ -1,6 +1,6 @@
 import Stage from "./stage";
 import { Damagable, Drawable, ImageCache, Updatable } from "./interfaces";
-import { Vector, randomIntBetween } from "./math";
+import { Vector, randomIntBetween, overlaps } from "./math";
 import Renderer from "./renderer";
 import SpriteAnimation from "./sprite_animation";
 
@@ -10,6 +10,7 @@ export default class Sprite implements Drawable, Updatable, Damagable {
   public renderer: Renderer;
 
   pos: Vector;
+  oldPos: Vector;
   vel: Vector;
   acc: Vector;
   originalSize: Vector;
@@ -28,12 +29,14 @@ export default class Sprite implements Drawable, Updatable, Damagable {
   spriteAnimations: { [key: string]: SpriteAnimation };
   currentAnimation: SpriteAnimation;
   dead = false;
+  canBump = false;
 
   private _currentFrame: number;
 
   constructor(props: ISpriteProps) {
     this.name = props.name;
     this.pos = props.pos;
+    this.oldPos = props.pos;
     this.vel = new Vector(0, 0, 0);
     this.acc = new Vector(0, 0, 0);
     this.size = props.size;
@@ -74,12 +77,25 @@ export default class Sprite implements Drawable, Updatable, Damagable {
   }
 
   private cacheImage() {
+    if (!this.imageDataUrl) return;
     const image = new Image();
     image.src = this.imageDataUrl;
     Sprite.imageCache[this.name] = image;
   }
 
   update(t: number) {
+    for (let i = 0; i < this.stage.bumpables.length; i++) {
+      const bumpable = this.stage.bumpables[i];
+
+      if (this.canBump && overlaps(this, bumpable)) {
+        this.vel.mult(-1);
+        this.acc.set(0, 0, 0);
+        // this.pos.set();
+        this.pos.set(this.oldPos.x, this.oldPos.y, this.oldPos.z);
+        return;
+      }
+    }
+    this.oldPos.set(this.pos.x, this.pos.y, this.pos.z);
     this.pos.add(this.vel);
     this.vel.add(this.acc);
     this.acc.set(0, 0, 0);
@@ -128,7 +144,7 @@ export interface ISpriteProps {
   pos: Vector;
   size: Vector;
   originalSize: Vector;
-  imageDataUrl: string;
+  imageDataUrl?: string;
   numFrames: number;
   debugColor: string;
   stage: Stage;
