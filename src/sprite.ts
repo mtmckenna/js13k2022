@@ -77,7 +77,7 @@ export default class Sprite implements Drawable, Updatable, Damagable {
     return this._currentFrame;
   }
 
-  center() {
+  get center() {
     this._center.set(
       this.pos.x + this.size.x / 2,
       this.pos.y + this.size.y / 2,
@@ -98,7 +98,7 @@ export default class Sprite implements Drawable, Updatable, Damagable {
       const bumpable = this.stage.bumpables[i];
 
       if (this.canBump && overlaps(this, bumpable)) {
-        this.vel.add(this.pos).sub(bumpable.pos).normalize();
+        this.vel.add(this.pos).sub(bumpable.center).normalize();
         this.acc.set(0, 0, 0);
       }
     }
