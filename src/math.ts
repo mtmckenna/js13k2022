@@ -26,6 +26,7 @@ export class Vector {
     this.x += otherVector.x;
     this.y += otherVector.y;
     this.z += otherVector.z;
+    return this;
   }
 
   sub(otherVector: Vector) {

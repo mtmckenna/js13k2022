@@ -32,6 +32,7 @@ export default class Sprite implements Drawable, Updatable, Damagable {
   canBump = false;
 
   private _currentFrame: number;
+  private _center: Vector = new Vector(0, 0, 0);
 
   constructor(props: ISpriteProps) {
     this.name = props.name;
@@ -76,6 +77,15 @@ export default class Sprite implements Drawable, Updatable, Damagable {
     return this._currentFrame;
   }
 
+  center() {
+    this._center.set(
+      this.pos.x + this.size.x / 2,
+      this.pos.y + this.size.y / 2,
+      this.pos.z
+    );
+    return this._center;
+  }
+
   private cacheImage() {
     if (!this.imageDataUrl) return;
     const image = new Image();
@@ -88,14 +98,11 @@ export default class Sprite implements Drawable, Updatable, Damagable {
       const bumpable = this.stage.bumpables[i];
 
       if (this.canBump && overlaps(this, bumpable)) {
-        this.vel.mult(-1);
+        this.vel.add(this.pos).sub(bumpable.pos).normalize();
         this.acc.set(0, 0, 0);
-        // this.pos.set();
-        this.pos.set(this.oldPos.x, this.oldPos.y, this.oldPos.z);
-        return;
       }
     }
-    this.oldPos.set(this.pos.x, this.pos.y, this.pos.z);
+
     this.pos.add(this.vel);
     this.vel.add(this.acc);
     this.acc.set(0, 0, 0);
