@@ -3,7 +3,13 @@ import Person from "./person";
 import PersonFlock from "./person_flock";
 import GullFlock from "./gull_flock";
 import Stage from "./stage";
-import { randomFloatBetween, Vector, overlaps, clamp } from "./math";
+import {
+  randomFloatBetween,
+  randomIntBetween,
+  Vector,
+  overlaps,
+  clamp,
+} from "./math";
 import Debug from "./debug";
 import RallyPoint from "./rally_point";
 import Input from "./input";
@@ -15,6 +21,7 @@ import BloodSystem from "./blood_system";
 import SafeHouse from "./safe_house";
 import SafeHouseTop from "./safe_house_top";
 import SafeHouseDoor from "./safe_house_door";
+import Search from "./search";
 
 const canvas: HTMLCanvasElement = document.getElementById(
   "game"
@@ -191,8 +198,53 @@ function tick(t: number) {
 
   ui.update(gullFlock);
 
+  // testPathFinding();
+
   moveStage();
 }
+
+// const start = currentStage.getCell(1, 1);
+// const blocks = [
+//   currentStage.getCell(5, 1),
+//   currentStage.getCell(15, 10),
+//   currentStage.getCell(3, 9),
+//   currentStage.getCell(3, 10),
+//   currentStage.getCell(1, 11),
+// ];
+
+// blocks.forEach((block) => {
+//   block.walkable = false;
+// });
+
+// // let end = currentStage.getCell(10, 10);
+
+// function testPathFinding() {
+//   currentStage.strokeCell(start, "blue");
+
+//   const cellsToNotBeEnd = [start, ...blocks];
+
+//   let end = currentStage.getCell(start.x, start.y);
+
+//   while (cellsToNotBeEnd.includes(end)) {
+//     const endX = randomIntBetween(0, currentStage.numCellsWide - 1);
+//     const endY = randomIntBetween(0, currentStage.numCellsTall - 1);
+//     end = currentStage.getCell(endX, endY);
+//   }
+
+//   currentStage.strokeCell(end, "green");
+
+//   const search = new Search(currentStage, start, end);
+//   const path = search.search();
+
+//   for (const cell of path) {
+//     currentStage.strokeCell(cell, "yellow");
+//   }
+
+//   for (let i = 0; i < blocks.length; i++) {
+//     const block = blocks[i];
+//     currentStage.strokeCell(block, "red");
+//   }
+// }
 
 function resetCameraWhenAtLimit() {
   const scale = camera.pos.z;
@@ -331,14 +383,6 @@ function resize(force = false) {
     scaledHeight = width / aspectRatio;
     scaledWidth = width;
   }
-
-  // if (aspectRatio >= 1) {
-  //   scaledWidth = width;
-  //   scaledHeight = width / aspectRatio;
-  // } else {
-  //   scaledHeight = height;
-  //   scaledWidth = height * aspectRatio;
-  // }
 
   canvas.width = scaledWidth;
   canvas.height = scaledHeight;

@@ -24,7 +24,7 @@ export default class Debug {
     };
     this.gullSlidersEnabled = false;
     this.gullSpritesEnabled = false;
-    this.gridEnabled = true;
+    this.gridEnabled = false;
     this.peopleSlidersEnabled = false;
     this.peopleSpritesEnabled = false;
   }

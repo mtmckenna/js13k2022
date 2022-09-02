@@ -54,7 +54,7 @@ export default class Renderer {
   }
 
   drawGrid() {
-    const gridSize = 4;
+    const gridSize = 16;
     this.ctx.lineWidth = 2;
     this.ctx.font = "12px serif";
     const scale = this.offset.z;
@@ -63,7 +63,7 @@ export default class Renderer {
 
     this.ctx.strokeStyle = "red";
     // vertical
-    for (let i = 0; i < this.stage.size.x / gridSize; i += gridSize) {
+    for (let i = 0; i < this.stage.size.x / gridSize; i++) {
       this.ctx.beginPath();
 
       this.ctx.moveTo(
@@ -81,7 +81,7 @@ export default class Renderer {
 
     this.ctx.strokeStyle = "pink";
     // horizontal
-    for (let j = 0; j < this.stage.size.y / gridSize; j += gridSize) {
+    for (let j = 0; j < this.stage.size.y / gridSize; j++) {
       this.ctx.beginPath();
       this.ctx.moveTo(
         (0 - this.offset.x) * scale,

@@ -18,6 +18,13 @@ export interface Drawable {
   renderer: Renderer;
 }
 
+export interface ICell {
+  x: number;
+  y: number;
+  neighbors: ICell[];
+  walkable: boolean;
+}
+
 export interface Damagable {
   lastDamagedAt: number;
   health: number;

@@ -2,11 +2,15 @@ import { Vector } from "./math";
 import Renderer from "./renderer";
 import Box from "./box";
 import Sprite from "./sprite";
+import { ICell } from "./interfaces";
 
 export default class Stage {
   public bumpables: Sprite[];
 
   public size: Vector;
+  public cells: ICell[][] = [];
+  public numCellsTall: number;
+  public numCellsWide: number;
 
   private renderer: Renderer;
 
@@ -14,15 +18,22 @@ export default class Stage {
   private beach: Box;
   private sun: Box;
   private lot: Box;
+  private cellSize = 16;
 
   constructor(size: Vector) {
     this.size = size;
     // this.camera = camera;
     this.renderer = Renderer.getInstance();
 
+    this.numCellsWide = Math.ceil(this.size.x / this.cellSize);
+    this.numCellsTall = Math.ceil(this.size.y / this.cellSize);
+    this.createCells();
+    this.createBackground();
+  }
+
+  createBackground() {
     const width = this.size.x;
     const height = this.size.y;
-
     const skyPos: Vector = new Vector(0, 0, 0);
     const skySize: Vector = new Vector(width, 50, 0);
     this.sky = new Box(skyPos, skySize);
@@ -45,7 +56,35 @@ export default class Stage {
     this.lot = new Box(lotPos, lotSize);
   }
 
-  public draw() {
+  createCells() {
+    for (let i = 0; i < this.numCellsTall; i++) {
+      this.cells[i] = [];
+      for (let j = 0; j < this.numCellsWide; j++) {
+        const cell: ICell = {
+          x: j,
+          y: i,
+          neighbors: [],
+          walkable: true,
+        };
+        this.cells[i].push(cell);
+      }
+    }
+  }
+
+  strokeCell(cell, color) {
+    const y = (this.numCellsTall - 1) * this.cellSize;
+    const scale = this.renderer.offset.z;
+
+    this.renderer.ctx.strokeStyle = color;
+    this.renderer.ctx.strokeRect(
+      (cell.x * this.cellSize - this.renderer.offset.x) * scale,
+      (y - cell.y * this.cellSize - this.renderer.offset.y) * scale,
+      this.cellSize * scale,
+      this.cellSize * scale
+    );
+  }
+
+  draw() {
     const ctx = this.renderer.ctx;
 
     const scale = this.renderer.offset.z;
@@ -83,5 +122,34 @@ export default class Stage {
       this.lot.size.x * scale,
       this.lot.size.y * scale
     );
+  }
+
+  getCell(x, y) {
+    return this.cells[y][x];
+  }
+
+  neighbors(cell) {
+    const result = [];
+    if (cell.x > 0) {
+      const left = this.cells[cell.y][cell.x - 1];
+      result.push(left);
+    }
+
+    if (cell.x < this.numCellsWide - 1) {
+      const right = this.cells[cell.y][cell.x + 1];
+      result.push(right);
+    }
+
+    if (cell.y < this.numCellsTall - 1) {
+      const above = this.cells[cell.y + 1][cell.x];
+      result.push(above);
+    }
+
+    if (cell.y > 0) {
+      const below = this.cells[cell.y - 1][cell.x];
+      result.push(below);
+    }
+
+    return result;
   }
 }
