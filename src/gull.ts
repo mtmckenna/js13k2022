@@ -19,7 +19,7 @@ export default class Gull extends Sprite {
   canBump = false;
 
   constructor(pos: Vector, stage: Stage) {
-    const scale = 2;
+    const scale = 1;
     const size = new Vector(16 * scale, 16 * scale, 1);
     const originalSize = new Vector(16, 16, 1);
     const fly_right = new SpriteAnimation("fly_right", 2, 0, 8);

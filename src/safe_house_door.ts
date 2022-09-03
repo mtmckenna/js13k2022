@@ -6,16 +6,18 @@ import Stage from "./stage";
 
 export default class SafeHouseDoor extends Sprite implements Drawable, IBox {
   canBump = false;
+  numCellsAcross = 1;
+  numCellsDown = 2;
   constructor(pos: Vector, stage: Stage) {
-    const scale = 3;
+    const scale = 1;
     const idle = new SpriteAnimation("idle", 1, 0, 0);
 
     const props: ISpriteProps = {
       name: "safe_house_door",
       pos,
-      numFrames: 2,
-      originalSize: new Vector(8, 8, 1),
-      size: new Vector(scale * 8, scale * 8, 1),
+      numFrames: 1,
+      originalSize: new Vector(8, 16, 1),
+      size: new Vector(scale * 8, scale * 16, 1),
       debugColor: "blue",
       stage,
       spriteAnimations: {
@@ -33,12 +35,12 @@ export default class SafeHouseDoor extends Sprite implements Drawable, IBox {
 
     const { ctx } = this.renderer;
 
-    ctx.fillStyle = "blue";
+    ctx.fillStyle = "black";
 
     // Flip canvas coordinates upsideown
-    const y = (-1 * (this.pos.y - h) - offset.y - this.size.y / 2) * offset.z;
+    const y = (-1 * (this.pos.y - h) - offset.y) * offset.z;
     ctx.fillRect(
-      (this.pos.x - offset.x - this.size.x / 2) * offset.z,
+      (this.pos.x - offset.x) * offset.z,
       y,
       this.size.x * offset.z,
       this.size.y * offset.z

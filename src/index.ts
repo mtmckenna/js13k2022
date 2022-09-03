@@ -16,10 +16,13 @@ import Input from "./input";
 import Renderer from "./renderer";
 import Ui from "./ui";
 import { AttackState } from "./gull_flock_states";
+import { CalmState } from "./person_flock_states";
 import Camera from "./camera";
 import BloodSystem from "./blood_system";
 import SafeHouse from "./safe_house";
 import SafeHouseTop from "./safe_house_top";
+import SafeHouseLeft from "./safe_house_left";
+import SafeHouseRight from "./safe_house_right";
 import SafeHouseDoor from "./safe_house_door";
 import Search from "./search";
 
@@ -28,8 +31,8 @@ const canvas: HTMLCanvasElement = document.getElementById(
 ) as HTMLCanvasElement;
 const ctx: CanvasRenderingContext2D = canvas.getContext("2d");
 
-const desiredWidth = 640;
-const desiredHeight = 480;
+const desiredWidth = 320;
+const desiredHeight = 240;
 const width = desiredWidth;
 const height = desiredHeight;
 
@@ -57,20 +60,56 @@ const safeHouse = new SafeHouse(
   currentStage
 );
 
-// const safeHouseDoor = new SafeHouseDoor(new Vector(0, 0, 0), currentStage);
+const safeHouseLeft = new SafeHouseLeft(
+  new Vector(4, height / 2, 0),
+  currentStage
+);
 
 const safeHouseDoor = new SafeHouseDoor(
   new Vector(
-    width / 2 + safeHouse.size.x / 2,
-    height / 2 - safeHouse.size.y / 2,
+    safeHouseLeft.pos.x + safeHouseLeft.size.x,
+    safeHouseLeft.pos.y,
+    0
+  ),
+  currentStage
+);
+
+const safeHouseRight = new SafeHouseRight(
+  new Vector(
+    safeHouseLeft.pos.x + safeHouseLeft.size.x + safeHouseDoor.size.x,
+    safeHouseLeft.pos.y,
     0
   ),
   currentStage
 );
 
 const safeHouseTop = new SafeHouseTop(
-  new Vector(width / 2, height / 2 + safeHouse.size.y, 0),
+  new Vector(safeHouseLeft.pos.x, safeHouseLeft.pos.y, 0),
   currentStage
+);
+
+safeHouseTop.pos.set(
+  safeHouseTop.pos.x,
+  safeHouseTop.pos.y + safeHouseTop.size.y,
+  safeHouseTop.pos.z
+);
+safeHouseTop.setOverlappingCellsWalkability();
+
+// console.log("safe house left", currentStage.getCellForPos(safeHouseLeft.pos));
+
+// console.log("safe house right", currentStage.getCellForPos(safeHouseRight.pos));
+// console.log("safe house top", currentStage.getCellForPos(safeHouseTop.pos));
+
+console.log(
+  "safe house door cell:",
+  currentStage.getCellForPos(safeHouseDoor.pos),
+  currentStage.getCellForPos(safeHouseDoor.center)
+);
+
+console.log(
+  "house top pos",
+  safeHouseTop.pos,
+  currentStage.getCellForPos(safeHouseTop.pos)
 );
 
 const bumpables = [safeHouse, safeHouseTop];
@@ -125,11 +164,6 @@ function tick(t: number) {
 
   currentStage.draw();
 
-  if (debug.gridEnabled) {
-    ctx.fillStyle = "red";
-    renderer.drawGrid();
-  }
-
   const flockCenter = rallyPoints[0].pos;
 
   rallyPoints.forEach((rallyPoint) => {
@@ -145,13 +179,18 @@ function tick(t: number) {
     }
   }
 
-  safeHouse.draw(t);
+  // safeHouse.draw(t);
+
+  safeHouseLeft.draw(t);
+  safeHouseRight.draw(t);
   safeHouseDoor.draw();
 
   const alivePeople = [];
   for (let i = 0; i < people.length; i++) {
     const person = people[i];
-    person.flock(people);
+    if (personFlock instanceof CalmState) {
+      person.flock(people);
+    }
     person.update(t);
     if (!person.dead) {
       alivePeople.push(person);
@@ -198,9 +237,14 @@ function tick(t: number) {
 
   ui.update(gullFlock);
 
+  if (debug.gridEnabled) {
+    ctx.fillStyle = "red";
+    renderer.drawGrid();
+  }
+
   // testPathFinding();
 
-  moveStage();
+  // moveStage();
 }
 
 // const start = currentStage.getCell(1, 1);
@@ -233,8 +277,8 @@ function tick(t: number) {
 
 //   currentStage.strokeCell(end, "green");
 
-//   const search = new Search(currentStage, start, end);
-//   const path = search.search();
+//   const search = new Search(currentStage);
+//   const path = search.search(start, end);
 
 //   for (const cell of path) {
 //     currentStage.strokeCell(cell, "yellow");
@@ -326,29 +370,23 @@ function clickCallback(pos: Vector) {
 function keydownCallback(keyCode: string) {
   switch (keyCode) {
     case "ArrowLeft":
-      console.log("left");
       renderer.camera.moveBy(-1, 0, 0);
       break;
     case "ArrowRight":
-      console.log("right");
       renderer.camera.moveBy(1, 0, 0);
       break;
     case "ArrowUp":
-      console.log("up");
       renderer.camera.moveBy(0, -1, 0);
       break;
     case "ArrowDown":
-      console.log("down");
       renderer.camera.moveBy(0, 1, 0);
       break;
     case "-":
       renderer.camera.moveBy(0, 0, -0.1);
-      console.log("zoom out", renderer.camera.pos.z);
       resize(true);
       break;
     case "+":
       renderer.camera.moveBy(0, 0, 0.1);
-      console.log("zoom in", renderer.camera.pos.z);
       resize(true);
       break;
   }

@@ -2,53 +2,48 @@ import Stage from "./stage";
 import { ICell } from "./interfaces";
 
 export default class Search {
-  start: ICell;
-  end: ICell;
   stage: Stage;
-  frontier: ICell[];
-  cameFrom: Map<ICell, ICell>;
 
-  constructor(stage, start, end) {
-    this.start = start;
-    this.end = end;
+  constructor(stage) {
     this.stage = stage;
-    this.frontier = [];
-    this.frontier.push(start);
-
-    this.cameFrom = new Map();
-    this.cameFrom.set(start, null);
   }
 
-  search(): ICell[] {
-    let current = null;
-    while (this.frontier.length > 0) {
-      current = this.frontier.shift();
+  search(start: ICell, end: ICell): ICell[] {
+    const frontier: ICell[] = [];
+    const cameFrom: Map<ICell, ICell> = new Map();
+    frontier.push(start);
+    cameFrom.set(start, null);
 
-      if (current === this.end) break;
+    let current = null;
+    while (frontier.length > 0) {
+      current = frontier.shift();
+
+      if (current === end) break;
 
       const neighbors = this.stage.neighbors(current);
       for (let i = 0; i < neighbors.length; i++) {
         const neighbor = neighbors[i];
         if (!neighbor.walkable) continue;
-        if (!this.cameFrom.has(neighbor)) {
-          this.cameFrom.set(neighbor, current);
-          this.frontier.push(neighbor);
+        if (!cameFrom.has(neighbor)) {
+          cameFrom.set(neighbor, current);
+          frontier.push(neighbor);
         }
       }
     }
 
     const path = [];
-    current = this.end;
+    current = end;
 
     let i = 0;
 
-    while (current !== this.start && i < 30) {
+    while (current !== start && i < 100) {
       path.push(current);
-      current = this.cameFrom.get(current);
+      current = cameFrom.get(current);
       i++;
     }
     path.reverse();
     path.pop();
+    path.shift();
 
     return path;
   }

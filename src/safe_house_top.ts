@@ -8,15 +8,16 @@ import SpriteAnimation from "./sprite_animation";
 
 export default class SafeHouseTop extends Sprite implements Drawable, IBox {
   canBump = false;
+
   constructor(pos: Vector, stage: Stage) {
-    const scale = 3;
+    const scale = 1;
     const idle = new SpriteAnimation("idle", 1, 0, 0);
 
     const props: ISpriteProps = {
       name: "safe_house_top",
       pos,
       imageDataUrl: houseTopImageDataUrl,
-      numFrames: 2,
+      numFrames: 1,
       originalSize: new Vector(32, 16, 1),
       size: new Vector(scale * 32, scale * 16, 1),
       debugColor: "blue",
@@ -28,5 +29,7 @@ export default class SafeHouseTop extends Sprite implements Drawable, IBox {
     };
 
     super(props);
+
+    this.setOverlappingCellsWalkability();
   }
 }

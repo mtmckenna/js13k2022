@@ -1,15 +1,14 @@
 import { Vector } from "./math";
 import Sprite, { ISpriteProps } from "./sprite";
 import Stage from "./stage";
-import { Bleedable, Damagable } from "./interfaces";
+import { Bleedable, Damagable, ICell } from "./interfaces";
 import BloodSystem from "./blood_system";
-
 import personImageDataUrl from "../assets/person2.png";
-
 import { align, cohere, separate } from "./flock";
 import SpriteAnimation from "./sprite_animation";
 import blood from "./blood";
 import SafeHouseDoors from "./safe_house_door";
+import Search from "./search";
 
 const bloodSystem = BloodSystem.getInstance();
 
@@ -42,9 +41,11 @@ export default class Person extends Sprite implements Bleedable, Damagable {
   bloodTimeDelta = 5;
   safeHouseDoors: SafeHouseDoors[] = [];
   canBump = true;
+  search: Search;
+  path: ICell[] = [];
 
   constructor(pos: Vector, stage: Stage) {
-    const scale = 3;
+    const scale = 1;
     const size = new Vector(8 * scale, 16 * scale, 1);
     const originalSize = new Vector(8, 16, 1);
     const walk_right = new SpriteAnimation("walk_left", 2, 4, 10);
@@ -75,6 +76,7 @@ export default class Person extends Sprite implements Bleedable, Damagable {
     this.bloods = [];
     this.bleeding = false;
     this.lastBleedAt = 0;
+    this.search = new Search(stage);
   }
 
   bleed() {
@@ -144,6 +146,16 @@ export default class Person extends Sprite implements Bleedable, Damagable {
     super.update(t);
 
     if (this.afraid) {
+      const start = this.stage.getCellForPos(this.center);
+      const end = this.stage.getCellForPos(this.safeHouseDoors[0].pos);
+      const path = this.search.search(start, end);
+      this.path = path;
+      const nextCell = path.shift();
+
+      this.vel
+        .set(this.pos.x, this.pos.y, 0)
+        .sub(this.stage.posForCell(nextCell))
+        .mult(-1);
       this.vel.setMag(MAX_RUNNING_SPEED);
     } else {
       this.vel.setMag(MAX_WALKING_SPEED);
@@ -210,5 +222,9 @@ export default class Person extends Sprite implements Bleedable, Damagable {
   draw(t: number) {
     super.draw(t);
     this.drawHealthBar();
+
+    for (const cell of this.path) {
+      this.stage.strokeCell(cell, "yellow");
+    }
   }
 }

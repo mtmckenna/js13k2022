@@ -11,6 +11,7 @@ export default class Stage {
   public cells: ICell[][] = [];
   public numCellsTall: number;
   public numCellsWide: number;
+  public cellSize = 8;
 
   private renderer: Renderer;
 
@@ -18,7 +19,8 @@ export default class Stage {
   private beach: Box;
   private sun: Box;
   private lot: Box;
-  private cellSize = 16;
+
+  private _posForCell = new Vector(0, 0, 0);
 
   constructor(size: Vector) {
     this.size = size;
@@ -126,6 +128,22 @@ export default class Stage {
 
   getCell(x, y) {
     return this.cells[y][x];
+  }
+
+  getCellForPos(pos: Vector) {
+    const x = Math.round(pos.x / this.cellSize);
+    const y = Math.round(pos.y / this.cellSize);
+
+    if (pos.y == 136) {
+      console.log("what", x, y);
+    }
+    return this.getCell(x, y);
+  }
+
+  posForCell(cell: ICell) {
+    const x = cell.x * this.cellSize;
+    const y = cell.y * this.cellSize;
+    return this._posForCell.set(x, y, 0);
   }
 
   neighbors(cell) {

@@ -54,11 +54,9 @@ export default class Renderer {
   }
 
   drawGrid() {
-    const gridSize = 16;
-    this.ctx.lineWidth = 2;
-    this.ctx.font = "12px serif";
+    const gridSize = 8;
+    this.ctx.lineWidth = 1;
     const scale = this.offset.z;
-    const fontSpacing = 50;
     const h = this.stage.size.y;
 
     this.ctx.strokeStyle = "red";
@@ -93,13 +91,26 @@ export default class Renderer {
       );
       this.ctx.stroke();
     }
+    this.ctx.font = "5px sans serif";
+    const fontSpacing = 50;
+    this.ctx.textAlign = "center";
 
-    for (let i = 0; i < this.stage.size.x; i += fontSpacing) {
-      for (let j = 0; j < this.stage.size.y; j += fontSpacing) {
+    // for (let i = 0; i < this.stage.size.x; i += fontSpacing) {
+    //   for (let j = 0; j < this.stage.size.y; j += fontSpacing) {
+    //     this.ctx.fillText(
+    //       `${i},${j}`,
+    //       (i - this.offset.x) * scale,
+    //       (h - j - this.offset.y) * scale
+    //     );
+    //   }
+    // }
+
+    for (let i = 0; i < this.stage.size.x / gridSize; i++) {
+      for (let j = 0; j < this.stage.size.y / gridSize; j++) {
         this.ctx.fillText(
           `${i},${j}`,
-          (i - this.offset.x) * scale,
-          (h - j - this.offset.y) * scale
+          (gridSize / 2 + gridSize * i - this.offset.x) * scale,
+          (h - j * gridSize - this.offset.y - gridSize / 2) * scale
         );
       }
     }

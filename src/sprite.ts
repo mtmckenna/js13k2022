@@ -1,6 +1,12 @@
 import Stage from "./stage";
-import { Damagable, Drawable, ImageCache, Updatable } from "./interfaces";
-import { Vector, randomIntBetween, overlaps } from "./math";
+import {
+  Damagable,
+  Drawable,
+  ImageCache,
+  Updatable,
+  ICell,
+} from "./interfaces";
+import { Vector, randomIntBetween, overlaps, clamp } from "./math";
 import Renderer from "./renderer";
 import SpriteAnimation from "./sprite_animation";
 
@@ -30,6 +36,9 @@ export default class Sprite implements Drawable, Updatable, Damagable {
   currentAnimation: SpriteAnimation;
   dead = false;
   canBump = false;
+  numCellsAcross = 1;
+  numCellsDown = 1;
+  unwalkable: ICell[] = [];
 
   private _currentFrame: number;
   private _center: Vector = new Vector(0, 0, 0);
@@ -80,7 +89,7 @@ export default class Sprite implements Drawable, Updatable, Damagable {
   get center() {
     this._center.set(
       this.pos.x + this.size.x / 2,
-      this.pos.y + this.size.y / 2,
+      this.pos.y - this.size.y / 2,
       this.pos.z
     );
     return this._center;
@@ -113,11 +122,56 @@ export default class Sprite implements Drawable, Updatable, Damagable {
     this.renderer.draw(this);
   }
 
+  setOverlappingCellsWalkability(walkable = false) {
+    for (let i = 0; i < this.unwalkable.length; i++) {
+      this.unwalkable[i].walkable = true;
+    }
+
+    this.unwalkable = [];
+
+    const mainCell = this.stage.getCellForPos(this.pos);
+    console.log("main", this.name, this.pos, mainCell);
+    const numCellsAcross = clamp(
+      Math.floor(this.size.x / this.stage.cellSize),
+      1,
+      this.stage.numCellsWide
+    );
+    const numCellsDown = clamp(
+      Math.floor(this.size.y / this.stage.cellSize),
+      1,
+      this.stage.numCellsWide
+    );
+
+    for (let i = 0; i < numCellsAcross; i++) {
+      const cell = this.stage.getCell(mainCell.x + i, mainCell.y);
+      cell.walkable = false;
+      this.unwalkable.push(cell);
+    }
+
+    for (let i = 1; i < numCellsDown; i++) {
+      const cell = this.stage.getCell(
+        mainCell.x,
+        mainCell.y - this.numCellsDown + i
+      );
+      cell.walkable = false;
+      this.unwalkable.push(cell);
+    }
+    console.log(
+      "unwalkable",
+      this.name,
+      this.unwalkable,
+      numCellsAcross,
+      numCellsDown
+    );
+  }
+
   edgesMirror() {
     if (this.pos.x > this.stage.size.x) this.pos.x = 0;
     if (this.pos.x < 0) this.pos.x = this.stage.size.x;
     if (this.pos.y > this.stage.size.y) this.pos.y = 0;
-    if (this.pos.y < 0) this.pos.y = this.stage.size.y;
+    if (this.pos.y < 0) {
+      this.pos.y = this.stage.size.y;
+    }
   }
 
   edgesMirror2() {
