@@ -1,5 +1,10 @@
+// https://www.redblobgames.com/pathfinding/grids/graphs.html
+// https://www.redblobgames.com/pathfinding/a-star/introduction.html
+
 import Stage from "./stage";
 import { ICell } from "./interfaces";
+
+const MAX_STEPS = 50;
 
 export default class Search {
   stage: Stage;
@@ -36,14 +41,14 @@ export default class Search {
 
     let i = 0;
 
-    while (current !== start && i < 100) {
+    while (current !== start && i < MAX_STEPS) {
       path.push(current);
       current = cameFrom.get(current);
+      if (current === undefined) break;
       i++;
     }
     path.reverse();
     path.pop();
-    path.shift();
 
     return path;
   }

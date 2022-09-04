@@ -174,7 +174,7 @@ function tick(t: number) {
     if (personFlock.modeState instanceof CalmState) personFlock.flock();
 
     person.update(t);
-    if (!person.dead) {
+    if (!person.dead && !person.safe) {
       alivePeople.push(person);
       person.draw(t);
     }

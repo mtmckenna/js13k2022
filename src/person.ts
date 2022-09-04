@@ -1,4 +1,4 @@
-import { Vector } from "./math";
+import { overlaps, Vector } from "./math";
 import Sprite, { ISpriteProps } from "./sprite";
 import Stage from "./stage";
 import { Bleedable, Damagable, ICell } from "./interfaces";
@@ -43,6 +43,7 @@ export default class Person extends Sprite implements Bleedable, Damagable {
   canBump = true;
   search: Search;
   path: ICell[] = [];
+  safe = false;
 
   constructor(pos: Vector, stage: Stage) {
     const scale = 3;
@@ -150,12 +151,23 @@ export default class Person extends Sprite implements Bleedable, Damagable {
       const end = this.stage.getCellForPos(this.safeHouseDoors[0].pos);
       const path = this.search.search(start, end);
       this.path = path;
-      const nextCell = path.shift();
-      const nextCellPos = this.stage.posForCell(nextCell);
 
-      this.vel.set(nextCellPos.x, nextCellPos.y, nextCellPos.z).sub(this.pos);
-
-      this.vel.setMag(MAX_RUNNING_SPEED);
+      // Check to see if we've arrived at the safe house door
+      if (path.length === 0) {
+        // they're in the house
+        if (overlaps(this, this.safeHouseDoors[0])) {
+          this.safe = true;
+        } else {
+          // no way for them to access house
+          console.warn("Person can't get to house");
+        }
+      } else {
+        // Otherwise runn along the path
+        const nextCell = path[0];
+        const nextCellPos = this.stage.posForCell(nextCell);
+        this.vel.set(nextCellPos.x, nextCellPos.y, nextCellPos.z).sub(this.pos);
+        this.vel.setMag(MAX_RUNNING_SPEED);
+      }
     } else {
       this.vel.setMag(MAX_WALKING_SPEED);
     }
