@@ -55,3 +55,7 @@ export interface Bleedable {
   bleed: () => void;
   die: () => void;
 }
+
+export interface Flockable {
+  flock: () => void;
+}

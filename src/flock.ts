@@ -1,5 +1,6 @@
 import { Vector, dist } from "./math";
 import Sprite from "./sprite";
+import { Flockable } from "./interfaces";
 
 export default class Flock {
   afraid: boolean;

@@ -45,7 +45,7 @@ export default class Person extends Sprite implements Bleedable, Damagable {
   path: ICell[] = [];
 
   constructor(pos: Vector, stage: Stage) {
-    const scale = 1;
+    const scale = 3;
     const size = new Vector(8 * scale, 16 * scale, 1);
     const originalSize = new Vector(8, 16, 1);
     const walk_right = new SpriteAnimation("walk_left", 2, 4, 10);
@@ -146,16 +146,15 @@ export default class Person extends Sprite implements Bleedable, Damagable {
     super.update(t);
 
     if (this.afraid) {
-      const start = this.stage.getCellForPos(this.center);
+      const start = this.stage.getCellForPos(this.pos);
       const end = this.stage.getCellForPos(this.safeHouseDoors[0].pos);
       const path = this.search.search(start, end);
       this.path = path;
       const nextCell = path.shift();
+      const nextCellPos = this.stage.posForCell(nextCell);
 
-      this.vel
-        .set(this.pos.x, this.pos.y, 0)
-        .sub(this.stage.posForCell(nextCell))
-        .mult(-1);
+      this.vel.set(nextCellPos.x, nextCellPos.y, nextCellPos.z).sub(this.pos);
+
       this.vel.setMag(MAX_RUNNING_SPEED);
     } else {
       this.vel.setMag(MAX_WALKING_SPEED);

@@ -12,7 +12,7 @@ export default class SafeHouseLeft extends Sprite implements Drawable, IBox {
   numCellsDown = 2;
 
   constructor(pos: Vector, stage: Stage) {
-    const scale = 1;
+    const scale = 3;
     const idle = new SpriteAnimation("idle", 1, 0, 0);
 
     const props: ISpriteProps = {

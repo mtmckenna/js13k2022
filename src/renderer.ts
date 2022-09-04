@@ -54,7 +54,7 @@ export default class Renderer {
   }
 
   drawGrid() {
-    const gridSize = 8;
+    const gridSize = this.stage.cellSize;
     this.ctx.lineWidth = 1;
     const scale = this.offset.z;
     const h = this.stage.size.y;
@@ -91,7 +91,7 @@ export default class Renderer {
       );
       this.ctx.stroke();
     }
-    this.ctx.font = "5px sans serif";
+    this.ctx.font = "10px sans serif";
     const fontSpacing = 50;
     this.ctx.textAlign = "center";
 
@@ -105,8 +105,21 @@ export default class Renderer {
     //   }
     // }
 
+    this.ctx.fillStyle = "purple";
+    const unwalkable = [];
     for (let i = 0; i < this.stage.size.x / gridSize; i++) {
       for (let j = 0; j < this.stage.size.y / gridSize; j++) {
+        const walkable = this.stage.cells[j][i].walkable;
+        if (!walkable) {
+          unwalkable.push(unwalkable);
+          const y = (-1 * (gridSize * j - h) - this.offset.y) * scale;
+          this.ctx.fillRect(
+            (gridSize * i - this.offset.x) * scale,
+            y,
+            gridSize * scale,
+            gridSize * scale
+          );
+        }
         this.ctx.fillText(
           `${i},${j}`,
           (gridSize / 2 + gridSize * i - this.offset.x) * scale,

@@ -7,10 +7,18 @@ import { IState } from "./interfaces";
 export default class GullFlock extends Flock {
   fearDistance: number;
   modeState: IState<GullFlock, GULL_FLOCK_INPUTS>;
+  sprites: Gull[];
 
   constructor(gulls: Gull[]) {
     super(gulls);
     this.modeState = new CircleTargetState();
+  }
+
+  flock() {
+    for (let i = 0; i < this.sprites.length; i++) {
+      const sprite = this.sprites[i];
+      sprite.flock(this.sprites);
+    }
   }
 
   attack() {

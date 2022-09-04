@@ -61,7 +61,6 @@ export class CircleTargetState implements IState<GullFlock, GULL_FLOCK_INPUTS> {
 
     // don't love setting modeState here
     gullFlock.modeState = state;
-    // console.log("HI", st);
 
     return state;
   }

@@ -31,8 +31,8 @@ const canvas: HTMLCanvasElement = document.getElementById(
 ) as HTMLCanvasElement;
 const ctx: CanvasRenderingContext2D = canvas.getContext("2d");
 
-const desiredWidth = 320;
-const desiredHeight = 240;
+const desiredWidth = 640;
+const desiredHeight = 480;
 const width = desiredWidth;
 const height = desiredHeight;
 
@@ -95,23 +95,6 @@ safeHouseTop.pos.set(
 );
 safeHouseTop.setOverlappingCellsWalkability();
 
-// console.log("safe house left", currentStage.getCellForPos(safeHouseLeft.pos));
-
-// console.log("safe house right", currentStage.getCellForPos(safeHouseRight.pos));
-// console.log("safe house top", currentStage.getCellForPos(safeHouseTop.pos));
-
-console.log(
-  "safe house door cell:",
-  currentStage.getCellForPos(safeHouseDoor.pos),
-  currentStage.getCellForPos(safeHouseDoor.center)
-);
-
-console.log(
-  "house top pos",
-  safeHouseTop.pos,
-  currentStage.getCellForPos(safeHouseTop.pos)
-);
-
 const bumpables = [safeHouse, safeHouseTop];
 currentStage.bumpables = bumpables;
 
@@ -140,7 +123,7 @@ for (let i = 0; i < 4; i++) {
   gulls.push(gull);
 }
 
-for (let i = 0; i < 2; i++) {
+for (let i = 0; i < 1; i++) {
   const randomOffset = 50;
   const pos = new Vector(
     width + randomFloatBetween(-1 * randomOffset, randomOffset),
@@ -188,9 +171,8 @@ function tick(t: number) {
   const alivePeople = [];
   for (let i = 0; i < people.length; i++) {
     const person = people[i];
-    if (personFlock instanceof CalmState) {
-      person.flock(people);
-    }
+    if (personFlock.modeState instanceof CalmState) personFlock.flock();
+
     person.update(t);
     if (!person.dead) {
       alivePeople.push(person);
