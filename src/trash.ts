@@ -3,22 +3,23 @@ import { Vector } from "./math";
 import Sprite, { ISpriteProps } from "./sprite";
 import Stage from "./stage";
 
-import houseImageDataUrl from "../assets/house_bottom.png";
+import houseImageDataUrl from "../assets/trash.png";
 import SpriteAnimation from "./sprite_animation";
 
-export default class SafeHouse extends Sprite implements Drawable, IBox {
+export default class Trash extends Sprite implements Drawable, IBox {
   canBump = true;
+
   constructor(pos: Vector, stage: Stage) {
-    const scale = 1;
+    const scale = 3;
     const idle = new SpriteAnimation("idle", 1, 0, 0);
 
     const props: ISpriteProps = {
-      name: "safe_house",
+      name: "trash",
       pos,
       imageDataUrl: houseImageDataUrl,
-      numFrames: 2,
-      originalSize: new Vector(32, 16, 1),
-      size: new Vector(scale * 32, scale * 16, 1),
+      numFrames: 1,
+      originalSize: new Vector(12, 16, 1),
+      size: new Vector(scale * 12, scale * 16, 1),
       debugColor: "blue",
       stage,
       spriteAnimations: {
@@ -28,5 +29,7 @@ export default class SafeHouse extends Sprite implements Drawable, IBox {
     };
 
     super(props);
+
+    this.setOverlappingCellsWalkability();
   }
 }

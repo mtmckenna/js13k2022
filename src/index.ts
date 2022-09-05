@@ -3,13 +3,7 @@ import Person from "./person";
 import PersonFlock from "./person_flock";
 import GullFlock from "./gull_flock";
 import Stage from "./stage";
-import {
-  randomFloatBetween,
-  randomIntBetween,
-  Vector,
-  overlaps,
-  clamp,
-} from "./math";
+import { randomFloatBetween, Vector, overlaps, clamp } from "./math";
 import Debug from "./debug";
 import RallyPoint from "./rally_point";
 import Input from "./input";
@@ -19,12 +13,11 @@ import { AttackState } from "./gull_flock_states";
 import { CalmState } from "./person_flock_states";
 import Camera from "./camera";
 import BloodSystem from "./blood_system";
-import SafeHouse from "./safe_house";
 import SafeHouseTop from "./safe_house_top";
 import SafeHouseLeft from "./safe_house_left";
 import SafeHouseRight from "./safe_house_right";
 import SafeHouseDoor from "./safe_house_door";
-import Search from "./search";
+import Trash from "./trash";
 
 const canvas: HTMLCanvasElement = document.getElementById(
   "game"
@@ -54,11 +47,6 @@ const gullFlock: GullFlock = new GullFlock(gulls);
 const rallyPoints: RallyPoint[] = [
   new RallyPoint(new Vector(width / 4, height / 2, 0), currentStage),
 ];
-
-const safeHouse = new SafeHouse(
-  new Vector(width / 2, height / 2, 0),
-  currentStage
-);
 
 const safeHouseLeft = new SafeHouseLeft(
   new Vector(4, height / 2, 0),
@@ -95,7 +83,9 @@ safeHouseTop.pos.set(
 );
 safeHouseTop.setOverlappingCellsWalkability();
 
-const bumpables = [safeHouse, safeHouseTop];
+const trash = new Trash(new Vector(300, 400, 0), currentStage);
+
+const bumpables = [safeHouseTop, safeHouseLeft, safeHouseRight];
 currentStage.bumpables = bumpables;
 
 const bloodSystem = BloodSystem.getInstance();
@@ -167,6 +157,7 @@ function tick(t: number) {
   safeHouseLeft.draw(t);
   safeHouseRight.draw(t);
   safeHouseDoor.draw();
+  safeHouseTop.draw(t);
 
   const alivePeople = [];
   for (let i = 0; i < people.length; i++) {
@@ -181,7 +172,7 @@ function tick(t: number) {
   }
   people = alivePeople;
 
-  safeHouseTop.draw(t);
+  trash.draw(t);
 
   gulls.forEach((gull) => {
     gull.flock(gulls, flockCenter);
@@ -205,18 +196,6 @@ function tick(t: number) {
     personFlock.calm();
   }
 
-  // for (let i = 0; i < people.length; i++) {
-  //   const person = people[i];
-  //   for (let j = 0; j < bumpables.length; j++) {
-  //     const bumpable = bumpables[j];
-
-  //     if (overlaps(person, bumpable)) {
-  //       person.vel.mult(-1);
-  //       person.pos.set(person.oldPos.x, person.oldPos.y, person.oldPos.z);
-  //     }
-  //   }
-  // }
-
   ui.update(gullFlock);
 
   if (debug.gridEnabled) {
@@ -228,49 +207,6 @@ function tick(t: number) {
 
   // moveStage();
 }
-
-// const start = currentStage.getCell(1, 1);
-// const blocks = [
-//   currentStage.getCell(5, 1),
-//   currentStage.getCell(15, 10),
-//   currentStage.getCell(3, 9),
-//   currentStage.getCell(3, 10),
-//   currentStage.getCell(1, 11),
-// ];
-
-// blocks.forEach((block) => {
-//   block.walkable = false;
-// });
-
-// // let end = currentStage.getCell(10, 10);
-
-// function testPathFinding() {
-//   currentStage.strokeCell(start, "blue");
-
-//   const cellsToNotBeEnd = [start, ...blocks];
-
-//   let end = currentStage.getCell(start.x, start.y);
-
-//   while (cellsToNotBeEnd.includes(end)) {
-//     const endX = randomIntBetween(0, currentStage.numCellsWide - 1);
-//     const endY = randomIntBetween(0, currentStage.numCellsTall - 1);
-//     end = currentStage.getCell(endX, endY);
-//   }
-
-//   currentStage.strokeCell(end, "green");
-
-//   const search = new Search(currentStage);
-//   const path = search.search(start, end);
-
-//   for (const cell of path) {
-//     currentStage.strokeCell(cell, "yellow");
-//   }
-
-//   for (let i = 0; i < blocks.length; i++) {
-//     const block = blocks[i];
-//     currentStage.strokeCell(block, "red");
-//   }
-// }
 
 function resetCameraWhenAtLimit() {
   const scale = camera.pos.z;

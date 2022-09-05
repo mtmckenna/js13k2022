@@ -130,6 +130,7 @@ export default class Person extends Sprite implements Bleedable, Damagable {
       .setMag(SCARE_FORCE_MULTIPLIER);
     this.acc.add(steering);
     this.afraid = true;
+    this.canBump = false;
   }
 
   damage(amount: number, t: number) {
@@ -147,8 +148,8 @@ export default class Person extends Sprite implements Bleedable, Damagable {
     super.update(t);
 
     if (this.afraid) {
-      const start = this.stage.getCellForPos(this.pos);
-      const end = this.stage.getCellForPos(this.safeHouseDoors[0].pos);
+      const start = this.stage.getCellForPos(this.center);
+      const end = this.stage.getCellForPos(this.safeHouseDoors[0].center);
       const path = this.search.search(start, end);
       this.path = path;
 
@@ -165,7 +166,9 @@ export default class Person extends Sprite implements Bleedable, Damagable {
         // Otherwise runn along the path
         const nextCell = path[0];
         const nextCellPos = this.stage.posForCell(nextCell);
-        this.vel.set(nextCellPos.x, nextCellPos.y, nextCellPos.z).sub(this.pos);
+        this.vel
+          .set(nextCellPos.x, nextCellPos.y, nextCellPos.z)
+          .sub(this.center);
         this.vel.setMag(MAX_RUNNING_SPEED);
       }
     } else {

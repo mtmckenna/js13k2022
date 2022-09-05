@@ -6,8 +6,6 @@ import Stage from "./stage";
 
 export default class SafeHouseDoor extends Sprite implements Drawable, IBox {
   canBump = false;
-  numCellsAcross = 1;
-  numCellsDown = 2;
   constructor(pos: Vector, stage: Stage) {
     const scale = 3;
     const idle = new SpriteAnimation("idle", 1, 0, 0);

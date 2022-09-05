@@ -8,8 +8,6 @@ import SpriteAnimation from "./sprite_animation";
 
 export default class SafeHouseLeft extends Sprite implements Drawable, IBox {
   canBump = false;
-  numCellsAcross = 1;
-  numCellsDown = 2;
 
   constructor(pos: Vector, stage: Stage) {
     const scale = 3;
