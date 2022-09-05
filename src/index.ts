@@ -10,7 +10,6 @@ import Input from "./input";
 import Renderer from "./renderer";
 import Ui from "./ui";
 import { AttackState } from "./gull_flock_states";
-import { CalmState } from "./person_flock_states";
 import Camera from "./camera";
 import BloodSystem from "./blood_system";
 import SafeHouseTop from "./safe_house_top";
@@ -90,7 +89,6 @@ currentStage.bumpables = bumpables;
 
 const bloodSystem = BloodSystem.getInstance();
 let people: Person[] = [];
-const personFlock = new PersonFlock(people);
 
 const ui = new Ui();
 ui.createUi(gullFlock);
@@ -126,6 +124,24 @@ for (let i = 0; i < 3; i++) {
   person.safeHouseDoors = [safeHouseDoor];
   people.push(person);
 }
+
+for (let i = 0; i < 3; i++) {
+  const randomOffset = 50;
+  const pos = new Vector(
+    100 + randomFloatBetween(-1 * randomOffset, randomOffset),
+    50 + randomFloatBetween(-1 * randomOffset, randomOffset),
+    10
+  );
+  const person = new Person(pos, currentStage);
+  person.vel.x = randomFloatBetween(-5, 5);
+  person.vel.y = randomFloatBetween(-0.5, 5);
+  person.safeHouseDoors = [safeHouseDoor];
+  people.push(person);
+}
+
+const personFlock1 = new PersonFlock(people.slice(0, 3));
+const personFlock2 = new PersonFlock(people.slice(3, 6));
+const personFlocks = [personFlock1, personFlock2];
 
 function tick(t: number) {
   requestAnimationFrame(tick);
@@ -181,12 +197,12 @@ function tick(t: number) {
     gull.draw(t);
   });
 
-  personFlock.update(t);
+  personFlock1.update(t);
   gullFlock.update(t);
 
   // Panic if under attack
   if (gullFlock.flockState instanceof AttackState) {
-    personFlock.panic();
+    personFlocks.forEach((person) => person.panic());
     gullFlock.sprites.forEach((gull: Gull) => {
       people.forEach((person: Person) => {
         if (overlaps(gull, person)) {
@@ -196,8 +212,10 @@ function tick(t: number) {
     });
   } else {
     // Otherwise people flock
-    personFlock.calm();
-    personFlock.flock();
+    personFlocks.forEach((personFlock) => {
+      personFlock.calm();
+      personFlock.flock();
+    });
   }
 
   ui.update(gullFlock);
