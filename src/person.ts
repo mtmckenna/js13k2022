@@ -10,6 +10,8 @@ import blood from "./blood";
 import SafeHouseDoors from "./safe_house_door";
 import Search from "./search";
 import { PERSON_INPUTS } from "./person_states";
+import PersonFlock from "./person_flock";
+import { PERSON_FLOCK_INPUTS } from "./person_flock_states";
 
 const bloodSystem = BloodSystem.getInstance();
 
@@ -22,9 +24,9 @@ const HEALTH_BAR_BORDER = 4;
 const HEALTH_BAR_INSIDE_HEIGHT = HEALTH_BAR_OUTSIDE_HEIGHT - HEALTH_BAR_BORDER;
 const HEALTH_BAR_INSIDE_OFFSET = HEALTH_BAR_BORDER / 2;
 
-const PEOPLE_CALM_ALIGNMENT_STRENGTH = 0.1;
-const PEOPLE_CALM_COHERENCE_STRENGTH = 0.1;
-const PEOPLE_CALM_SEPARATION_STRENGTH = 0.1;
+const PEOPLE_CALM_ALIGNMENT_STRENGTH = 0.05;
+const PEOPLE_CALM_COHERENCE_STRENGTH = 0.4;
+const PEOPLE_CALM_SEPARATION_STRENGTH = 0.7;
 
 const PEOPLE_PANIC_ALIGNMENT_STRENGTH = 0.05;
 const PEOPLE_PANIC_COHERENCE_STRENGTH = 6;
@@ -46,6 +48,7 @@ export default class Person extends Sprite implements Bleedable, Damagable {
   path: ICell[] = [];
   safe = false;
   modeState: IState<Person, PERSON_INPUTS>;
+  flockState: IState<PersonFlock, PERSON_FLOCK_INPUTS>;
 
   constructor(pos: Vector, stage: Stage) {
     const scale = 3;

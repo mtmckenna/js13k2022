@@ -160,7 +160,7 @@ function tick(t: number) {
   safeHouseTop.draw(t);
 
   const alivePeople = [];
-  if (personFlock.flockState instanceof CalmState) personFlock.flock();
+  // if (personFlock.flockState instanceof CalmState) personFlock.flock();
 
   for (let i = 0; i < people.length; i++) {
     const person = people[i];
@@ -184,6 +184,7 @@ function tick(t: number) {
   personFlock.update(t);
   gullFlock.update(t);
 
+  // Panic if under attack
   if (gullFlock.flockState instanceof AttackState) {
     personFlock.panic(gullFlock.center);
     gullFlock.sprites.forEach((gull: Gull) => {
@@ -194,7 +195,9 @@ function tick(t: number) {
       });
     });
   } else {
+    // Otherwise people flock
     personFlock.calm();
+    personFlock.flock();
   }
 
   ui.update(gullFlock);
