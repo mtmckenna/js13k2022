@@ -11,7 +11,7 @@ import SafeHouseDoors from "./safe_house_door";
 import Search from "./search";
 import { PERSON_INPUTS } from "./person_states";
 import PersonFlock from "./person_flock";
-import { PERSON_FLOCK_INPUTS } from "./person_flock_states";
+import { PanicState, PERSON_FLOCK_INPUTS } from "./person_flock_states";
 
 const bloodSystem = BloodSystem.getInstance();
 
@@ -35,7 +35,6 @@ const PEOPLE_PANIC_SEPARATION_STRENGTH = 0.02;
 export default class Person extends Sprite implements Bleedable, Damagable {
   public pos: Vector;
 
-  afraid: boolean;
   lastBleedAt: number;
   bleeding: boolean;
   bloods: blood[];
@@ -78,7 +77,6 @@ export default class Person extends Sprite implements Bleedable, Damagable {
 
     super(props);
 
-    this.afraid = false;
     this.bloods = [];
     this.bleeding = false;
     this.lastBleedAt = 0;
@@ -105,7 +103,8 @@ export default class Person extends Sprite implements Bleedable, Damagable {
     const alignment = align(this, people);
 
     let housePos: Vector = null;
-    if (this.afraid) housePos = this.safeHouseDoors[0].pos;
+    if (this.flockState instanceof PanicState)
+      housePos = this.safeHouseDoors[0].pos;
 
     const cohesion = cohere(this, people, housePos);
     const separation = separate(this, people, 30);
@@ -114,7 +113,7 @@ export default class Person extends Sprite implements Bleedable, Damagable {
     let coherenceMult = PEOPLE_CALM_COHERENCE_STRENGTH;
     let separationMult = PEOPLE_CALM_SEPARATION_STRENGTH;
 
-    if (this.afraid) {
+    if (this.flockState instanceof PanicState) {
       alignmentMult = PEOPLE_PANIC_ALIGNMENT_STRENGTH;
       coherenceMult = PEOPLE_PANIC_COHERENCE_STRENGTH;
       separationMult = PEOPLE_PANIC_SEPARATION_STRENGTH;
@@ -125,16 +124,7 @@ export default class Person extends Sprite implements Bleedable, Damagable {
     this.acc.add(separation.mult(separationMult));
   }
 
-  scare(scareLocation: Vector) {
-    // const steering = scareLocation.copy().sub(this.vel);
-    const SCARE_FORCE_MULTIPLIER = 0.3;
-    const steering = scareLocation
-      .copy()
-      .sub(this.pos)
-      .mult(-1)
-      .setMag(SCARE_FORCE_MULTIPLIER);
-    this.acc.add(steering);
-    this.afraid = true;
+  scare() {
     this.canBump = false;
   }
 
@@ -152,7 +142,7 @@ export default class Person extends Sprite implements Bleedable, Damagable {
   update(t: number) {
     super.update(t);
 
-    if (this.afraid) {
+    if (this.flockState instanceof PanicState) {
       const start = this.stage.getCellForPos(this.center);
       const end = this.stage.getCellForPos(this.safeHouseDoors[0].center);
       const path = this.search.search(start, end);
@@ -181,14 +171,15 @@ export default class Person extends Sprite implements Bleedable, Damagable {
     }
 
     let animation = null;
+    const panicked = this.flockState instanceof PanicState;
 
-    if (this.vel.x <= 0 && this.afraid) {
+    if (this.vel.x <= 0 && panicked) {
       animation = this.spriteAnimations["run_left"];
-    } else if (this.vel.x <= 0 && !this.afraid) {
+    } else if (this.vel.x <= 0 && !panicked) {
       animation = this.spriteAnimations["walk_left"];
-    } else if (this.vel.x > 0 && this.afraid) {
+    } else if (this.vel.x > 0 && panicked) {
       animation = this.spriteAnimations["run_right"];
-    } else if (this.vel.x > 0 && !this.afraid) {
+    } else if (this.vel.x > 0 && !panicked) {
       animation = this.spriteAnimations["walk_right"];
     }
 

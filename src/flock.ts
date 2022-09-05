@@ -2,7 +2,6 @@ import { Vector, dist } from "./math";
 import Sprite from "./sprite";
 
 export default class Flock {
-  afraid: boolean;
   sprites: Sprite[];
   fearDistance: number;
 

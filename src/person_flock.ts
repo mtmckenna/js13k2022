@@ -22,17 +22,12 @@ export default class PersonFlock extends Flock implements Flockable {
     }
   }
 
-  panic(pos: Vector) {
+  panic() {
     this.flockState.handleInput(this, PERSON_FLOCK_INPUTS.PANIC);
-    this.sprites.forEach((sprite: Person) => {
-      sprite.scare(pos);
-    });
+    this.sprites.forEach((sprite: Person) => sprite.scare());
   }
 
   calm() {
     this.flockState.handleInput(this, PERSON_FLOCK_INPUTS.CALM);
-    this.sprites.forEach((sprite: Person) => {
-      sprite.afraid = false;
-    });
   }
 }

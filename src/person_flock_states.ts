@@ -43,9 +43,8 @@ export class CalmState implements IState<PersonFlock, PERSON_FLOCK_INPUTS> {
 
     switch (input) {
       case PERSON_FLOCK_INPUTS.PANIC:
-        state = new CalmState();
+        state = new PanicState();
         state.enter(personFlock);
-        state = this; // eslint-disable-line
         break;
       case PERSON_FLOCK_INPUTS.CALM:
         state = this; // eslint-disable-line

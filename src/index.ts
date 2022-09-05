@@ -186,7 +186,7 @@ function tick(t: number) {
 
   // Panic if under attack
   if (gullFlock.flockState instanceof AttackState) {
-    personFlock.panic(gullFlock.center);
+    personFlock.panic();
     gullFlock.sprites.forEach((gull: Gull) => {
       people.forEach((person: Person) => {
         if (overlaps(gull, person)) {
