@@ -41,52 +41,8 @@ export default class Debug {
   }
 
   createSliders() {
-    this.createGullSliders();
     // this.createPeopleSliders();
   }
-
-  createGullSliders() {
-    const wrapper = document.createElement("div");
-    this.gullAlignmentSlider = createSlider(0, 2, 0, 0.1, wrapper);
-    this.gullCohesionSlider = createSlider(0, 2, 1, 0.1, wrapper);
-    this.gullSeparationSlider = createSlider(0, 2, 1, 0.1, wrapper);
-    const uiWrapper = document.getElementById("ui-wrapper");
-    uiWrapper.appendChild(wrapper);
-
-    this.gullAlignmentSlider.addEventListener("change", (event: Event) =>
-      console.log((event.target as HTMLInputElement).value)
-    );
-
-    this.gullCohesionSlider.addEventListener("change", (event: Event) =>
-      console.log((event.target as HTMLInputElement).value)
-    );
-
-    this.gullSeparationSlider.addEventListener("change", (event: Event) =>
-      console.log((event.target as HTMLInputElement).value)
-    );
-  }
-
-  // createPeopleSliders() {
-  //   const wrapper = document.createElement("div");
-  //   wrapper.classList.add("ui");
-  //   this.peopleAlignmentSlider = createSlider(0, 2, 0, 0.1, wrapper);
-  //   this.peopleCohesionSlider = createSlider(0, 2, 1, 0.1, wrapper);
-  //   this.peopleSeparationSlider = createSlider(0, 2, 1, 0.1, wrapper);
-  //   const uiWrapper = document.getElementById("ui-wrapper");
-  //   uiWrapper.appendChild(wrapper);
-
-  //   this.peopleAlignmentSlider.addEventListener("change", (event: Event) =>
-  //     console.log((event.target as HTMLInputElement).value)
-  //   );
-
-  //   this.peopleCohesionSlider.addEventListener("change", (event: Event) =>
-  //     console.log((event.target as HTMLInputElement).value)
-  //   );
-
-  //   this.peopleSeparationSlider.addEventListener("change", (event: Event) =>
-  //     console.log((event.target as HTMLInputElement).value)
-  //   );
-  // }
 }
 
 // https://github.com/processing/p5.js/blob/v1.4.2/src/dom/dom.js#L492
