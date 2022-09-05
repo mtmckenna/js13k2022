@@ -33,16 +33,6 @@ export default class Debug {
     if (!Debug.instance) Debug.instance = new Debug();
     return Debug.instance;
   }
-
-  public static start() {
-    const debug = Debug.getInstance();
-    if (!debug.gullSlidersEnabled) return;
-    debug.createSliders();
-  }
-
-  createSliders() {
-    // this.createPeopleSliders();
-  }
 }
 
 // https://github.com/processing/p5.js/blob/v1.4.2/src/dom/dom.js#L492
