@@ -82,7 +82,12 @@ safeHouseTop.pos.set(
 );
 safeHouseTop.setOverlappingCellsWalkability();
 
-const trash = new Trash(new Vector(300, 400, 0), currentStage);
+const trashCan1 = new Trash(new Vector(300, 400 - 0 * 8, 0), currentStage);
+const trashCan2 = new Trash(new Vector(300, 400 - 1 * 8 * 3, 0), currentStage);
+const trashCan3 = new Trash(new Vector(300, 400 - 2 * 8 * 3, 0), currentStage);
+const trashCan4 = new Trash(new Vector(300, 400 - 3 * 8 * 3, 0), currentStage);
+
+const trashCans = [trashCan1, trashCan2, trashCan3, trashCan4];
 
 const bumpables = [safeHouseTop, safeHouseLeft, safeHouseRight];
 currentStage.bumpables = bumpables;
@@ -189,7 +194,7 @@ function tick(t: number) {
   }
   people = alivePeople;
 
-  trash.draw(t);
+  trashCans.forEach((trashCan) => trashCan.draw(t));
 
   gulls.forEach((gull) => {
     gull.flock(gulls, flockCenter);
