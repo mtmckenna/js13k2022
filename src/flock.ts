@@ -1,6 +1,5 @@
 import { Vector, dist } from "./math";
 import Sprite from "./sprite";
-import { Flockable } from "./interfaces";
 
 export default class Flock {
   afraid: boolean;
@@ -12,7 +11,6 @@ export default class Flock {
   constructor(sprites: Sprite[]) {
     this._center = new Vector(0, 0, 0);
     this.sprites = sprites;
-    this.afraid = false;
   }
 
   update(t: number) {

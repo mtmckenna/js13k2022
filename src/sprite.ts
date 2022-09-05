@@ -36,6 +36,7 @@ export default class Sprite implements Drawable, Updatable, Damagable {
   currentAnimation: SpriteAnimation;
   dead = false;
   canBump = false;
+  canBreak = false;
   numCellsAcross = 1;
   numCellsDown = 1;
   unwalkable: ICell[] = [];

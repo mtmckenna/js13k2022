@@ -19,10 +19,10 @@ export default class Ui {
 
   update(gullFlock: GullFlock) {
     // console.log(gullFlock.modeState);
-    if (gullFlock.modeState instanceof AttackState) {
+    if (gullFlock.flockState instanceof AttackState) {
       select(this.attackButton);
       unselect(this.circleTargetButton);
-    } else if (gullFlock.modeState instanceof CircleTargetState) {
+    } else if (gullFlock.flockState instanceof CircleTargetState) {
       unselect(this.attackButton);
       select(this.circleTargetButton);
     }

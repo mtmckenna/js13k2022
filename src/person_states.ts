@@ -1,50 +1,50 @@
 import { IState } from "./interfaces";
-import PersonFlock from "./person_flock";
+import Person from "./person";
 
-export class PanicState implements IState<PersonFlock, PERSON_FLOCK_INPUTS> {
-  handleInput(personFlock: PersonFlock, input: PERSON_FLOCK_INPUTS) {
+export class PanicState implements IState<Person, PERSON_INPUTS> {
+  handleInput(person: Person, input: PERSON_INPUTS) {
     let state = null;
 
     switch (input) {
-      case PERSON_FLOCK_INPUTS.PANIC:
+      case PERSON_INPUTS.PANIC:
         state = this; // eslint-disable-line
         break;
-      case PERSON_FLOCK_INPUTS.CALM:
+      case PERSON_INPUTS.CALM:
         state = new CalmState();
         break;
       default:
         state = this; // eslint-disable-line
     }
 
-    personFlock.flockState = state;
+    person.modeState = state;
 
     return state;
   }
 }
 
-export class CalmState implements IState<PersonFlock, PERSON_FLOCK_INPUTS> {
-  handleInput(personFlock: PersonFlock, input: PERSON_FLOCK_INPUTS) {
+export class CalmState implements IState<Person, PERSON_INPUTS> {
+  handleInput(person: Person, input: PERSON_INPUTS) {
     let state = null;
 
     switch (input) {
-      case PERSON_FLOCK_INPUTS.PANIC:
+      case PERSON_INPUTS.PANIC:
         state = new CalmState();
         state = this; // eslint-disable-line
         break;
-      case PERSON_FLOCK_INPUTS.CALM:
+      case PERSON_INPUTS.CALM:
         state = this; // eslint-disable-line
         break;
       default:
         state = this; // eslint-disable-line
     }
 
-    personFlock.flockState = state;
+    person.modeState = state;
 
     return state;
   }
 }
 
-export enum PERSON_FLOCK_INPUTS {
+export enum PERSON_INPUTS {
   CALM = "CALM",
   PANIC = "PANIC",
 }

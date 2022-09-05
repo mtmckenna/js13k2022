@@ -1,7 +1,7 @@
 import { overlaps, Vector } from "./math";
 import Sprite, { ISpriteProps } from "./sprite";
 import Stage from "./stage";
-import { Bleedable, Damagable, ICell } from "./interfaces";
+import { Bleedable, Damagable, ICell, IState } from "./interfaces";
 import BloodSystem from "./blood_system";
 import personImageDataUrl from "../assets/person2.png";
 import { align, cohere, separate } from "./flock";
@@ -9,6 +9,7 @@ import SpriteAnimation from "./sprite_animation";
 import blood from "./blood";
 import SafeHouseDoors from "./safe_house_door";
 import Search from "./search";
+import { PERSON_INPUTS } from "./person_states";
 
 const bloodSystem = BloodSystem.getInstance();
 
@@ -44,6 +45,7 @@ export default class Person extends Sprite implements Bleedable, Damagable {
   search: Search;
   path: ICell[] = [];
   safe = false;
+  modeState: IState<Person, PERSON_INPUTS>;
 
   constructor(pos: Vector, stage: Stage) {
     const scale = 3;

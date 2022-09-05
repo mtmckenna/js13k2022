@@ -6,13 +6,13 @@ import { Flockable, IState } from "./interfaces";
 
 export default class PersonFlock extends Flock implements Flockable {
   fearDistance: number;
-  modeState: IState<PersonFlock, PERSON_FLOCK_INPUTS>;
+  flockState: IState<PersonFlock, PERSON_FLOCK_INPUTS>;
   sprites: Person[];
 
   constructor(people: Person[]) {
     super(people);
     this.fearDistance = 120;
-    this.modeState = new CalmState();
+    this.flockState = new CalmState();
   }
 
   flock() {
@@ -23,15 +23,14 @@ export default class PersonFlock extends Flock implements Flockable {
   }
 
   panic(pos: Vector) {
-    this.modeState.handleInput(this, PERSON_FLOCK_INPUTS.PANIC);
+    this.flockState.handleInput(this, PERSON_FLOCK_INPUTS.PANIC);
     this.sprites.forEach((sprite: Person) => {
       sprite.scare(pos);
     });
-    this.sprites = [];
   }
 
   calm() {
-    this.modeState.handleInput(this, PERSON_FLOCK_INPUTS.CALM);
+    this.flockState.handleInput(this, PERSON_FLOCK_INPUTS.CALM);
     this.sprites.forEach((sprite: Person) => {
       sprite.afraid = false;
     });

@@ -26,7 +26,7 @@ export class AttackState implements IState<GullFlock, GULL_FLOCK_INPUTS> {
         state = this; // eslint-disable-line
     }
 
-    gullFlock.modeState = state;
+    gullFlock.flockState = state;
 
     return state;
   }
@@ -60,7 +60,7 @@ export class CircleTargetState implements IState<GullFlock, GULL_FLOCK_INPUTS> {
     }
 
     // don't love setting modeState here
-    gullFlock.modeState = state;
+    gullFlock.flockState = state;
 
     return state;
   }

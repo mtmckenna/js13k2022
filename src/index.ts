@@ -113,7 +113,7 @@ for (let i = 0; i < 4; i++) {
   gulls.push(gull);
 }
 
-for (let i = 0; i < 1; i++) {
+for (let i = 0; i < 3; i++) {
   const randomOffset = 50;
   const pos = new Vector(
     width + randomFloatBetween(-1 * randomOffset, randomOffset),
@@ -160,9 +160,10 @@ function tick(t: number) {
   safeHouseTop.draw(t);
 
   const alivePeople = [];
+  if (personFlock.flockState instanceof CalmState) personFlock.flock();
+
   for (let i = 0; i < people.length; i++) {
     const person = people[i];
-    if (personFlock.modeState instanceof CalmState) personFlock.flock();
 
     person.update(t);
     if (!person.dead && !person.safe) {
@@ -183,7 +184,7 @@ function tick(t: number) {
   personFlock.update(t);
   gullFlock.update(t);
 
-  if (gullFlock.modeState instanceof AttackState) {
+  if (gullFlock.flockState instanceof AttackState) {
     personFlock.panic(gullFlock.center);
     gullFlock.sprites.forEach((gull: Gull) => {
       people.forEach((person: Person) => {
