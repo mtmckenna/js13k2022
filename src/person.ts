@@ -158,13 +158,22 @@ export default class Person extends Sprite implements Bleedable, Damagable {
           console.warn("Person can't get to house");
         }
       } else {
-        // Otherwise runn along the path
+        // Otherwise run along the path
         const nextCell = path[0];
-        const nextCellPos = this.stage.posForCell(nextCell);
-        this.vel
-          .set(nextCellPos.x, nextCellPos.y, nextCellPos.z)
-          .sub(this.center);
-        this.vel.setMag(MAX_RUNNING_SPEED);
+
+        // I'm sorry for this very long if statement
+        // If current cell is breakable start punching
+        if (nextCell.breakable) {
+          console.log("PUNCH");
+          this.vel.setMag(0);
+        } else {
+          // Otherwise RUN
+          const nextCellPos = this.stage.posForCell(nextCell);
+          this.vel
+            .set(nextCellPos.x, nextCellPos.y, nextCellPos.z)
+            .sub(this.center);
+          this.vel.setMag(MAX_RUNNING_SPEED);
+        }
       }
     } else {
       this.vel.setMag(MAX_WALKING_SPEED);

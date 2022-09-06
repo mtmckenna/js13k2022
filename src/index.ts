@@ -83,7 +83,7 @@ safeHouseTop.pos.set(
 safeHouseTop.setOverlappingCellsWalkability();
 
 const trashCans = [];
-for (let i = 0; i < 11; i++) {
+for (let i = 0; i < 13; i++) {
   const trashCan = new Trash(new Vector(300, 470 - i * 8 * 3, 0), currentStage);
   trashCans.push(trashCan);
 }
