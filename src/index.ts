@@ -82,12 +82,11 @@ safeHouseTop.pos.set(
 );
 safeHouseTop.setOverlappingCellsWalkability();
 
-const trashCan1 = new Trash(new Vector(300, 400 - 0 * 8, 0), currentStage);
-const trashCan2 = new Trash(new Vector(300, 400 - 1 * 8 * 3, 0), currentStage);
-const trashCan3 = new Trash(new Vector(300, 400 - 2 * 8 * 3, 0), currentStage);
-const trashCan4 = new Trash(new Vector(300, 400 - 3 * 8 * 3, 0), currentStage);
-
-const trashCans = [trashCan1, trashCan2, trashCan3, trashCan4];
+const trashCans = [];
+for (let i = 0; i < 11; i++) {
+  const trashCan = new Trash(new Vector(300, 470 - i * 8 * 3, 0), currentStage);
+  trashCans.push(trashCan);
+}
 
 const bumpables = [safeHouseTop, safeHouseLeft, safeHouseRight];
 currentStage.bumpables = bumpables;

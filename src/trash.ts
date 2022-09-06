@@ -31,6 +31,6 @@ export default class Trash extends Sprite implements Drawable, IBox {
 
     super(props);
 
-    this.setOverlappingCellsWalkability();
+    this.setOverlappingCellsWalkability(false, true);
   }
 }

@@ -37,12 +37,10 @@ export default class Search {
         const cost = costs.get(current) + neighbor.cost;
 
         if (!costs.has(neighbor) || cost < costs.get(neighbor)) {
-          if (!neighbor.walkable) continue;
-          // if (!cameFrom.has(neighbor)) {
+          if (!neighbor.walkable && !neighbor.breakable) continue;
           costs.set(neighbor, cost);
           cameFrom.set(neighbor, current);
           frontier.enqueue(neighbor, cost);
-          // }
         }
       }
     }
