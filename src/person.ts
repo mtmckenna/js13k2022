@@ -53,7 +53,7 @@ export default class Person extends Sprite implements Bleedable, Damagable {
     const scale = 3;
     const size = new Vector(8 * scale, 16 * scale, 1);
     const originalSize = new Vector(8, 16, 1);
-    const walk_right = new SpriteAnimation("walk_left", 2, 4, 10);
+    const walk_right = new SpriteAnimation("walk_right", 2, 4, 10);
     const walk_left = new SpriteAnimation("walk_left", 2, 6, 10);
     const run_right = new SpriteAnimation("run_right", 2, 0, 5);
     const run_left = new SpriteAnimation("run_left", 2, 2, 5);
