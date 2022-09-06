@@ -143,6 +143,7 @@ for (let i = 0; i < 3; i++) {
   people.push(person);
 }
 
+// const personFlock1 = new PersonFlock(people.slice(0, 3));
 const personFlock1 = new PersonFlock(people.slice(0, 3));
 const personFlock2 = new PersonFlock(people.slice(3, 6));
 const personFlocks = [personFlock1, personFlock2];

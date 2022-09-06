@@ -23,6 +23,8 @@ export interface ICell {
   y: number;
   neighbors: ICell[];
   walkable: boolean;
+  breakable: boolean;
+  cost: number;
 }
 
 export interface Damagable {

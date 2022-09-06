@@ -40,6 +40,7 @@ export default class Sprite implements Drawable, Updatable, Damagable {
   numCellsAcross = 1;
   numCellsDown = 1;
   unwalkable: ICell[] = [];
+  breakable: ICell[] = [];
 
   private _currentFrame: number;
   private _center: Vector = new Vector(0, 0, 0);
@@ -123,15 +124,11 @@ export default class Sprite implements Drawable, Updatable, Damagable {
     this.renderer.draw(this);
   }
 
-  setOverlappingCellsWalkability(walkable = false) {
-    for (let i = 0; i < this.unwalkable.length; i++) {
-      // this.unwalkable[i].walkable = true;
-    }
-
+  setOverlappingCellsWalkability(walkable = false, breakable = false) {
     this.unwalkable = [];
+    this.breakable = [];
 
     const mainCell = this.stage.getCellForPos(this.pos);
-    // console.log("main", this.name, this.pos, mainCell);
     const numCellsAcross = clamp(
       Math.floor(this.size.x / this.stage.cellSize),
       1,
@@ -146,19 +143,16 @@ export default class Sprite implements Drawable, Updatable, Damagable {
     for (let i = 0; i < numCellsAcross; i++) {
       for (let j = 0; j < numCellsDown; j++) {
         const cell = this.stage.getCell(mainCell.x + i, mainCell.y - j);
-        cell.walkable = false;
-        this.unwalkable.push(cell);
+        cell.cost = Stage.WALKABLE_COST;
+        cell.walkable = walkable;
+        cell.breakable = breakable;
+        if (!walkable) this.unwalkable.push(cell);
+        if (breakable) {
+          this.breakable.push(cell);
+          cell.cost = Stage.WALKABLE_COST + Stage.BREAKABLE_COST;
+        }
       }
     }
-
-    // console.log(this.name, this.unwalkable.length, this.unwalkable);
-    // console.log(
-    //   "unwalkable",
-    //   this.name,
-    //   this.unwalkable,
-    //   numCellsAcross,
-    //   numCellsDown
-    // );
   }
 
   edgesMirror() {

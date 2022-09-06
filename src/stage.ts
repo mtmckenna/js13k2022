@@ -4,6 +4,8 @@ import Box from "./box";
 import Sprite from "./sprite";
 import { ICell } from "./interfaces";
 
+const DEFAULT_COST = 1;
+
 export default class Stage {
   public bumpables: Sprite[];
 
@@ -20,7 +22,8 @@ export default class Stage {
   private sun: Box;
   private lot: Box;
 
-  // private _posForCell = new Vector(0, 0, 0);
+  static BREAKABLE_COST = 2;
+  static WALKABLE_COST = 1;
 
   constructor(size: Vector) {
     this.size = size;
@@ -67,6 +70,8 @@ export default class Stage {
           y: i,
           neighbors: [],
           walkable: true,
+          breakable: false,
+          cost: DEFAULT_COST,
         };
         this.cells[i].push(cell);
       }
