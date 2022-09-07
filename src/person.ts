@@ -12,6 +12,11 @@ import Search from "./search";
 import { PERSON_INPUTS } from "./person_states";
 import PersonFlock from "./person_flock";
 import { PanicState, PERSON_FLOCK_INPUTS } from "./person_flock_states";
+import {
+  FightState,
+  PeaceState,
+  PERSON_FIGHT_INPUTS,
+} from "./person_battle_states";
 
 const bloodSystem = BloodSystem.getInstance();
 
@@ -48,6 +53,7 @@ export default class Person extends Sprite implements Bleedable, Damagable {
   safe = false;
   modeState: IState<Person, PERSON_INPUTS>;
   flockState: IState<PersonFlock, PERSON_FLOCK_INPUTS>;
+  battleState: IState<Person, PERSON_FIGHT_INPUTS>;
   startOffset = 200;
 
   constructor(pos: Vector, stage: Stage) {
@@ -58,6 +64,8 @@ export default class Person extends Sprite implements Bleedable, Damagable {
     const walk_left = new SpriteAnimation("walk_left", 2, 6, 10);
     const run_right = new SpriteAnimation("run_right", 2, 0, 5);
     const run_left = new SpriteAnimation("run_left", 2, 2, 5);
+    const punch_right = new SpriteAnimation("punch_right", 2, 8, 5);
+    const punch_left = new SpriteAnimation("punch_left", 2, 10, 5);
     const props: ISpriteProps = {
       name: "person",
       pos,
@@ -72,6 +80,8 @@ export default class Person extends Sprite implements Bleedable, Damagable {
         run_left,
         walk_right,
         walk_left,
+        punch_left,
+        punch_right,
         default: walk_right,
       },
     };
@@ -82,6 +92,7 @@ export default class Person extends Sprite implements Bleedable, Damagable {
     this.bleeding = false;
     this.lastBleedAt = 0;
     this.search = new Search(stage);
+    this.battleState = new PeaceState();
   }
 
   bleed() {
@@ -143,6 +154,9 @@ export default class Person extends Sprite implements Bleedable, Damagable {
   update(t: number) {
     super.update(t);
 
+    let nextBattleState = PERSON_FIGHT_INPUTS.PEACE;
+    let nextCell = null;
+
     if (this.flockState instanceof PanicState) {
       const start = this.stage.getCellForPos(this.center);
       const end = this.stage.getCellForPos(this.safeHouseDoors[0].center);
@@ -160,15 +174,17 @@ export default class Person extends Sprite implements Bleedable, Damagable {
         }
       } else {
         // Otherwise run along the path
-        const nextCell = path[0];
+        nextCell = path[0];
 
         // I'm sorry for this very long if statement
         // If current cell is breakable start punching
         if (nextCell.breakable) {
-          console.log("PUNCH");
+          nextBattleState = PERSON_FIGHT_INPUTS.FIGHT;
+          // this.battleState.handleInput(this, PERSON_FIGHT_INPUTS.FIGHT);
           this.vel.setMag(0);
         } else {
           // Otherwise RUN
+          // this.battleState.handleInput(this, PERSON_FIGHT_INPUTS.PEACE);
           const nextCellPos = this.stage.posForCell(nextCell);
           this.vel
             .set(nextCellPos.x, nextCellPos.y, nextCellPos.z)
@@ -183,15 +199,18 @@ export default class Person extends Sprite implements Bleedable, Damagable {
     let animation = null;
     const panicked = this.flockState instanceof PanicState;
 
-    if (this.vel.x <= 0 && panicked) {
+    if (this.direction === "left" && panicked) {
       animation = this.spriteAnimations["run_left"];
-    } else if (this.vel.x <= 0 && !panicked) {
+    } else if (this.direction === "left" && !panicked) {
       animation = this.spriteAnimations["walk_left"];
-    } else if (this.vel.x > 0 && panicked) {
+    } else if (this.direction === "right" && panicked) {
       animation = this.spriteAnimations["run_right"];
-    } else if (this.vel.x > 0 && !panicked) {
+    } else if (this.direction === "right" && !panicked) {
       animation = this.spriteAnimations["walk_right"];
     }
+
+    this.changeAnimation(animation);
+    this.battleState.handleInput(this, nextBattleState);
 
     if (
       this.bleeding &&
@@ -204,7 +223,6 @@ export default class Person extends Sprite implements Bleedable, Damagable {
 
     if (this.health <= 0) this.die();
 
-    this.changeAnimation(animation);
     this.edgesMirror2();
   }
 

@@ -42,6 +42,7 @@ export default class Sprite implements Drawable, Updatable, Damagable {
   unwalkable: ICell[] = [];
   breakable: ICell[] = [];
   startOffset = 0;
+  direction: "left" | "right" = "right";
 
   private _currentFrame: number;
   private _center: Vector = new Vector(0, 0, 0);
@@ -118,6 +119,12 @@ export default class Sprite implements Drawable, Updatable, Damagable {
     this.pos.add(this.vel);
     this.vel.add(this.acc);
     this.acc.set(0, 0, 0);
+
+    if (this.vel.x > 0) {
+      this.direction = "right";
+    } else if (this.vel.x < 0) {
+      this.direction = "left";
+    }
   }
 
   draw(t: number) {

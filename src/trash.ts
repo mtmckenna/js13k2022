@@ -9,7 +9,7 @@ import SpriteAnimation from "./sprite_animation";
 export default class Trash extends Sprite implements Drawable, IBox {
   canBump = true;
   canBreak = true;
-  startOffset = 264;
+  startOffset = 296;
 
   constructor(pos: Vector, stage: Stage) {
     const scale = 3;
