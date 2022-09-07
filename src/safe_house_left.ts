@@ -3,11 +3,13 @@ import { Vector } from "./math";
 import Sprite, { ISpriteProps } from "./sprite";
 import Stage from "./stage";
 
-import houseImageDataUrl from "../assets/house_left.png";
+import houseImageDataUrl from "../assets/spritesheet.png";
+import carImageDataUrl from "../assets/spritesheet.png";
 import SpriteAnimation from "./sprite_animation";
 
 export default class SafeHouseLeft extends Sprite implements Drawable, IBox {
   canBump = false;
+  startOffset = 144;
 
   constructor(pos: Vector, stage: Stage) {
     const scale = 3;
@@ -28,6 +30,7 @@ export default class SafeHouseLeft extends Sprite implements Drawable, IBox {
       },
     };
 
+    console.log(carImageDataUrl);
     super(props);
 
     this.setOverlappingCellsWalkability();

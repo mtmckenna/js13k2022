@@ -4,7 +4,7 @@ import Stage from "./stage";
 import Debug from "./debug";
 import { align, cohere, separate } from "./flock";
 
-import gullImageDataUrl from "../assets/gull.png";
+import gullImageDataUrl from "../assets/spritesheet.png";
 import SpriteAnimation from "./sprite_animation";
 
 const MAX_SPEED = 3;
@@ -17,6 +17,7 @@ export default class Gull extends Sprite {
 
   private attacking: boolean;
   canBump = false;
+  startOffset = 16;
 
   constructor(pos: Vector, stage: Stage) {
     const scale = 2;

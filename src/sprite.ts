@@ -41,6 +41,7 @@ export default class Sprite implements Drawable, Updatable, Damagable {
   numCellsDown = 1;
   unwalkable: ICell[] = [];
   breakable: ICell[] = [];
+  startOffset = 0;
 
   private _currentFrame: number;
   private _center: Vector = new Vector(0, 0, 0);

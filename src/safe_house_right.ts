@@ -3,11 +3,12 @@ import { Vector } from "./math";
 import Sprite, { ISpriteProps } from "./sprite";
 import Stage from "./stage";
 
-import houseImageDataUrl from "../assets/house_right.png";
+import houseImageDataUrl from "../assets/spritesheet.png";
 import SpriteAnimation from "./sprite_animation";
 
 export default class SafeHouseRight extends Sprite implements Drawable, IBox {
   canBump = false;
+  startOffset = 156;
 
   constructor(pos: Vector, stage: Stage) {
     const scale = 3;

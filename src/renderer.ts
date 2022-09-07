@@ -152,7 +152,7 @@ export default class Renderer {
 
     this.ctx.drawImage(
       sprite.image,
-      sprite.currentFrame * sprite.originalSize.x,
+      sprite.startOffset + sprite.currentFrame * sprite.originalSize.x,
       0,
       sprite.originalSize.x,
       sprite.originalSize.y,

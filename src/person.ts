@@ -3,7 +3,7 @@ import Sprite, { ISpriteProps } from "./sprite";
 import Stage from "./stage";
 import { Bleedable, Damagable, ICell, IState } from "./interfaces";
 import BloodSystem from "./blood_system";
-import personImageDataUrl from "../assets/person2.png";
+import personImageDataUrl from "../assets/spritesheet.png";
 import { align, cohere, separate } from "./flock";
 import SpriteAnimation from "./sprite_animation";
 import blood from "./blood";
@@ -48,6 +48,7 @@ export default class Person extends Sprite implements Bleedable, Damagable {
   safe = false;
   modeState: IState<Person, PERSON_INPUTS>;
   flockState: IState<PersonFlock, PERSON_FLOCK_INPUTS>;
+  startOffset = 200;
 
   constructor(pos: Vector, stage: Stage) {
     const scale = 3;
