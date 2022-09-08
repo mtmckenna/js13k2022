@@ -9,6 +9,10 @@ import {
 import { Vector, randomIntBetween, overlaps, clamp } from "./math";
 import Renderer from "./renderer";
 import SpriteAnimation from "./sprite_animation";
+import Blood from "./blood";
+import BloodSystem from "./blood_system";
+
+const bloodSystem = BloodSystem.getInstance();
 
 export default class Sprite implements Drawable, Updatable, Damagable {
   public static imageCache: ImageCache = {};
@@ -22,6 +26,7 @@ export default class Sprite implements Drawable, Updatable, Damagable {
   originalSize: Vector;
   size: Vector;
   debugColor: string;
+  bloods: Blood[] = [];
   name: string;
   imageDataUrl: string;
   numFrames: number;
@@ -30,6 +35,7 @@ export default class Sprite implements Drawable, Updatable, Damagable {
   health = Sprite.MAX_HEALTH;
   lastDamagedAt = 0;
   damageProtectionTimeDelta = 50;
+  maxDeathBloods = 50;
   id: string;
   stage: Stage;
   spriteAnimations: { [key: string]: SpriteAnimation };
@@ -73,6 +79,22 @@ export default class Sprite implements Drawable, Updatable, Damagable {
     return Sprite.imageCache[this.name];
   }
 
+  get clampedNumCellsAcross() {
+    return clamp(
+      Math.floor(this.size.x / this.stage.cellSize),
+      1,
+      this.stage.numCellsWide
+    );
+  }
+
+  get clampedNumCellsDown() {
+    return clamp(
+      Math.floor(this.size.y / this.stage.cellSize),
+      1,
+      this.stage.numCellsWide
+    );
+  }
+
   changeAnimation(nextAnimation: SpriteAnimation) {
     this.currentAnimation = nextAnimation;
   }
@@ -106,15 +128,30 @@ export default class Sprite implements Drawable, Updatable, Damagable {
     Sprite.imageCache[this.name] = image;
   }
 
-  update(t: number) {
-    for (let i = 0; i < this.stage.bumpables.length; i++) {
-      const bumpable = this.stage.bumpables[i];
+  damage(amount: number, t: number) {
+    if (t < this.lastDamagedAt + this.damageProtectionTimeDelta) return;
+    this.health = Math.max(0, this.health - amount);
 
-      if (this.canBump && overlaps(this, bumpable)) {
-        this.vel.add(this.pos).sub(bumpable.center).normalize();
-        this.acc.set(0, 0, 0);
-      }
+    for (let i = 0; i < Math.floor(amount); i++) {
+      this.bloods.push(bloodSystem.regenBlood(this));
     }
+
+    this.lastDamagedAt = t;
+  }
+
+  update(t: number) {
+    // for (let i = 0; i < this.stage.bumpables.length; i++) {
+    // const bumpable = this.stage.bumpables[i];
+
+    const cell = this.stage.getCellForPos(this.center);
+    // if (this.canBump && overlaps(this, bumpable)) {
+    if (!cell.walkable) {
+      this.vel.mult(-1);
+      this.vel.add(this.center).sub(cell.sprite.center).normalize();
+      console.log("bump", cell.sprite.name, cell);
+      this.acc.set(0, 0, 0);
+    }
+    // }
 
     this.pos.add(this.vel);
     this.vel.add(this.acc);
@@ -127,6 +164,14 @@ export default class Sprite implements Drawable, Updatable, Damagable {
     }
   }
 
+  die() {
+    if (this.dead) return;
+    this.dead = true;
+    for (let i = 0; i < this.maxDeathBloods; i++) {
+      this.bloods.push(bloodSystem.regenBlood(this));
+    }
+  }
+
   draw(t: number) {
     if (t < this.lastDamagedAt + this.damageProtectionTimeDelta) return;
     this.renderer.draw(this);
@@ -135,44 +180,23 @@ export default class Sprite implements Drawable, Updatable, Damagable {
   setOverlappingCellsWalkability(walkable = false, breakable = false) {
     this.unwalkable = [];
     this.breakable = [];
-
     const mainCell = this.stage.getCellForPos(this.pos);
-    const numCellsAcross = clamp(
-      Math.floor(this.size.x / this.stage.cellSize),
-      1,
-      this.stage.numCellsWide
-    );
-    const numCellsDown = clamp(
-      Math.floor(this.size.y / this.stage.cellSize),
-      1,
-      this.stage.numCellsWide
-    );
+    this.setCell(mainCell, walkable, breakable);
+  }
 
-    for (let i = 0; i < numCellsAcross; i++) {
-      for (let j = 0; j < numCellsDown; j++) {
+  setCell(mainCell: ICell, walkable = false, breakable = false) {
+    for (let i = 0; i < this.clampedNumCellsAcross; i++) {
+      for (let j = 0; j < this.clampedNumCellsDown; j++) {
         const cell = this.stage.getCell(mainCell.x + i, mainCell.y - j);
         cell.cost = Stage.WALKABLE_COST;
         cell.walkable = walkable;
         cell.breakable = breakable;
-        if (!walkable) this.unwalkable.push(cell);
-        if (breakable) {
-          this.breakable.push(cell);
-          cell.cost = Stage.WALKABLE_COST + Stage.BREAKABLE_COST;
-        }
+        cell.sprite = this;
       }
     }
   }
 
   edgesMirror() {
-    if (this.pos.x > this.stage.size.x) this.pos.x = 0;
-    if (this.pos.x < 0) this.pos.x = this.stage.size.x;
-    if (this.pos.y > this.stage.size.y) this.pos.y = 0;
-    if (this.pos.y < 0) {
-      this.pos.y = this.stage.size.y;
-    }
-  }
-
-  edgesMirror2() {
     if (this.pos.x + this.size.x >= this.stage.size.x) {
       this.pos.x = this.stage.size.x - this.size.x - 1;
       this.acc.x = -1 * Math.abs(this.acc.x);

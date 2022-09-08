@@ -84,7 +84,10 @@ safeHouseTop.setOverlappingCellsWalkability();
 
 const trashCans = [];
 for (let i = 0; i < 13; i++) {
-  const trashCan = new Trash(new Vector(300, 470 - i * 8 * 3, 0), currentStage);
+  const trashCan = new Trash(
+    new Vector(20 * 16, 28 * 16 - i * 8 * 3, 0),
+    currentStage
+  );
   trashCans.push(trashCan);
 }
 
@@ -146,6 +149,7 @@ for (let i = 0; i < 3; i++) {
 const personFlock1 = new PersonFlock(people.slice(0, 3));
 const personFlock2 = new PersonFlock(people.slice(3, 6));
 const personFlocks = [personFlock1, personFlock2];
+// const personFlocks = [personFlock1];
 
 function tick(t: number) {
   requestAnimationFrame(tick);
@@ -178,22 +182,20 @@ function tick(t: number) {
   safeHouseRight.draw(t);
   safeHouseDoor.draw();
   safeHouseTop.draw(t);
+  trashCans.forEach((trashCan) => trashCan.draw(t));
 
   const alivePeople = [];
-  // if (personFlock.flockState instanceof CalmState) personFlock.flock();
 
   for (let i = 0; i < people.length; i++) {
     const person = people[i];
 
     person.update(t);
-    if (!person.dead && !person.safe) {
+    if (!person.safe) {
       alivePeople.push(person);
       person.draw(t);
     }
   }
   people = alivePeople;
-
-  trashCans.forEach((trashCan) => trashCan.draw(t));
 
   gulls.forEach((gull) => {
     gull.flock(gulls, flockCenter);

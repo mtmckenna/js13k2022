@@ -12,7 +12,7 @@ export default class Trash extends Sprite implements Drawable, IBox {
   startOffset = 296;
 
   constructor(pos: Vector, stage: Stage) {
-    const scale = 3;
+    const scale = 2;
     const idle = new SpriteAnimation("idle", 1, 0, 0);
 
     const props: ISpriteProps = {
@@ -20,8 +20,8 @@ export default class Trash extends Sprite implements Drawable, IBox {
       pos,
       imageDataUrl: houseImageDataUrl,
       numFrames: 1,
-      originalSize: new Vector(12, 16, 1),
-      size: new Vector(scale * 12, scale * 16, 1),
+      originalSize: new Vector(8, 8, 1),
+      size: new Vector(scale * 8, scale * 8, 1),
       debugColor: "blue",
       stage,
       spriteAnimations: {

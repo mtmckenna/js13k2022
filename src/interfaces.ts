@@ -1,6 +1,7 @@
 import { Vector } from "./math";
 import Blood from "./blood";
 import Renderer from "./renderer";
+import Sprite from "./sprite";
 
 // TODO: make this generic for diff types of states?
 export interface IState<BThing, BInputEnum> {
@@ -25,6 +26,7 @@ export interface ICell {
   walkable: boolean;
   breakable: boolean;
   cost: number;
+  sprite: Sprite;
 }
 
 export interface Damagable {

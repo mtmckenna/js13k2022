@@ -95,16 +95,6 @@ export default class Renderer {
     const fontSpacing = 50;
     this.ctx.textAlign = "center";
 
-    // for (let i = 0; i < this.stage.size.x; i += fontSpacing) {
-    //   for (let j = 0; j < this.stage.size.y; j += fontSpacing) {
-    //     this.ctx.fillText(
-    //       `${i},${j}`,
-    //       (i - this.offset.x) * scale,
-    //       (h - j - this.offset.y) * scale
-    //     );
-    //   }
-    // }
-
     this.ctx.fillStyle = "purple";
     const unwalkable = [];
     for (let i = 0; i < this.stage.size.x / gridSize; i++) {
@@ -113,12 +103,12 @@ export default class Renderer {
         if (!walkable) {
           unwalkable.push(unwalkable);
           const y = (-1 * (gridSize * j - h) - this.offset.y) * scale;
-          this.ctx.fillRect(
-            (gridSize * i - this.offset.x) * scale,
-            y,
-            gridSize * scale,
-            gridSize * scale
-          );
+          // this.ctx.fillRect(
+          //   (gridSize * i - this.offset.x) * scale,
+          //   y,
+          //   gridSize * scale,
+          //   gridSize * scale
+          // );
         }
         this.ctx.fillText(
           `${i},${j}`,
@@ -139,6 +129,7 @@ export default class Renderer {
   }
 
   private drawSprite(sprite: Sprite) {
+    if (sprite.dead) return;
     const h = sprite.stage.size.y;
 
     sprite.updateCurrentFrame(this.previousRenderNumber);
@@ -147,6 +138,13 @@ export default class Renderer {
 
     const x = Math.round((sprite.pos.x - this.offset.x) * scale);
     const y = Math.round((h - sprite.pos.y - this.offset.y) * scale);
+
+    // const x = Math.round(
+    //   (sprite.pos.x - this.offset.x + sprite.size.x) * scale
+    // );
+    // const y = Math.round(
+    //   (h - sprite.pos.y - this.offset.y + sprite.size.y) * scale
+    // );
     const xSize = Math.round(sprite.size.x * scale);
     const ySize = Math.round(sprite.size.y * scale);
 

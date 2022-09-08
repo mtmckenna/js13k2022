@@ -6,17 +6,13 @@ import BloodSystem from "./blood_system";
 import personImageDataUrl from "../assets/spritesheet.png";
 import { align, cohere, separate } from "./flock";
 import SpriteAnimation from "./sprite_animation";
-import blood from "./blood";
+import Blood from "./blood";
 import SafeHouseDoors from "./safe_house_door";
 import Search from "./search";
 import { PERSON_INPUTS } from "./person_states";
 import PersonFlock from "./person_flock";
 import { PanicState, PERSON_FLOCK_INPUTS } from "./person_flock_states";
-import {
-  FightState,
-  PeaceState,
-  PERSON_FIGHT_INPUTS,
-} from "./person_battle_states";
+import { PeaceState, PERSON_FIGHT_INPUTS } from "./person_battle_states";
 
 const bloodSystem = BloodSystem.getInstance();
 
@@ -42,7 +38,7 @@ export default class Person extends Sprite implements Bleedable, Damagable {
 
   lastBleedAt: number;
   bleeding: boolean;
-  bloods: blood[];
+  bloods: Blood[];
   maxBleedBloods = Sprite.MAX_HEALTH;
   maxDeathBloods = 50;
   bloodTimeDelta = 5;
@@ -103,14 +99,6 @@ export default class Person extends Sprite implements Bleedable, Damagable {
     this.bleeding = false;
   }
 
-  die() {
-    if (this.dead) return;
-    this.dead = true;
-    for (let i = 0; i < this.maxDeathBloods; i++) {
-      this.bloods.push(bloodSystem.regenBlood(this));
-    }
-  }
-
   flock(people: Person[]) {
     const alignment = align(this, people);
 
@@ -138,17 +126,6 @@ export default class Person extends Sprite implements Bleedable, Damagable {
 
   scare() {
     this.canBump = false;
-  }
-
-  damage(amount: number, t: number) {
-    if (t < this.lastDamagedAt + this.damageProtectionTimeDelta) return;
-    this.health = Math.max(0, this.health - amount);
-
-    for (let i = 0; i < Math.floor(amount); i++) {
-      this.bloods.push(bloodSystem.regenBlood(this));
-    }
-
-    this.lastDamagedAt = t;
   }
 
   update(t: number) {
@@ -180,11 +157,9 @@ export default class Person extends Sprite implements Bleedable, Damagable {
         // If current cell is breakable start punching
         if (nextCell.breakable) {
           nextBattleState = PERSON_FIGHT_INPUTS.FIGHT;
-          // this.battleState.handleInput(this, PERSON_FIGHT_INPUTS.FIGHT);
           this.vel.setMag(0);
         } else {
           // Otherwise RUN
-          // this.battleState.handleInput(this, PERSON_FIGHT_INPUTS.PEACE);
           const nextCellPos = this.stage.posForCell(nextCell);
           this.vel
             .set(nextCellPos.x, nextCellPos.y, nextCellPos.z)
@@ -199,6 +174,7 @@ export default class Person extends Sprite implements Bleedable, Damagable {
     let animation = null;
     const panicked = this.flockState instanceof PanicState;
 
+    // TODO: Go back and make this a hierarchical state machine
     if (this.direction === "left" && panicked) {
       animation = this.spriteAnimations["run_left"];
     } else if (this.direction === "left" && !panicked) {
@@ -212,6 +188,26 @@ export default class Person extends Sprite implements Bleedable, Damagable {
     this.changeAnimation(animation);
     this.battleState.handleInput(this, nextBattleState);
 
+    this.addBlood(t);
+    this.damageBreakables(nextCell, t);
+    if (this.health <= 0) this.die();
+
+    this.edgesMirror();
+  }
+
+  damageBreakables(cell: ICell, t: number) {
+    const breakable = cell?.breakable;
+    if (cell && breakable) {
+      cell.sprite.damage(1, t);
+      // console.log(cell.sprite.health, cell.sprite.health <= 0);
+      if (cell.sprite.health <= 0) {
+        cell.sprite.die();
+        cell.sprite.setCell(cell, true, false);
+      }
+    }
+  }
+
+  addBlood(t: number) {
     if (
       this.bleeding &&
       this.bloods.length < this.maxBleedBloods &&
@@ -220,10 +216,6 @@ export default class Person extends Sprite implements Bleedable, Damagable {
       this.bloods.push(bloodSystem.regenBlood(this));
       this.lastBleedAt = t;
     }
-
-    if (this.health <= 0) this.die();
-
-    this.edgesMirror2();
   }
 
   healthBarWidth(): number {

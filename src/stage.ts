@@ -1,4 +1,4 @@
-import { Vector } from "./math";
+import { Vector, clamp } from "./math";
 import Renderer from "./renderer";
 import Box from "./box";
 import Sprite from "./sprite";
@@ -72,6 +72,7 @@ export default class Stage {
           walkable: true,
           breakable: false,
           cost: DEFAULT_COST,
+          sprite: null,
         };
         this.cells[i].push(cell);
       }
@@ -136,8 +137,16 @@ export default class Stage {
   }
 
   getCellForPos(pos: Vector) {
-    const x = Math.round(pos.x / this.cellSize);
-    const y = Math.round(pos.y / this.cellSize);
+    const x = clamp(
+      Math.round(pos.x / this.cellSize),
+      0,
+      this.numCellsWide - 1
+    );
+    const y = clamp(
+      Math.round(pos.y / this.cellSize),
+      0,
+      this.numCellsTall - 1
+    );
 
     return this.getCell(x, y);
   }
@@ -146,7 +155,6 @@ export default class Stage {
     const x = cell.x * this.cellSize;
     const y = cell.y * this.cellSize;
     return new Vector(x, y, 0);
-    // return this._posForCell.set(x, y, 0);
   }
 
   neighbors(cell) {
