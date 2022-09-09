@@ -1,8 +1,7 @@
 import { overlaps, Vector } from "./math";
 import Sprite, { ISpriteProps } from "./sprite";
 import Stage from "./stage";
-import { Bleedable, Damagable, ICell, IState } from "./interfaces";
-import BloodSystem from "./blood_system";
+import { Damagable, ICell, IState } from "./interfaces";
 import personImageDataUrl from "../assets/spritesheet.png";
 import { align, cohere, separate } from "./flock";
 import SpriteAnimation from "./sprite_animation";
@@ -14,8 +13,6 @@ import PersonFlock from "./person_flock";
 import { PanicState, PERSON_FLOCK_INPUTS } from "./person_flock_states";
 import { PeaceState, PERSON_FIGHT_INPUTS } from "./person_battle_states";
 import SoundEffects from "./sound_effects";
-
-const bloodSystem = BloodSystem.getInstance();
 
 const MAX_WALKING_SPEED = 0.5;
 const MAX_RUNNING_SPEED = 1;
@@ -34,11 +31,9 @@ const PEOPLE_PANIC_ALIGNMENT_STRENGTH = 0.05;
 const PEOPLE_PANIC_COHERENCE_STRENGTH = 6;
 const PEOPLE_PANIC_SEPARATION_STRENGTH = 0.02;
 
-export default class Person extends Sprite implements Bleedable, Damagable {
+export default class Person extends Sprite implements Damagable {
   public pos: Vector;
 
-  lastBleedAt: number;
-  bleeding: boolean;
   bloods: Blood[];
   maxBleedBloods = Sprite.MAX_HEALTH;
   maxDeathBloods = 50;
@@ -86,18 +81,8 @@ export default class Person extends Sprite implements Bleedable, Damagable {
     super(props);
 
     this.bloods = [];
-    this.bleeding = false;
-    this.lastBleedAt = 0;
     this.search = new Search(stage);
     this.battleState = new PeaceState();
-  }
-
-  bleed() {
-    this.bleeding = true;
-  }
-
-  stopBleeding() {
-    this.bleeding = false;
   }
 
   flock(people: Person[]) {

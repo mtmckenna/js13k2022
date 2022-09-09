@@ -113,8 +113,6 @@ let people: Person[] = [];
 const ui = new Ui();
 ui.createUi(gullFlock);
 
-// const debug = Debug.getInstance();
-
 const input = Input.getInstance();
 input.addEventListeners(canvas);
 

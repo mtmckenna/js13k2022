@@ -49,17 +49,6 @@ export interface IBox {
   size: Vector;
 }
 
-export interface Bleedable {
-  lastBleedAt: number;
-  bleeding: boolean;
-  bloods: Blood[];
-  maxBleedBloods: number;
-  maxDeathBloods: number;
-  bloodTimeDelta: number;
-  bleed: () => void;
-  die: () => void;
-}
-
 export interface Flockable {
   flock: () => void;
 }

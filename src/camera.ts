@@ -16,8 +16,4 @@ export default class Camera {
       this.pos.z + zoom
     );
   }
-
-  moveTo(horizontal: number, veritcal: number, zoom: number) {
-    this.pos.set(horizontal, veritcal, zoom);
-  }
 }

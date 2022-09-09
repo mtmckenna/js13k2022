@@ -11,7 +11,6 @@ export default class RallyPoint implements Drawable {
   ctx: CanvasRenderingContext2D;
   color: string;
   bloods: Blood[];
-  bleeding: boolean;
   lastBleedAt: number;
   maxBleedBloods = 20;
   maxDeathBloods = 20;
