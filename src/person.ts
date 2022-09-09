@@ -189,7 +189,6 @@ export default class Person extends Sprite implements Bleedable, Damagable {
     this.changeAnimation(animation);
     this.battleState.handleInput(this, nextBattleState);
 
-    this.addBlood(t);
     this.damageBreakables(nextCell, t);
     if (this.health <= 0) this.die();
 
@@ -204,17 +203,6 @@ export default class Person extends Sprite implements Bleedable, Damagable {
         cell.sprite.die();
         cell.sprite.setCell(cell, true, false);
       }
-    }
-  }
-
-  addBlood(t: number) {
-    if (
-      this.bleeding &&
-      this.bloods.length < this.maxBleedBloods &&
-      t > this.lastBleedAt + this.bloodTimeDelta
-    ) {
-      this.bloods.push(bloodSystem.regenBlood(this));
-      this.lastBleedAt = t;
     }
   }
 

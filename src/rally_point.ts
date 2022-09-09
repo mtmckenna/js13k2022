@@ -1,13 +1,10 @@
 import { Vector } from "./math";
-import { Bleedable, Drawable, Updatable } from "./interfaces";
+import { Drawable } from "./interfaces";
 import Renderer from "./renderer";
-import BloodSystem from "./blood_system";
 import Blood from "./blood";
 import Stage from "./stage";
 
-const bloodSystem = BloodSystem.getInstance();
-
-export default class RallyPoint implements Drawable, Bleedable, Updatable {
+export default class RallyPoint implements Drawable {
   pos: Vector;
   size: Vector;
   renderer: Renderer;
@@ -32,28 +29,6 @@ export default class RallyPoint implements Drawable, Bleedable, Updatable {
     this.bloods = [];
     this.dead = false;
     this.stage = stage;
-  }
-
-  update(t: number) {
-    if (
-      this.bleeding &&
-      this.bloods.length < this.maxBleedBloods &&
-      t > this.lastBleedAt + this.bloodTimeDelta
-    ) {
-      this.bloods.push(bloodSystem.regenBlood(this));
-      this.lastBleedAt = t;
-    }
-  }
-
-  bleed() {
-    this.bleeding = true;
-  }
-
-  die() {
-    this.dead = true;
-    for (let i = 0; i < this.maxDeathBloods; i++) {
-      this.bloods.push(bloodSystem.regenBlood(this));
-    }
   }
 
   draw() {
