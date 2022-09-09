@@ -13,6 +13,7 @@ import { PERSON_INPUTS } from "./person_states";
 import PersonFlock from "./person_flock";
 import { PanicState, PERSON_FLOCK_INPUTS } from "./person_flock_states";
 import { PeaceState, PERSON_FIGHT_INPUTS } from "./person_battle_states";
+import SoundEffects from "./sound_effects";
 
 const bloodSystem = BloodSystem.getInstance();
 
@@ -129,6 +130,11 @@ export default class Person extends Sprite implements Bleedable, Damagable {
     this.canBump = false;
   }
 
+  die() {
+    super.die();
+    SoundEffects.getInstance().kill.play();
+  }
+
   update(t: number) {
     super.update(t);
 
@@ -146,6 +152,8 @@ export default class Person extends Sprite implements Bleedable, Damagable {
         // they're in the house
         if (overlaps(this, this.safeHouseDoors[0])) {
           this.safe = true;
+          console.log("safe!");
+          SoundEffects.getInstance().safe.play();
         } else {
           // no way for them to access house
           console.warn("Person can't get to house");

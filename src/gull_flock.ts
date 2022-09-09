@@ -3,6 +3,7 @@ import Gull from "./gull";
 import { CircleTargetState, GULL_FLOCK_INPUTS } from "./gull_flock_states";
 
 import { IState } from "./interfaces";
+import SoundEffects from "./sound_effects";
 
 export default class GullFlock extends Flock {
   fearDistance: number;
@@ -22,6 +23,7 @@ export default class GullFlock extends Flock {
   }
 
   attack() {
+    SoundEffects.getInstance().click.play();
     this.flockState.handleInput(this, GULL_FLOCK_INPUTS.ATTACK);
   }
 

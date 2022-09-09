@@ -157,7 +157,6 @@ for (let i = 0; i < 3; i++) {
   people.push(person);
 }
 
-// const personFlock1 = new PersonFlock(people.slice(0, 3));
 const personFlock1 = new PersonFlock(people.slice(0, 3));
 const personFlock2 = new PersonFlock(people.slice(3, 6));
 const personFlocks = [personFlock1, personFlock2];
@@ -185,8 +184,6 @@ function tick(t: number) {
       blood.draw();
     }
   }
-
-  // safeHouse.draw(t);
 
   safeHouseLeft.draw(t);
   safeHouseRight.draw(t);
@@ -241,10 +238,6 @@ function tick(t: number) {
     ctx.fillStyle = "red";
     renderer.drawGrid();
   }
-
-  // testPathFinding();
-
-  // moveStage();
 }
 
 function resetCameraWhenAtLimit() {
