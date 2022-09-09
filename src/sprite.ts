@@ -9,7 +9,7 @@ import {
 import { Vector, randomIntBetween, overlaps, clamp } from "./math";
 import Renderer from "./renderer";
 import SpriteAnimation from "./sprite_animation";
-import Blood from "./blood";
+import Blood, { COLOR_MAP } from "./blood";
 import BloodSystem from "./blood_system";
 
 const bloodSystem = BloodSystem.getInstance();
@@ -27,6 +27,7 @@ export default class Sprite implements Drawable, Updatable, Damagable {
   size: Vector;
   debugColor: string;
   bloods: Blood[] = [];
+  bloodColor = COLOR_MAP.red;
   name: string;
   imageDataUrl: string;
   numFrames: number;
@@ -134,7 +135,7 @@ export default class Sprite implements Drawable, Updatable, Damagable {
     this.health = Math.max(0, this.health - amount);
 
     for (let i = 0; i < Math.floor(amount); i++) {
-      this.bloods.push(bloodSystem.regenBlood(this));
+      this.bloods.push(bloodSystem.regenBlood(this, this.bloodColor));
     }
 
     this.lastDamagedAt = t;
@@ -168,7 +169,7 @@ export default class Sprite implements Drawable, Updatable, Damagable {
     if (this.dead) return;
     this.dead = true;
     for (let i = 0; i < this.maxDeathBloods; i++) {
-      this.bloods.push(bloodSystem.regenBlood(this));
+      this.bloods.push(bloodSystem.regenBlood(this, this.bloodColor));
     }
   }
 

@@ -175,7 +175,6 @@ function tick(t: number) {
   const flockCenter = rallyPoints[0].pos;
 
   rallyPoints.forEach((rallyPoint) => {
-    rallyPoint.update(t);
     rallyPoint.draw();
   });
 

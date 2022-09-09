@@ -7,6 +7,12 @@ const GRAVITY = -0.75;
 const START_X_VEL = 3;
 const START_Y_VEL = 3;
 
+export enum COLOR_MAP {
+  red = "#a12f18",
+  gray = "#45484d",
+  blue = "#285cc4",
+}
+
 export default class Blood implements Drawable, IBox {
   pos: Vector;
   vel: Vector;
@@ -15,6 +21,7 @@ export default class Blood implements Drawable, IBox {
   renderer: Renderer;
   timeLeft: number;
   groundLevel: number;
+  color: COLOR_MAP.gray | COLOR_MAP.blue | COLOR_MAP.red;
 
   constructor(pos: Vector, renderer: Renderer) {
     this.pos = pos;
@@ -23,6 +30,7 @@ export default class Blood implements Drawable, IBox {
     this.size = new Vector(5, 5, 0);
     this.renderer = renderer;
     this.timeLeft = 0;
+    this.color = COLOR_MAP.red;
   }
 
   inUse() {
@@ -33,7 +41,7 @@ export default class Blood implements Drawable, IBox {
     this.timeLeft = 0;
   }
 
-  regen(box: IBox) {
+  regen(box: IBox, color: COLOR_MAP.red | COLOR_MAP.gray | COLOR_MAP.blue) {
     const { pos, size } = box;
     this.timeLeft = LIFE_SPAN;
     const x = randomFloatBetween(
@@ -49,15 +57,14 @@ export default class Blood implements Drawable, IBox {
       0
     );
     this.groundLevel = pos.y - size.y;
+    this.color = color;
   }
 
   update() {
     this.vel.add(this.acc);
     this.pos.add(this.vel);
-    // console.log(this.vel);
 
     if (this.pos.y <= this.groundLevel) {
-      // console.log("ground", this.pos.y, this.groundLevel);
       this.vel.set(0, 0, 0);
       this.acc.set(0, 0, 0);
     }
@@ -66,7 +73,7 @@ export default class Blood implements Drawable, IBox {
   draw(): void {
     const { ctx, offset } = this.renderer;
     const h = this.renderer.stage.size.y;
-    ctx.fillStyle = "#a12f18";
+    ctx.fillStyle = this.color;
     ctx.fillRect(
       (this.pos.x - offset.x) * offset.z,
       (h - this.pos.y - offset.y) * offset.z,

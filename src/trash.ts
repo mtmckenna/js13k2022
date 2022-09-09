@@ -2,6 +2,7 @@ import { Drawable, IBox } from "./interfaces";
 import { Vector } from "./math";
 import Sprite, { ISpriteProps } from "./sprite";
 import Stage from "./stage";
+import { COLOR_MAP } from "./blood";
 
 import houseImageDataUrl from "../assets/spritesheet.png";
 import SpriteAnimation from "./sprite_animation";
@@ -10,6 +11,8 @@ export default class Trash extends Sprite implements Drawable, IBox {
   canBump = true;
   canBreak = true;
   startOffset = 296;
+  bloodColor = COLOR_MAP.gray;
+  health = 50;
 
   constructor(pos: Vector, stage: Stage) {
     const scale = 2;

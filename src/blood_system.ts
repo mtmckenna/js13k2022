@@ -1,4 +1,4 @@
-import Blood from "./blood";
+import Blood, { COLOR_MAP } from "./blood";
 import { Vector } from "./math";
 import Renderer from "./renderer";
 import { IBox } from "./interfaces";
@@ -17,12 +17,15 @@ export default class BloodSystem {
     }
   }
 
-  regenBlood(box: IBox) {
+  regenBlood(
+    box: IBox,
+    color: COLOR_MAP.red | COLOR_MAP.gray | COLOR_MAP.blue
+  ) {
     let blood: Blood | null = null;
     for (let i = 0; i < this.bloods.length; i++) {
       blood = this.bloods[i];
       if (!blood.inUse()) {
-        blood.regen(box);
+        blood.regen(box, color);
         break;
       }
     }
