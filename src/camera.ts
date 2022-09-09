@@ -2,7 +2,6 @@ import { Vector } from "./math";
 
 export default class Camera {
   pos: Vector;
-
   speed = 3;
 
   constructor(pos: Vector = new Vector(0, 0, 1)) {

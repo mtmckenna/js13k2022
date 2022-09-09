@@ -1,5 +1,3 @@
-import SoundEffects from "./sound_effects";
-
 export default class SoundEffect {
   context: AudioContext;
   path: string;

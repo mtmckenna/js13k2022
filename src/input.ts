@@ -9,8 +9,6 @@ export default class Input {
   renderer: Renderer;
 
   clickCallbacks: Array<(pos: Vector) => void> = [];
-  moveCallbacks: Array<(pos: Vector) => void> = [];
-  releaseCallbacks: Array<(pos: Vector) => void> = [];
   keydownCallbacks: Array<(keyCode: string) => void> = [];
 
   public static getInstance(): Input {
@@ -58,16 +56,13 @@ export default class Input {
     if (e instanceof MouseEvent) {
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
-      // this.posFromEventTempVec.set(x, y, 0);
       pos.set(x, y, 0);
     } else if (e instanceof TouchEvent) {
       const x = e.changedTouches[0].clientX - rect.left;
       const y = e.changedTouches[0].clientY - rect.top;
-      // this.posFromEventTempVec.set(x, y, 0);
       pos.set(x, y, 0);
     }
 
-    // return this.posFromEventTempVec;
     return pos;
   }
 

@@ -11,7 +11,6 @@ export default class Car extends Sprite implements Drawable, IBox {
   canBump = true;
   canBreak = true;
   startOffset = 0;
-  damageProtectionTimeDelta = 50;
   health = 200;
   bloodColor = COLOR_MAP.blue;
 

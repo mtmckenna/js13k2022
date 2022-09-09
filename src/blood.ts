@@ -37,10 +37,6 @@ export default class Blood implements Drawable, IBox {
     return this.timeLeft > 0;
   }
 
-  kill() {
-    this.timeLeft = 0;
-  }
-
   regen(box: IBox, color: COLOR_MAP.red | COLOR_MAP.gray | COLOR_MAP.blue) {
     const { pos, size } = box;
     this.timeLeft = LIFE_SPAN;

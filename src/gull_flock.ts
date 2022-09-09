@@ -11,11 +11,4 @@ export default class GullFlock extends Flock {
     super(gulls);
     this.rallyPoint = rallyPoint;
   }
-
-  flock() {
-    for (let i = 0; i < this.sprites.length; i++) {
-      const sprite = this.sprites[i];
-      sprite.flock(this.sprites);
-    }
-  }
 }

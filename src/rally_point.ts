@@ -25,7 +25,6 @@ export default class RallyPoint implements Drawable {
     this.ctx = this.renderer.ctx;
     this.color = "pink";
     this.lastBleedAt = 0;
-    this.bloods = [];
     this.dead = false;
     this.stage = stage;
   }
