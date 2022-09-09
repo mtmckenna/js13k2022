@@ -34,11 +34,11 @@
 },
 "house_top.png":
 {
-	"frame": {"x":168,"y":0,"w":32,"h":10},
+	"frame": {"x":168,"y":0,"w":32,"h":16},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":10},
-	"sourceSize": {"w":32,"h":10}
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":16},
+	"sourceSize": {"w":32,"h":16}
 },
 "person2.png":
 {
@@ -63,6 +63,6 @@
 	"format": "RGBA8888",
 	"size": {"w":304,"h":16},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:fcdf4b4f502ecf20d688703d7c4a308b:7f77233ae227738c94f6d77baf6b73f7:729adc6043343cfda41c447ce8f464d6$"
+	"smartupdate": "$TexturePacker:SmartUpdate:e2bf3beb4bd4b0deddcac8bee8a4025b:a5bdb1c2341210d2abacfea7513269e4:729adc6043343cfda41c447ce8f464d6$"
 }
 }

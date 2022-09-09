@@ -43,6 +43,7 @@ export default class Sprite implements Drawable, Updatable, Damagable {
   dead = false;
   canBump = false;
   canBreak = false;
+  canMove = false;
   numCellsAcross = 1;
   numCellsDown = 1;
   unwalkable: ICell[] = [];
@@ -140,18 +141,17 @@ export default class Sprite implements Drawable, Updatable, Damagable {
   }
 
   update(t: number) {
-    // for (let i = 0; i < this.stage.bumpables.length; i++) {
-    // const bumpable = this.stage.bumpables[i];
+    if (!this.canMove) return;
 
-    const cell = this.stage.getCellForPos(this.center);
-    // if (this.canBump && overlaps(this, bumpable)) {
-    if (!cell.walkable) {
-      this.vel.mult(-1);
-      this.vel.add(this.center).sub(cell.sprite.center).normalize();
-      console.log("bump", cell.sprite.name, cell);
-      this.acc.set(0, 0, 0);
+    for (let i = 0; i < this.stage.bumpables.length; i++) {
+      const bumpable = this.stage.bumpables[i];
+
+      if (this.canBump && overlaps(this, bumpable)) {
+        this.vel.mult(-1);
+        this.vel.add(this.center).sub(bumpable.center).normalize();
+        this.acc.set(0, 0, 0);
+      }
     }
-    // }
 
     this.pos.add(this.vel);
     this.vel.add(this.acc);
@@ -188,6 +188,7 @@ export default class Sprite implements Drawable, Updatable, Damagable {
     for (let i = 0; i < this.clampedNumCellsAcross; i++) {
       for (let j = 0; j < this.clampedNumCellsDown; j++) {
         const cell = this.stage.getCell(mainCell.x + i, mainCell.y - j);
+
         cell.cost = Stage.WALKABLE_COST;
         cell.walkable = walkable;
         cell.breakable = breakable;

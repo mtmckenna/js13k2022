@@ -48,7 +48,7 @@ const rallyPoints: RallyPoint[] = [
 ];
 
 const safeHouseLeft = new SafeHouseLeft(
-  new Vector(4, height / 2, 0),
+  new Vector(8 * 4, 32 * 3 * 2, 0),
   currentStage
 );
 
@@ -85,13 +85,13 @@ safeHouseTop.setOverlappingCellsWalkability();
 const trashCans = [];
 for (let i = 0; i < 13; i++) {
   const trashCan = new Trash(
-    new Vector(20 * 16, 28 * 16 - i * 8 * 3, 0),
+    new Vector(20 * 16, 28 * 16 - i * 8 * 2, 0),
     currentStage
   );
   trashCans.push(trashCan);
 }
 
-const bumpables = [safeHouseTop, safeHouseLeft, safeHouseRight];
+const bumpables = [safeHouseTop, safeHouseLeft, safeHouseRight, ...trashCans];
 currentStage.bumpables = bumpables;
 
 const bloodSystem = BloodSystem.getInstance();

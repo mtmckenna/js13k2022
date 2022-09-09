@@ -17,6 +17,7 @@ export default class Gull extends Sprite {
 
   private attacking: boolean;
   canBump = false;
+  canMove = true;
   startOffset = 16;
 
   constructor(pos: Vector, stage: Stage) {

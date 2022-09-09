@@ -92,7 +92,6 @@ export default class Renderer {
       this.ctx.stroke();
     }
     this.ctx.font = "10px sans serif";
-    const fontSpacing = 50;
     this.ctx.textAlign = "center";
 
     this.ctx.fillStyle = "purple";
@@ -103,12 +102,12 @@ export default class Renderer {
         if (!walkable) {
           unwalkable.push(unwalkable);
           const y = (-1 * (gridSize * j - h) - this.offset.y) * scale;
-          // this.ctx.fillRect(
-          //   (gridSize * i - this.offset.x) * scale,
-          //   y,
-          //   gridSize * scale,
-          //   gridSize * scale
-          // );
+          this.ctx.fillRect(
+            (gridSize * i - this.offset.x) * scale,
+            y,
+            gridSize * scale,
+            gridSize * scale
+          );
         }
         this.ctx.fillText(
           `${i},${j}`,

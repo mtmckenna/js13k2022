@@ -44,6 +44,7 @@ export default class Person extends Sprite implements Bleedable, Damagable {
   bloodTimeDelta = 5;
   safeHouseDoors: SafeHouseDoors[] = [];
   canBump = true;
+  canMove = true;
   search: Search;
   path: ICell[] = [];
   safe = false;
