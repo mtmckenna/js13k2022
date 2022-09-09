@@ -1,4 +1,3 @@
-// import { AttackState, CircleTargetState } from "./gull_flock_states";
 import { DefaultState, SelectObstacleState, UI_INPUTS } from "./ui_states";
 import { IState } from "./interfaces";
 import Stage from "./stage";

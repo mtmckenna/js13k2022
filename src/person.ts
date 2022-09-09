@@ -8,7 +8,6 @@ import SpriteAnimation from "./sprite_animation";
 import Blood from "./blood";
 import SafeHouseDoors from "./safe_house_door";
 import Search from "./search";
-// import { PERSON_INPUTS } from "./person_states";
 import { PeaceState, PERSON_FIGHT_INPUTS } from "./person_battle_states";
 import SoundEffects from "./sound_effects";
 import { AttackState } from "./ui_states";
@@ -81,13 +80,7 @@ export default class Person extends Sprite implements Damagable {
   flock(people: Person[]) {
     const alignment = align(this, people);
 
-    let housePos: Vector = null;
-
-    // TODO: remove this part since we aren't using cohesion for going around the
-    if (this.ui.state instanceof AttackState)
-      housePos = this.safeHouseDoors[0].pos;
-
-    const cohesion = cohere(this, people, housePos);
+    const cohesion = cohere(this, people);
     const separation = separate(this, people, 30);
 
     this.acc.add(alignment.mult(PEOPLE_CALM_ALIGNMENT_STRENGTH));

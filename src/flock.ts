@@ -30,13 +30,6 @@ export default class Flock {
 
     return this._center;
   }
-
-  flockTheStff() {
-    for (let i = 0; i < this.sprites.length; i++) {
-      const sprite = this.sprites[i];
-      sprite.flock(this.sprites);
-    }
-  }
 }
 
 const MAX_STEERING_FORCE = 0.1;
