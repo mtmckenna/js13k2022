@@ -16,7 +16,6 @@ export default class SafeHouseDoor extends Sprite implements Drawable, IBox {
       numFrames: 1,
       originalSize: new Vector(8, 16, 1),
       size: new Vector(scale * 8, scale * 16, 1),
-      debugColor: "blue",
       stage,
       spriteAnimations: {
         idle,

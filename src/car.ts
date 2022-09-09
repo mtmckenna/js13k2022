@@ -26,7 +26,6 @@ export default class Car extends Sprite implements Drawable, IBox {
       numFrames: 1,
       originalSize: new Vector(16, 8, 1),
       size: new Vector(scale * 16, scale * 8, 1),
-      debugColor: "blue",
       stage,
       spriteAnimations: {
         idle,

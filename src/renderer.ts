@@ -1,5 +1,4 @@
 import Sprite from "./sprite";
-import Debug from "./debug";
 import Camera from "./camera";
 import { Vector } from "./math";
 import Stage from "./stage";
@@ -9,7 +8,6 @@ export default class Renderer {
 
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
-  debug: boolean;
   previousRenderNumber: number;
   currentRenderNumber: number;
   camera: Camera;
@@ -20,7 +18,6 @@ export default class Renderer {
   private constructor() {
     this.canvas = document.getElementById("game") as HTMLCanvasElement;
     this.ctx = this.canvas.getContext("2d");
-    this.debug = Debug.getInstance().gullSpritesEnabled;
     this.previousRenderNumber = 0;
     this.currentRenderNumber = 0;
     const camera = new Camera();

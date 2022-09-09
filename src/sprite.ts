@@ -25,7 +25,6 @@ export default class Sprite implements Drawable, Updatable, Damagable {
   acc: Vector;
   originalSize: Vector;
   size: Vector;
-  debugColor: string;
   bloods: Blood[] = [];
   bloodColor = COLOR_MAP.red;
   name: string;
@@ -63,7 +62,6 @@ export default class Sprite implements Drawable, Updatable, Damagable {
     this.acc = new Vector(0, 0, 0);
     this.size = props.size;
     this.originalSize = props.originalSize;
-    this.debugColor = props.debugColor;
     this.imageDataUrl = props.imageDataUrl;
     this.cacheImage();
     this._currentFrame = 0;
@@ -231,7 +229,6 @@ export interface ISpriteProps {
   originalSize: Vector;
   imageDataUrl?: string;
   numFrames: number;
-  debugColor: string;
   stage: Stage;
   spriteAnimations: {
     [key: string]: SpriteAnimation;

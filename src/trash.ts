@@ -25,7 +25,6 @@ export default class Trash extends Sprite implements Drawable, IBox {
       numFrames: 1,
       originalSize: new Vector(8, 8, 1),
       size: new Vector(scale * 8, scale * 8, 1),
-      debugColor: "blue",
       stage,
       spriteAnimations: {
         idle,

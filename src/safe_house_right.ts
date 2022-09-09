@@ -21,7 +21,6 @@ export default class SafeHouseRight extends Sprite implements Drawable, IBox {
       numFrames: 1,
       originalSize: new Vector(12, 16, 1),
       size: new Vector(scale * 12, scale * 16, 1),
-      debugColor: "blue",
       stage,
       spriteAnimations: {
         idle,

@@ -1,7 +1,6 @@
 import { Vector } from "./math";
 import Sprite, { ISpriteProps } from "./sprite";
 import Stage from "./stage";
-import Debug from "./debug";
 import { align, cohere, separate } from "./flock";
 
 import gullImageDataUrl from "../assets/spritesheet.png";
@@ -35,7 +34,6 @@ export default class Gull extends Sprite {
       numFrames: 2,
       originalSize,
       size,
-      debugColor: "#70c4db",
       stage,
       spriteAnimations: {
         fly_right,
@@ -55,18 +53,9 @@ export default class Gull extends Sprite {
     const cohesion = cohere(this, gulls, posToCircle, 1.4);
     const separation = separate(this, gulls, 100, 0.5);
 
-    const debug = Debug.getInstance();
-    if (debug.gullSlidersEnabled) {
-      this.acc.add(alignment.mult(parseFloat(debug.gullAlignmentSlider.value)));
-      this.acc.add(cohesion.mult(parseFloat(debug.gullCohesionSlider.value)));
-      this.acc.add(
-        separation.mult(parseFloat(debug.gullSeparationSlider.value))
-      );
-    } else {
-      // this.acc.add(alignment);
-      this.acc.add(cohesion);
-      this.acc.add(separation);
-    }
+    // this.acc.add(alignment);
+    this.acc.add(cohesion);
+    this.acc.add(separation);
   }
 
   attack() {

@@ -23,8 +23,8 @@ export default class GullFlock extends Flock {
   }
 
   attack() {
-    SoundEffects.getInstance().click.play();
     this.flockState.handleInput(this, GULL_FLOCK_INPUTS.ATTACK);
+    SoundEffects.getInstance().click.play();
   }
 
   circleTarget() {

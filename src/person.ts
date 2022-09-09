@@ -71,7 +71,6 @@ export default class Person extends Sprite implements Bleedable, Damagable {
       numFrames: 2,
       originalSize,
       size,
-      debugColor: "#70c4db",
       stage,
       spriteAnimations: {
         run_right,
@@ -131,8 +130,8 @@ export default class Person extends Sprite implements Bleedable, Damagable {
   }
 
   die() {
+    if (this.health <= 0 && !this.dead) SoundEffects.getInstance().kill.play();
     super.die();
-    SoundEffects.getInstance().kill.play();
   }
 
   update(t: number) {
@@ -222,6 +221,7 @@ export default class Person extends Sprite implements Bleedable, Damagable {
   }
 
   drawHealthBar() {
+    if (this.health <= 0) return;
     const ctx = this.renderer.ctx;
     const h = this.stage.size.y;
     const x = this.pos.x - (MAX_HEALTH_BAR_WIDTH - this.size.x) / 2;

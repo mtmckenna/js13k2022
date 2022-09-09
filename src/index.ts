@@ -3,8 +3,7 @@ import Person from "./person";
 import PersonFlock from "./person_flock";
 import GullFlock from "./gull_flock";
 import Stage from "./stage";
-import { randomFloatBetween, Vector, overlaps, clamp } from "./math";
-import Debug from "./debug";
+import { randomFloatBetween, Vector, overlaps } from "./math";
 import RallyPoint from "./rally_point";
 import Input from "./input";
 import Renderer from "./renderer";
@@ -18,6 +17,8 @@ import SafeHouseRight from "./safe_house_right";
 import SafeHouseDoor from "./safe_house_door";
 import Trash from "./trash";
 import Car from "./car";
+
+const debug = false;
 
 const canvas: HTMLCanvasElement = document.getElementById(
   "game"
@@ -112,7 +113,7 @@ let people: Person[] = [];
 const ui = new Ui();
 ui.createUi(gullFlock);
 
-const debug = Debug.getInstance();
+// const debug = Debug.getInstance();
 
 const input = Input.getInstance();
 input.addEventListeners(canvas);
@@ -234,72 +235,10 @@ function tick(t: number) {
 
   ui.update(gullFlock);
 
-  if (debug.gridEnabled) {
+  if (debug) {
     ctx.fillStyle = "red";
     renderer.drawGrid();
   }
-}
-
-function resetCameraWhenAtLimit() {
-  const scale = camera.pos.z;
-
-  if (camera.pos.x < 0) {
-    camera.pos.set(0, camera.pos.y, camera.pos.z);
-  } else if (
-    currentStage.size.x * scale >= canvas.width &&
-    camera.pos.x * scale + canvas.width > currentStage.size.x * scale
-  ) {
-    camera.pos.set(
-      currentStage.size.x - canvas.width / scale,
-      camera.pos.y,
-      camera.pos.z
-    );
-  }
-
-  if (camera.pos.y < 0) {
-    camera.pos.set(camera.pos.x, 0, camera.pos.z);
-  } else if (
-    currentStage.size.y * scale >= canvas.height &&
-    camera.pos.y * scale + canvas.height > currentStage.size.y * scale
-  ) {
-    camera.pos.set(
-      camera.pos.x,
-      currentStage.size.y - canvas.height / scale,
-      camera.pos.z
-    );
-  }
-}
-
-function moveStage() {
-  if (Input.isTouchDevice()) return;
-  if (input.inputHash.currPos.x === -1) return;
-
-  const threshold = 15;
-  if (input.inputHash.currPos.x <= threshold) {
-    camera.moveBy(-1, 0, 0);
-  } else if (input.inputHash.currPos.x >= window.innerWidth - threshold) {
-    camera.moveBy(1, 0, 0);
-  } else if (input.inputHash.currPos.y <= threshold) {
-    camera.moveBy(0, -1, 0);
-  } else if (input.inputHash.currPos.y >= window.innerHeight - threshold) {
-    camera.moveBy(0, 1, 0);
-  }
-  // resetCameraWhenAtLimit();
-}
-
-function dragCallback(pos: Vector) {
-  const MAX_DRAG = 2;
-  renderer.camera.moveBy(
-    clamp(-pos.x, -1 * MAX_DRAG, MAX_DRAG),
-    clamp(-pos.y, -1 * MAX_DRAG, MAX_DRAG),
-    0
-  );
-  document.body.style.cursor = "grab";
-  // resetCameraWhenAtLimit();
-}
-
-function releaseCallback(pos: Vector) {
-  document.body.style.cursor = "default";
 }
 
 function clickCallback(pos: Vector) {
@@ -317,37 +256,34 @@ function clickCallback(pos: Vector) {
   rallyPoints[0] = new RallyPoint(pos, currentStage);
 }
 
-function keydownCallback(keyCode: string) {
-  switch (keyCode) {
-    case "ArrowLeft":
-      renderer.camera.moveBy(-1, 0, 0);
-      break;
-    case "ArrowRight":
-      renderer.camera.moveBy(1, 0, 0);
-      break;
-    case "ArrowUp":
-      renderer.camera.moveBy(0, -1, 0);
-      break;
-    case "ArrowDown":
-      renderer.camera.moveBy(0, 1, 0);
-      break;
-    case "-":
-      renderer.camera.moveBy(0, 0, -0.1);
-      resize(true);
-      break;
-    case "+":
-      renderer.camera.moveBy(0, 0, 0.1);
-      resize(true);
-      break;
-  }
+// function keydownCallback(keyCode: string) {
+//   switch (keyCode) {
+//     case "ArrowLeft":
+//       renderer.camera.moveBy(-1, 0, 0);
+//       break;
+//     case "ArrowRight":
+//       renderer.camera.moveBy(1, 0, 0);
+//       break;
+//     case "ArrowUp":
+//       renderer.camera.moveBy(0, -1, 0);
+//       break;
+//     case "ArrowDown":
+//       renderer.camera.moveBy(0, 1, 0);
+//       break;
+//     case "-":
+//       renderer.camera.moveBy(0, 0, -0.1);
+//       resize(true);
+//       break;
+//     case "+":
+//       renderer.camera.moveBy(0, 0, 0.1);
+//       resize(true);
+//       break;
+//   }
 
-  // resetCameraWhenAtLimit();
-}
+//   // resetCameraWhenAtLimit();
+// }
 
 input.registerClickCallback(clickCallback);
-// input.registerDragCallback(dragCallback);
-input.registerReleaseCallback(releaseCallback);
-input.registerKeydownCallback(keydownCallback);
 
 requestAnimationFrame(tick);
 
@@ -384,9 +320,3 @@ function resize(force = false) {
   // How much have we stretched the canvas to fit the screen
   canvasWindowScale = window.innerHeight / scaledHeight;
 }
-
-document.body.onkeyup = function (e) {
-  if (e.key == " " || e.code == "Space" || e.keyCode == 32) {
-    tick(performance.now());
-  }
-};

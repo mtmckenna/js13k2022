@@ -33,11 +33,6 @@ export default class RallyPoint implements Drawable {
 
   draw() {
     const h = this.stage.size.y;
-    // ctx.beginPath();
-    // ctx.moveTo(75, 50);
-    // ctx.lineTo(100, 75);
-    // ctx.lineTo(100, 25);
-    // ctx.fill();
     const offset = this.renderer.offset;
 
     this.ctx.fillStyle = this.color;

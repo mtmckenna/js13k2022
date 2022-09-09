@@ -28,7 +28,6 @@ export default class SafeHouseLeft extends Sprite implements Drawable, IBox {
         scale * SafeHouseLeft.ORIGINAL_SIZE.y,
         1
       ),
-      debugColor: "blue",
       stage,
       spriteAnimations: {
         idle,
