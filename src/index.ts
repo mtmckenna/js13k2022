@@ -17,6 +17,7 @@ import SafeHouseLeft from "./safe_house_left";
 import SafeHouseRight from "./safe_house_right";
 import SafeHouseDoor from "./safe_house_door";
 import Trash from "./trash";
+import Car from "./car";
 
 const canvas: HTMLCanvasElement = document.getElementById(
   "game"
@@ -91,7 +92,18 @@ for (let i = 0; i < 13; i++) {
   trashCans.push(trashCan);
 }
 
-const bumpables = [safeHouseTop, safeHouseLeft, safeHouseRight, ...trashCans];
+const cars = [];
+const car1 = new Car(new Vector(3 * 16, 8 * 16, 0), currentStage);
+
+cars.push(car1);
+
+const bumpables = [
+  safeHouseTop,
+  safeHouseLeft,
+  safeHouseRight,
+  ...trashCans,
+  ...cars,
+];
 currentStage.bumpables = bumpables;
 
 const bloodSystem = BloodSystem.getInstance();
@@ -149,7 +161,6 @@ for (let i = 0; i < 3; i++) {
 const personFlock1 = new PersonFlock(people.slice(0, 3));
 const personFlock2 = new PersonFlock(people.slice(3, 6));
 const personFlocks = [personFlock1, personFlock2];
-// const personFlocks = [personFlock1];
 
 function tick(t: number) {
   requestAnimationFrame(tick);
@@ -183,6 +194,7 @@ function tick(t: number) {
   safeHouseDoor.draw();
   safeHouseTop.draw(t);
   trashCans.forEach((trashCan) => trashCan.draw(t));
+  cars.forEach((car) => car.draw(t));
 
   const alivePeople = [];
 

@@ -200,7 +200,6 @@ export default class Person extends Sprite implements Bleedable, Damagable {
     const breakable = cell?.breakable;
     if (cell && breakable) {
       cell.sprite.damage(1, t);
-      // console.log(cell.sprite.health, cell.sprite.health <= 0);
       if (cell.sprite.health <= 0) {
         cell.sprite.die();
         cell.sprite.setCell(cell, true, false);

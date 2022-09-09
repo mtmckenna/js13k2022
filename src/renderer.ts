@@ -46,11 +46,7 @@ export default class Renderer {
   }
 
   public draw(sprite: Sprite) {
-    if (this.debug) {
-      this.drawDebug(sprite);
-    } else {
-      this.drawSprite(sprite);
-    }
+    this.drawSprite(sprite);
   }
 
   drawGrid() {
@@ -138,12 +134,6 @@ export default class Renderer {
     const x = Math.round((sprite.pos.x - this.offset.x) * scale);
     const y = Math.round((h - sprite.pos.y - this.offset.y) * scale);
 
-    // const x = Math.round(
-    //   (sprite.pos.x - this.offset.x + sprite.size.x) * scale
-    // );
-    // const y = Math.round(
-    //   (h - sprite.pos.y - this.offset.y + sprite.size.y) * scale
-    // );
     const xSize = Math.round(sprite.size.x * scale);
     const ySize = Math.round(sprite.size.y * scale);
 
@@ -157,19 +147,6 @@ export default class Renderer {
       y,
       xSize,
       ySize
-    );
-  }
-
-  private drawDebug(sprite: Sprite) {
-    this.ctx.fillStyle = sprite.debugColor;
-    const scale = this.offset.z;
-    const h = sprite.stage.size.y;
-
-    this.ctx.fillRect(
-      Math.round((sprite.pos.x - this.offset.x) * scale),
-      Math.round((h - sprite.pos.y - this.offset.y) * scale),
-      Math.round(sprite.size.x * scale),
-      Math.round(sprite.size.y * scale)
     );
   }
 }
