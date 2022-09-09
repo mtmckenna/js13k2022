@@ -3,6 +3,10 @@ import Renderer from "./renderer";
 import Box from "./box";
 import Sprite from "./sprite";
 import { ICell } from "./interfaces";
+import Person from "./person";
+import Gull from "./gull";
+import PersonFlock from "./person_flock";
+import GullFlock from "./gull_flock";
 
 const DEFAULT_COST = 1;
 
@@ -14,6 +18,10 @@ export default class Stage {
   public numCellsTall: number;
   public numCellsWide: number;
   public cellSize = 16;
+  public people: Person[];
+  public gulls: Gull[];
+  public personFlocks: PersonFlock[];
+  public gullFlocks: GullFlock[];
 
   private renderer: Renderer;
 
@@ -149,6 +157,12 @@ export default class Stage {
     );
 
     return this.getCell(x, y);
+  }
+
+  selectObstacle(pos: Vector): Sprite {
+    const cell = this.getCellForPos(pos);
+    if (!cell.breakable) return null;
+    return cell.sprite;
   }
 
   posForCell(cell: ICell) {

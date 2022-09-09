@@ -11,6 +11,7 @@ import Renderer from "./renderer";
 import SpriteAnimation from "./sprite_animation";
 import Blood, { COLOR_MAP } from "./blood";
 import BloodSystem from "./blood_system";
+import Ui from "./ui";
 
 const bloodSystem = BloodSystem.getInstance();
 
@@ -50,6 +51,7 @@ export default class Sprite implements Drawable, Updatable, Damagable {
   breakable: ICell[] = [];
   startOffset = 0;
   direction: "left" | "right" = "right";
+  ui: Ui;
 
   private _currentFrame: number;
   private _center: Vector = new Vector(0, 0, 0);
@@ -73,6 +75,7 @@ export default class Sprite implements Drawable, Updatable, Damagable {
     this.stage = props.stage;
     this.spriteAnimations = props.spriteAnimations;
     this.changeAnimation(this.spriteAnimations.default);
+    this.ui = Ui.getInstance();
   }
 
   get image() {

@@ -1,26 +1,17 @@
 import { Vector, dist } from "./math";
 import Sprite from "./sprite";
+import { Flockable } from "./interfaces";
+
+type FlockableSprite = Sprite & Flockable;
 
 export default class Flock {
-  sprites: Sprite[];
-  fearDistance: number;
+  sprites: FlockableSprite[];
 
   private _center: Vector;
 
-  constructor(sprites: Sprite[]) {
+  constructor(sprites: FlockableSprite[]) {
     this._center = new Vector(0, 0, 0);
     this.sprites = sprites;
-  }
-
-  update(t: number) {
-    const currentSprites = [];
-
-    // Remove dead members from flock
-    for (let i = 0; i < this.sprites.length; i++) {
-      const sprite = this.sprites[i];
-      if (!sprite.dead) currentSprites.push(sprite);
-    }
-    this.sprites = currentSprites;
   }
 
   get center(): Vector {
@@ -38,6 +29,13 @@ export default class Flock {
     this._center.set(this._center.x, this._center.y, 0);
 
     return this._center;
+  }
+
+  flockTheStff() {
+    for (let i = 0; i < this.sprites.length; i++) {
+      const sprite = this.sprites[i];
+      sprite.flock(this.sprites);
+    }
   }
 }
 

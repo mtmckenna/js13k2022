@@ -2,6 +2,7 @@ import GullFlock from "./gull_flock";
 import Gull from "./Gull";
 import { IState } from "./interfaces";
 
+//TODO: can probably kill this state and use UI states instead
 export class AttackState implements IState<GullFlock, GULL_FLOCK_INPUTS> {
   enter(gullFock: GullFlock) {
     gullFock.sprites.forEach((gull: Gull) => gull.attack());

@@ -8,7 +8,6 @@ import RallyPoint from "./rally_point";
 import Input from "./input";
 import Renderer from "./renderer";
 import Ui from "./ui";
-import { AttackState } from "./gull_flock_states";
 import Camera from "./camera";
 import BloodSystem from "./blood_system";
 import SafeHouseTop from "./safe_house_top";
@@ -17,6 +16,7 @@ import SafeHouseRight from "./safe_house_right";
 import SafeHouseDoor from "./safe_house_door";
 import Trash from "./trash";
 import Car from "./car";
+import { AttackState } from "./ui_states";
 
 const debug = false;
 
@@ -43,11 +43,13 @@ canvas.width = width;
 canvas.height = height;
 
 const currentStage = new Stage(new Vector(width, height, 0));
-const gulls: Gull[] = [];
-const gullFlock: GullFlock = new GullFlock(gulls);
 const rallyPoints: RallyPoint[] = [
   new RallyPoint(new Vector(width / 4, height / 2, 0), currentStage),
 ];
+const gulls: Gull[] = [];
+const gullFlocks: GullFlock[] = [];
+const gullFlock: GullFlock = new GullFlock(gulls, rallyPoints[0]);
+gullFlocks.push(gullFlock);
 
 const safeHouseLeft = new SafeHouseLeft(
   new Vector(8 * 4, 32 * 3 * 2, 0),
@@ -108,10 +110,7 @@ const bumpables = [
 currentStage.bumpables = bumpables;
 
 const bloodSystem = BloodSystem.getInstance();
-let people: Person[] = [];
-
-const ui = new Ui();
-ui.createUi(gullFlock);
+const people: Person[] = [];
 
 const input = Input.getInstance();
 input.addEventListeners(canvas);
@@ -160,6 +159,14 @@ const personFlock1 = new PersonFlock(people.slice(0, 3));
 const personFlock2 = new PersonFlock(people.slice(3, 6));
 const personFlocks = [personFlock1, personFlock2];
 
+currentStage.people = people;
+currentStage.gulls = gulls;
+currentStage.gullFlocks = gullFlocks;
+currentStage.personFlocks = personFlocks;
+
+const ui = Ui.getInstance();
+ui.createUi(currentStage);
+
 function tick(t: number) {
   requestAnimationFrame(tick);
   resize();
@@ -170,11 +177,9 @@ function tick(t: number) {
 
   currentStage.draw();
 
-  const flockCenter = rallyPoints[0].pos;
+  // const flockCenter = rallyPoints[0].pos;
 
-  rallyPoints.forEach((rallyPoint) => {
-    rallyPoint.draw();
-  });
+  rallyPoints.forEach((rallyPoint) => rallyPoint.draw());
 
   for (let i = 0; i < bloodSystem.bloods.length; i++) {
     const blood = bloodSystem.bloods[i];
@@ -191,52 +196,46 @@ function tick(t: number) {
   trashCans.forEach((trashCan) => trashCan.draw(t));
   cars.forEach((car) => car.draw(t));
 
-  const alivePeople = [];
-
-  for (let i = 0; i < people.length; i++) {
-    const person = people[i];
-
-    person.update(t);
-    if (!person.safe) {
-      alivePeople.push(person);
-      person.draw(t);
-    }
-  }
-  people = alivePeople;
-
   gulls.forEach((gull) => {
-    gull.flock(gulls, flockCenter);
     gull.update(t);
     gull.draw(t);
   });
 
-  personFlock1.update(t);
-  gullFlock.update(t);
+  for (let i = 0; i < people.length; i++) {
+    const person = people[i];
+    if (person.safe || person.dead) continue;
+    person.update(t);
+    person.draw(t);
+  }
+
+  currentStage.gullFlocks.forEach((gullFlock) => {
+    gullFlock.sprites.forEach((gull) =>
+      gull.flock(gullFlock.sprites, gullFlock.rallyPoint.pos)
+    );
+  });
 
   // Panic if under attack
-  if (gullFlock.flockState instanceof AttackState) {
-    personFlocks.forEach((person) => person.panic());
-    gullFlock.sprites.forEach((gull: Gull) => {
-      people.forEach((person: Person) => {
-        if (overlaps(gull, person)) {
-          person.damage(1, t);
-        }
-      });
+  if (ui.state instanceof AttackState) {
+    currentStage.people.forEach((person) => {
+      if (!person.dead && !person.safe) {
+        gulls.forEach((gull) => {
+          if (overlaps(gull, person)) {
+            person.damage(1, t);
+          }
+        });
+      }
     });
   } else {
-    // Otherwise people flock
-    personFlocks.forEach((personFlock) => {
-      personFlock.calm();
-      personFlock.flock();
+    currentStage.personFlocks.forEach((personFlock) => {
+      personFlock.sprites.forEach((person) =>
+        person.flock(personFlock.sprites)
+      );
     });
   }
 
-  ui.update(gullFlock);
+  ui.update();
 
-  if (debug) {
-    ctx.fillStyle = "red";
-    renderer.drawGrid();
-  }
+  if (debug) renderer.drawGrid();
 }
 
 function clickCallback(pos: Vector) {
@@ -251,7 +250,8 @@ function clickCallback(pos: Vector) {
 
   const h = currentStage.size.y;
   pos.set(pos.x, h - pos.y, pos.z);
-  rallyPoints[0] = new RallyPoint(pos, currentStage);
+  // rallyPoints[0] = new RallyPoint(pos, currentStage);
+  rallyPoints[0].pos.set(pos.x, pos.y, pos.z);
 }
 
 // function keydownCallback(keyCode: string) {

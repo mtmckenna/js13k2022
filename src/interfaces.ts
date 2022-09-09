@@ -1,5 +1,4 @@
 import { Vector } from "./math";
-import Blood from "./blood";
 import Renderer from "./renderer";
 import Sprite from "./sprite";
 
@@ -50,5 +49,5 @@ export interface IBox {
 }
 
 export interface Flockable {
-  flock: () => void;
+  flock: (sprites: Sprite[]) => void;
 }

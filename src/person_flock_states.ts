@@ -17,9 +17,9 @@ export class PanicState implements IState<PersonFlock, PERSON_FLOCK_INPUTS> {
         state = this; // eslint-disable-line
     }
 
-    personFlock.flockState = state;
+    // personFlock.flockState = state;
     personFlock.sprites.forEach((person: Person) => {
-      person.flockState = state;
+      // person.flockState = state;
     });
 
     return state;
@@ -41,9 +41,9 @@ export class CalmState implements IState<PersonFlock, PERSON_FLOCK_INPUTS> {
         state = this; // eslint-disable-line
     }
 
-    personFlock.flockState = state;
+    // personFlock.flockState = state;
     personFlock.sprites.forEach((person: Person) => {
-      person.flockState = state;
+      // person.flockState = state;
     });
 
     return state;

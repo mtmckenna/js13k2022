@@ -1,31 +1,50 @@
-import { AttackState, CircleTargetState } from "./gull_flock_states";
-import GullFlock from "./gull_flock";
+// import { AttackState, CircleTargetState } from "./gull_flock_states";
+import { DefaultState, SelectObstacleState, UI_INPUTS } from "./ui_states";
+import { IState } from "./interfaces";
+import Stage from "./stage";
 
 export default class Ui {
+  private static instance: Ui;
+
   attackButton: HTMLButtonElement;
-  circleTargetButton: HTMLButtonElement;
+  moveButton: HTMLButtonElement;
+  state: IState<Ui, UI_INPUTS>;
+  public stage: Stage;
 
-  createUi(gullFlock: GullFlock) {
-    const uiWrapper = document.getElementById("ui-wrapper");
-    const attack = createButton("Attack", uiWrapper, []);
-    const circle = createButton("Circle target", uiWrapper, []);
-
-    attack.addEventListener("click", gullFlock.attack.bind(gullFlock));
-    circle.addEventListener("click", gullFlock.circleTarget.bind(gullFlock));
-
-    this.attackButton = attack;
-    this.circleTargetButton = circle;
+  public static getInstance(): Ui {
+    if (!Ui.instance) Ui.instance = new Ui();
+    return Ui.instance;
   }
 
-  update(gullFlock: GullFlock) {
+  createUi(stage: Stage) {
+    this.state = new DefaultState();
+    this.stage = stage;
+
+    const uiWrapper = document.getElementById("ui-wrapper");
+    const attack = createButton("Attack", uiWrapper, []);
+    const move = createButton("Move obstacle", uiWrapper, []);
+
+    // attack.addEventListener("click", gullFlock.attack.bind(gullFlock));
+    attack.addEventListener("click", () =>
+      this.state.handleInput(this, UI_INPUTS.ATTACK)
+    );
+    move.addEventListener("click", () =>
+      this.state.handleInput(this, UI_INPUTS.SELECT_OBSTACLE)
+    );
+
+    this.attackButton = attack;
+    this.moveButton = move;
+  }
+
+  update() {
     // console.log(gullFlock.modeState);
-    if (gullFlock.flockState instanceof AttackState) {
-      select(this.attackButton);
-      unselect(this.circleTargetButton);
-    } else if (gullFlock.flockState instanceof CircleTargetState) {
-      unselect(this.attackButton);
-      select(this.circleTargetButton);
-    }
+    // if (gullFlock.flockState instanceof AttackState) {
+    //   select(this.attackButton);
+    //   unselect(this.moveButton);
+    // } else if (gullFlock.flockState instanceof CircleTargetState) {
+    //   unselect(this.attackButton);
+    //   select(this.moveButton);
+    // }
   }
 }
 

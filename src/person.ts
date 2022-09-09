@@ -8,11 +8,10 @@ import SpriteAnimation from "./sprite_animation";
 import Blood from "./blood";
 import SafeHouseDoors from "./safe_house_door";
 import Search from "./search";
-import { PERSON_INPUTS } from "./person_states";
-import PersonFlock from "./person_flock";
-import { PanicState, PERSON_FLOCK_INPUTS } from "./person_flock_states";
+// import { PERSON_INPUTS } from "./person_states";
 import { PeaceState, PERSON_FIGHT_INPUTS } from "./person_battle_states";
 import SoundEffects from "./sound_effects";
+import { AttackState } from "./ui_states";
 
 const MAX_WALKING_SPEED = 0.5;
 const MAX_RUNNING_SPEED = 1;
@@ -27,10 +26,6 @@ const PEOPLE_CALM_ALIGNMENT_STRENGTH = 0.05;
 const PEOPLE_CALM_COHERENCE_STRENGTH = 0.4;
 const PEOPLE_CALM_SEPARATION_STRENGTH = 0.7;
 
-const PEOPLE_PANIC_ALIGNMENT_STRENGTH = 0.05;
-const PEOPLE_PANIC_COHERENCE_STRENGTH = 6;
-const PEOPLE_PANIC_SEPARATION_STRENGTH = 0.02;
-
 export default class Person extends Sprite implements Damagable {
   public pos: Vector;
 
@@ -44,8 +39,6 @@ export default class Person extends Sprite implements Damagable {
   search: Search;
   path: ICell[] = [];
   safe = false;
-  modeState: IState<Person, PERSON_INPUTS>;
-  flockState: IState<PersonFlock, PERSON_FLOCK_INPUTS>;
   battleState: IState<Person, PERSON_FIGHT_INPUTS>;
   startOffset = 200;
 
@@ -89,25 +82,17 @@ export default class Person extends Sprite implements Damagable {
     const alignment = align(this, people);
 
     let housePos: Vector = null;
-    if (this.flockState instanceof PanicState)
+
+    // TODO: remove this part since we aren't using cohesion for going around the
+    if (this.ui.state instanceof AttackState)
       housePos = this.safeHouseDoors[0].pos;
 
     const cohesion = cohere(this, people, housePos);
     const separation = separate(this, people, 30);
 
-    let alignmentMult = PEOPLE_CALM_ALIGNMENT_STRENGTH;
-    let coherenceMult = PEOPLE_CALM_COHERENCE_STRENGTH;
-    let separationMult = PEOPLE_CALM_SEPARATION_STRENGTH;
-
-    if (this.flockState instanceof PanicState) {
-      alignmentMult = PEOPLE_PANIC_ALIGNMENT_STRENGTH;
-      coherenceMult = PEOPLE_PANIC_COHERENCE_STRENGTH;
-      separationMult = PEOPLE_PANIC_SEPARATION_STRENGTH;
-    }
-
-    this.acc.add(alignment.mult(alignmentMult));
-    this.acc.add(cohesion.mult(coherenceMult));
-    this.acc.add(separation.mult(separationMult));
+    this.acc.add(alignment.mult(PEOPLE_CALM_ALIGNMENT_STRENGTH));
+    this.acc.add(cohesion.mult(PEOPLE_CALM_COHERENCE_STRENGTH));
+    this.acc.add(separation.mult(PEOPLE_CALM_SEPARATION_STRENGTH));
   }
 
   scare() {
@@ -125,7 +110,7 @@ export default class Person extends Sprite implements Damagable {
     let nextBattleState = PERSON_FIGHT_INPUTS.PEACE;
     let nextCell = null;
 
-    if (this.flockState instanceof PanicState) {
+    if (this.ui.state instanceof AttackState) {
       const start = this.stage.getCellForPos(this.center);
       const end = this.stage.getCellForPos(this.safeHouseDoors[0].center);
       const path = this.search.search(start, end);
@@ -136,7 +121,6 @@ export default class Person extends Sprite implements Damagable {
         // they're in the house
         if (overlaps(this, this.safeHouseDoors[0])) {
           this.safe = true;
-          console.log("safe!");
           SoundEffects.getInstance().safe.play();
         } else {
           // no way for them to access house
@@ -165,7 +149,7 @@ export default class Person extends Sprite implements Damagable {
     }
 
     let animation = null;
-    const panicked = this.flockState instanceof PanicState;
+    const panicked = this.ui.state instanceof AttackState;
 
     // TODO: Go back and make this a hierarchical state machine
     if (this.direction === "left" && panicked) {
