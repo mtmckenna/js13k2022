@@ -20,6 +20,9 @@ export default class Ui {
   percentDiv: HTMLDivElement;
   prevButton: HTMLButtonElement;
   nextButton: HTMLButtonElement;
+  bottomWrapper: HTMLElement;
+  topWrapper: HTMLElement;
+  titleDiv: HTMLElement;
 
   state: IState<Ui, UI_INPUTS>;
   public stage: Stage;
@@ -33,6 +36,7 @@ export default class Ui {
     this.state = new DefaultState();
     this.stage = stage;
 
+    const title = document.getElementById("title-screen");
     const uiWrapperBottom = document.getElementById("ui-wrapper-bottom");
     const uiWrapperTop = document.getElementById("ui-wrapper-top");
     const attack = createButton("Attack", uiWrapperBottom);
@@ -80,6 +84,23 @@ export default class Ui {
     this.killDiv = kill;
     this.escapeDiv = escape;
     this.percentDiv = percent;
+    this.topWrapper = uiWrapperTop;
+    this.bottomWrapper = uiWrapperBottom;
+    this.titleDiv = title;
+  }
+
+  hideUi() {
+    hide(this.topWrapper);
+    hide(this.bottomWrapper);
+  }
+
+  showUi() {
+    show(this.topWrapper);
+    show(this.bottomWrapper);
+  }
+
+  hideTitle() {
+    hide(this.titleDiv);
   }
 
   update() {

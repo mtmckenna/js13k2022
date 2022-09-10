@@ -79,7 +79,6 @@ export default class Renderer {
     this.ctx.font = "10px sans serif";
     this.ctx.textAlign = "center";
 
-    let fillStyle = "purple";
     const unwalkable = [];
     for (let i = 0; i < this.stage.size.x / gridSize; i++) {
       for (let j = 0; j < this.stage.size.y / gridSize; j++) {
@@ -89,7 +88,7 @@ export default class Renderer {
           unwalkable.push(unwalkable);
           const y = (-1 * (gridSize * j - h) - this.offset.y) * scale;
 
-          this.ctx.fillStyle = fillStyle;
+          this.ctx.fillStyle = "purple";
 
           this.ctx.fillRect(
             (gridSize * i - this.offset.x) * scale,

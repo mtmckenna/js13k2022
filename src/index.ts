@@ -21,10 +21,11 @@ canvas.height = desiredHeight;
 const desiredAspectRatio = desiredWidth / desiredHeight;
 let aspectRatio = null;
 let canvasWindowScale = 0;
+let gameStarted = false;
 
 const renderer = Renderer.getInstance();
 
-const currentStage = stage1;
+let currentStage = stage1;
 
 const input = Input.getInstance();
 input.addEventListeners(canvas);
@@ -105,6 +106,13 @@ function tick(t: number) {
 }
 
 function rallyPointClickCallback(pos: Vector) {
+  console.log("HI");
+  if (!gameStarted) {
+    console.log("star");
+    startGame();
+    return;
+  }
+
   if (!currentStage.selectedFlock) return;
 
   const gamePos = screenToGameCoordinates(pos);
@@ -131,8 +139,10 @@ function screenToGameCoordinates(pos: Vector): Vector {
   return pos;
 }
 
+console.log("reg");
 input.registerClickCallback(rallyPointClickCallback);
 
+showMainMenu();
 requestAnimationFrame(tick);
 
 function resize(force = false) {
@@ -167,4 +177,15 @@ function resize(force = false) {
 
   // How much have we stretched the canvas to fit the screen
   canvasWindowScale = window.innerHeight / scaledHeight;
+}
+
+function startGame() {
+  console.log("in startgame");
+  ui.showUi();
+  ui.hideTitle();
+  gameStarted = true;
+}
+
+function showMainMenu() {
+  ui.hideUi();
 }
