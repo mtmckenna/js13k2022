@@ -4,11 +4,9 @@ import PersonFlock from "./person_flock";
 import GullFlock from "./gull_flock";
 import Stage from "./stage";
 import { randomFloatBetween, Vector, overlaps } from "./math";
-import RallyPoint from "./rally_point";
 import Input from "./input";
 import Renderer from "./renderer";
 import Ui from "./ui";
-import Camera from "./camera";
 import BloodSystem from "./blood_system";
 import SafeHouseTop from "./safe_house_top";
 import SafeHouseLeft from "./safe_house_left";
@@ -35,9 +33,6 @@ let aspectRatio = null;
 let canvasWindowScale = 0;
 
 const renderer = Renderer.getInstance();
-const zoom = 1;
-const camera = new Camera(new Vector(0, 0, zoom));
-renderer.camera = camera;
 
 canvas.width = width;
 canvas.height = height;
@@ -232,7 +227,7 @@ function tick(t: number) {
 
   ui.update();
 
-  if (debug) renderer.drawGrid();
+  // if (debug) renderer.drawGrid();
 }
 
 function rallyPointClickCallback(pos: Vector) {
@@ -261,33 +256,6 @@ function screenToGameCoordinates(pos: Vector): Vector {
 
   return pos;
 }
-
-// function keydownCallback(keyCode: string) {
-//   switch (keyCode) {
-//     case "ArrowLeft":
-//       renderer.camera.moveBy(-1, 0, 0);
-//       break;
-//     case "ArrowRight":
-//       renderer.camera.moveBy(1, 0, 0);
-//       break;
-//     case "ArrowUp":
-//       renderer.camera.moveBy(0, -1, 0);
-//       break;
-//     case "ArrowDown":
-//       renderer.camera.moveBy(0, 1, 0);
-//       break;
-//     case "-":
-//       renderer.camera.moveBy(0, 0, -0.1);
-//       resize(true);
-//       break;
-//     case "+":
-//       renderer.camera.moveBy(0, 0, 0.1);
-//       resize(true);
-//       break;
-//   }
-
-//   // resetCameraWhenAtLimit();
-// }
 
 input.registerClickCallback(rallyPointClickCallback);
 
@@ -318,8 +286,8 @@ function resize(force = false) {
   canvas.height = scaledHeight;
 
   renderer.canvasOffset.set(
-    (scaledWidth / camera.pos.z - desiredWidth) / 2,
-    (scaledHeight / camera.pos.z - desiredHeight) / 2,
+    (scaledWidth - desiredWidth) / 2,
+    (scaledHeight - desiredHeight) / 2,
     0
   );
 

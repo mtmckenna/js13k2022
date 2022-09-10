@@ -116,19 +116,6 @@ export default class Stage {
     }
   }
 
-  fillCell(cell, color) {
-    const y = (this.numCellsTall - 1) * this.cellSize;
-    const scale = this.renderer.offset.z;
-
-    this.renderer.ctx.fillStyle = color;
-    this.renderer.ctx.fillRect(
-      (cell.x * this.cellSize - this.renderer.offset.x) * scale,
-      (y - cell.y * this.cellSize - this.renderer.offset.y) * scale,
-      this.cellSize * scale,
-      this.cellSize * scale
-    );
-  }
-
   recalculateAvailableBirds() {
     const { gulls: allGulls } = this;
 
