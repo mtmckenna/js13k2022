@@ -1,4 +1,5 @@
 import { Vector } from "./math";
+import RallyPoint from "./rally_point";
 import Renderer from "./renderer";
 import Sprite from "./sprite";
 
@@ -26,6 +27,7 @@ export interface ICell {
   breakable: boolean;
   cost: number;
   sprite: Sprite;
+  hasRallyPoint: boolean;
 }
 
 export interface Damagable {

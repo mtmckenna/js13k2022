@@ -12,7 +12,7 @@ import { AttackState } from "./ui_states";
 import SafeHouse from "./safe_house";
 
 const MAX_WALKING_SPEED = 0.1;
-const MAX_RUNNING_SPEED = 0.75;
+const MAX_RUNNING_SPEED = 0.5;
 const MAX_HEALTH_BAR_WIDTH = 50;
 const HEALTH_BAR_Y_OFFSET = 5;
 const HEALTH_BAR_OUTSIDE_HEIGHT = 10;

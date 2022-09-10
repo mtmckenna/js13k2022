@@ -85,7 +85,8 @@ export default class Renderer {
       for (let j = 0; j < this.stage.size.y / gridSize; j++) {
         const cell = this.stage.cells[j][i];
         const walkable = cell.walkable;
-        if (!walkable) {
+        const hasRallyPoint = cell.hasRallyPoint;
+        if (!walkable || hasRallyPoint) {
           unwalkable.push(unwalkable);
           const y = (-1 * (gridSize * j - h) - this.offset.y) * scale;
 

@@ -60,6 +60,7 @@ export class CreateFlockState implements IState<Ui, UI_INPUTS> {
     const flock = new GullFlock([], rallyPoint);
     ui.stage.gullFlocks.push(flock);
     ui.stage.selectFlock(flock);
+    ui.stage.resetRallyPointCosts();
   }
 
   handleInput(ui: Ui, input: UI_INPUTS) {

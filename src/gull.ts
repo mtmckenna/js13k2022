@@ -45,7 +45,7 @@ export default class Gull extends Sprite {
   flock(gulls: Gull[], posToCircle?: Vector) {
     // const alignment = align(this, gulls);
     const cohesion = cohere(this, gulls, posToCircle, 1.6);
-    const separation = separate(this, gulls, 150, 0.6);
+    const separation = separate(this, gulls, 150, 0.4);
 
     // this.acc.add(alignment);
     this.acc.add(cohesion);

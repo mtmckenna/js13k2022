@@ -22,7 +22,6 @@ const desiredAspectRatio = desiredWidth / desiredHeight;
 let aspectRatio = null;
 let canvasWindowScale = 0;
 let gameStarted = false;
-let pause = false;
 
 const renderer = Renderer.getInstance();
 
@@ -47,7 +46,7 @@ function tick(t: number) {
 
   if (currentStage.peopleLeft <= 0) {
     if (currentStage.percentKilled < 0.5) {
-      console.log("show retry");
+      // console.log("show retry");
       ui.showRetryResults();
     }
   }
@@ -128,6 +127,8 @@ function rallyPointClickCallback(pos: Vector) {
     gamePos.y,
     gamePos.z
   );
+
+  currentStage.resetRallyPointCosts();
 }
 
 function screenToGameCoordinates(pos: Vector): Vector {
@@ -213,18 +214,18 @@ function showMainMenu() {
   ui.hideUi();
 }
 
-document.addEventListener(
-  "keyup",
-  (event) => {
-    const keyName = event.key;
+// document.addEventListener(
+//   "keyup",
+//   (event) => {
+//     const keyName = event.key;
 
-    console.log(keyName);
-    // As the user releases the Ctrl key, the key is no longer active,
-    // so event.ctrlKey is false.
-    if (keyName === "p") {
-      console.log("p");
-      pause = true;
-    }
-  },
-  false
-);
+//     console.log(keyName);
+//     // As the user releases the Ctrl key, the key is no longer active,
+//     // so event.ctrlKey is false.
+//     if (keyName === "p") {
+//       console.log("p");
+//       // pause = true;
+//     }
+//   },
+//   false
+// );

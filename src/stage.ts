@@ -18,6 +18,7 @@ const DEFAULT_COST = 1;
 export default class Stage {
   static BREAKABLE_COST = 3;
   static WALKABLE_COST = 1;
+  static RALLY_POINT_COST = 2;
   static CELL_SIZE = 16;
 
   public bumpables: Sprite[];
@@ -152,6 +153,7 @@ export default class Stage {
           breakable: false,
           cost: DEFAULT_COST,
           sprite: null,
+          hasRallyPoint: false,
         };
         this.cells[i].push(cell);
       }
@@ -170,6 +172,13 @@ export default class Stage {
     );
 
     this.availableGulls = allGulls.filter((x) => !gullsInFlocks.includes(x));
+  }
+
+  resetRallyPointCosts() {
+    this.cells.flat().forEach((cell) => (cell.hasRallyPoint = false));
+    this.gullFlocks.forEach((gullFlock) => {
+      gullFlock.rallyPoint.addToCell();
+    });
   }
 
   selectNextFlock() {
