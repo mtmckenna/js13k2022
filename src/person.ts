@@ -9,10 +9,9 @@ import Blood from "./blood";
 import SafeHouseDoors from "./safe_house_door";
 import Search from "./search";
 import { PeaceState, PERSON_FIGHT_INPUTS } from "./person_battle_states";
-import SoundEffects from "./sound_effects";
 import { AttackState } from "./ui_states";
 
-const MAX_WALKING_SPEED = 0.5;
+const MAX_WALKING_SPEED = 0.03;
 const MAX_RUNNING_SPEED = 1;
 const MAX_HEALTH_BAR_WIDTH = 50;
 const HEALTH_BAR_Y_OFFSET = 5;
@@ -93,7 +92,9 @@ export default class Person extends Sprite implements Damagable {
   }
 
   die() {
-    if (this.health <= 0 && !this.dead) SoundEffects.getInstance().kill.play();
+    if (this.health <= 0 && !this.dead) {
+      this.stage.personKilled();
+    }
     super.die();
   }
 
@@ -114,7 +115,7 @@ export default class Person extends Sprite implements Damagable {
         // they're in the house
         if (overlaps(this, this.safeHouseDoors[0])) {
           this.safe = true;
-          SoundEffects.getInstance().safe.play();
+          this.stage.personSafe();
         } else {
           // no way for them to access house
           console.warn("Person can't get to house");

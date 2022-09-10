@@ -8,6 +8,7 @@ import Gull from "./gull";
 import PersonFlock from "./person_flock";
 import GullFlock from "./gull_flock";
 import { COLOR_MAP } from "./blood";
+import SoundEffects from "./sound_effects";
 
 const DEFAULT_COST = 1;
 
@@ -27,6 +28,9 @@ export default class Stage {
   public center: Vector;
   public topLeft: Vector;
   public selectedFlock: GullFlock;
+  public numPeopleSafe = 0;
+  public numPeopleKilled = 0;
+  public totalNumberOfPeople = 0;
 
   private renderer: Renderer;
 
@@ -63,6 +67,11 @@ export default class Stage {
 
   get gullsInFlocks() {
     return this.gullFlocks.flatMap((gullFlock) => gullFlock.sprites);
+  }
+
+  setPeople(people: Person[]) {
+    this.people = people;
+    this.totalNumberOfPeople = people.length;
   }
 
   selectFlock(flock: GullFlock) {
@@ -135,6 +144,22 @@ export default class Stage {
       this.cellSize * scale,
       this.cellSize * scale
     );
+  }
+
+  personSafe() {
+    SoundEffects.getInstance().safe.play();
+    this.numPeopleSafe++;
+  }
+
+  personKilled() {
+    SoundEffects.getInstance().kill.play();
+    this.numPeopleKilled++;
+  }
+
+  get percentKilled(): string {
+    return `${((this.numPeopleKilled / this.totalNumberOfPeople) * 100).toFixed(
+      0
+    )}%`;
   }
 
   draw() {

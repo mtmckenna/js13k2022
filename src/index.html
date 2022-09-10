@@ -55,20 +55,33 @@
       .ui {
         z-index: 2;
         position:absolute;
+        padding: 5px;
+        text-align: center;
+        width: 100%;
+
       }
 
-      #ui-wrapper {
-        position:absolute;
-        padding: 5px;
+      #ui-wrapper-top {
+        top: 0;
+      }
+
+      #ui-wrapper-bottom {
         bottom: 0;
-        /* left: 50%; */
-        /* transform: translate(-50%, 0); */
-        width: 100%;
-        text-align: center;
       }
 
       .hide {
         display: none;
+      }
+
+      .inline {
+        font-family: "Pixelated MS Sans Serif", Arial;
+        -webkit-font-smoothing: none;
+        color:white;
+        font-size: 20px;
+        display: inline-block;
+        text-shadow: 1px 1px 1px black;
+
+        padding: 0 5px;
       }
 
       /* https://github.com/jdan/98.css/blob/main/style.css */
@@ -88,6 +101,10 @@
         min-height: 23px;
         padding: 0 12px;
         margin: 0 5px;
+      }
+
+      red-buttom {
+        background-color: red;
       }
 
       button:not(:disabled):active {
@@ -135,7 +152,8 @@
   </head>
   <body>
     <canvas id="game"></canvas>
-    <div id="ui-wrapper">
+    <div id="ui-wrapper-top" class="ui"></div>
+    <div id="ui-wrapper-bottom" class="ui">
     </div>
   </body>
 </html>

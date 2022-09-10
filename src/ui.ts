@@ -15,8 +15,9 @@ export default class Ui {
   addBirdButton: HTMLButtonElement;
   removeBirdButton: HTMLButtonElement;
   doneWithFlock: HTMLButtonElement;
-  // nextFlockButton: HTMLButtonElement;
-  // prevFlockButton: HTMLButtonElement;
+  killDiv: HTMLDivElement;
+  escapeDiv: HTMLDivElement;
+  percentDiv: HTMLDivElement;
 
   state: IState<Ui, UI_INPUTS>;
   public stage: Stage;
@@ -30,14 +31,17 @@ export default class Ui {
     this.state = new DefaultState();
     this.stage = stage;
 
-    const uiWrapper = document.getElementById("ui-wrapper");
-    const attack = createButton("Attack", uiWrapper);
-    const createFlock = createButton("Create flock", uiWrapper);
-    const addBird = createButton("Add bird", uiWrapper);
-    const removeBird = createButton("Remove bird", uiWrapper);
-    const done = createButton("Done", uiWrapper);
-    // const prev = createButton("Prev flock", uiWrapper);
-    // const next = createButton("Next flock", uiWrapper);
+    const uiWrapperBottom = document.getElementById("ui-wrapper-bottom");
+    const uiWrapperTop = document.getElementById("ui-wrapper-top");
+    const attack = createButton("Attack", uiWrapperBottom);
+    const createFlock = createButton("Create flock", uiWrapperBottom);
+    const addBird = createButton("Add bird", uiWrapperBottom);
+    const removeBird = createButton("Remove bird", uiWrapperBottom);
+    const done = createButton("Done", uiWrapperBottom);
+
+    const kill = createDiv("Killed: 0", uiWrapperTop, ["inline"]);
+    const escape = createDiv("Escaped: 0", uiWrapperTop, ["inline"]);
+    const percent = createDiv("0%", uiWrapperTop, ["inline"]);
 
     attack.addEventListener("click", () =>
       this.state.handleInput(this, UI_INPUTS.ATTACK)
@@ -59,43 +63,36 @@ export default class Ui {
       this.stage.removeBird(this.stage.selectedFlock)
     );
 
-    // next.addEventListener("click", () => {
-    //   let index = this.stage.gullFlocks.indexOf(this.stage.selectedFlock);
-    //   if (index === this.stage.gullFlocks.length - 1) {
-    //     index = 0;
-    //   } else {
-    //     index++;
-    //   }
-    //   const newFlock = this.stage.gullFlocks[index];
-    //   this.stage.selectFlock(newFlock);
-    // });
-
-    // prev.addEventListener("click", () => {
-    //   let index = this.stage.gullFlocks.indexOf(this.stage.selectedFlock);
-    //   if (index === 0) {
-    //     index = this.stage.gullFlocks.length - 1;
-    //   } else {
-    //     index--;
-    //   }
-    //   const newFlock = this.stage.gullFlocks[index];
-    //   this.stage.selectFlock(newFlock);
-    // });
-
     this.attackButton = attack;
     this.createFlockButton = createFlock;
     this.addBirdButton = addBird;
     this.removeBirdButton = removeBird;
     this.doneWithFlock = done;
-    // this.nextFlockButton = next;
-    // this.prevFlockButton = prev;
+    this.killDiv = kill;
+    this.escapeDiv = escape;
+    this.percentDiv = percent;
   }
 
   update() {
+    const killText = `Killed: ${this.stage.numPeopleKilled}`;
+    const escapeText = `Escaped: ${this.stage.numPeopleSafe}`;
+    const percentText = this.stage.percentKilled;
+    if (this.killDiv.innerText !== killText) {
+      this.killDiv.innerText = killText;
+    }
+
+    if (this.escapeDiv.innerText !== escapeText) {
+      this.escapeDiv.innerText = escapeText;
+    }
+
+    if (this.percentDiv.innerText !== percentText) {
+      this.percentDiv.innerText = percentText;
+    }
+
     if (this.state instanceof DefaultState) {
       show(this.attackButton);
       show(this.createFlockButton);
-      // show(this.nextFlockButton);
-      // show(this.prevFlockButton);
+
       enable(this.attackButton);
 
       if (this.stage.availableGulls.length > 0) {
@@ -104,34 +101,20 @@ export default class Ui {
         disable(this.createFlockButton);
       }
 
-      // if (this.stage.gullFlocks.length > 1) {
-      //   enable(this.nextFlockButton);
-      //   enable(this.prevFlockButton);
-      // } else {
-      //   disable(this.nextFlockButton);
-      //   disable(this.prevFlockButton);
-      // }
-
       hide(this.addBirdButton);
       hide(this.removeBirdButton);
       hide(this.doneWithFlock);
     } else if (this.state instanceof AttackState) {
       show(this.attackButton);
       show(this.createFlockButton);
-      // show(this.nextFlockButton);
-      // show(this.prevFlockButton);
       disable(this.attackButton);
       disable(this.createFlockButton);
-      // disable(this.nextFlockButton);
-      // disable(this.prevFlockButton);
       hide(this.addBirdButton);
       hide(this.removeBirdButton);
       hide(this.doneWithFlock);
     } else if (this.state instanceof CreateFlockState) {
       hide(this.attackButton);
       hide(this.createFlockButton);
-      // hide(this.nextFlockButton);
-      // hide(this.prevFlockButton);
       show(this.addBirdButton);
       show(this.removeBirdButton);
       show(this.doneWithFlock);
@@ -151,27 +134,35 @@ export default class Ui {
   }
 }
 
-export function hide(node) {
+function hide(node) {
   node.classList.add("hide");
 }
 
-export function show(node) {
+function show(node) {
   node.classList.remove("hide");
 }
 
-export function disable(node) {
+function disable(node) {
   if (node.disabled == true) return;
   node.disabled = true;
 }
 
-export function enable(node) {
+function enable(node) {
   if (node.disabled == false) return;
   node.disabled = false;
 }
 
-export function createButton(text, node) {
+function createButton(text, node) {
   const elt = document.createElement("button");
   elt.innerText = text;
   node.appendChild(elt);
+  return elt;
+}
+
+function createDiv(text, node, classes = []) {
+  const elt = document.createElement("div");
+  elt.innerText = text;
+  node.appendChild(elt);
+  elt.classList.add(...classes);
   return elt;
 }

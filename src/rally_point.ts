@@ -16,7 +16,7 @@ export default class RallyPoint implements Drawable {
 
   constructor(pos: Vector, stage: Stage) {
     this.pos = pos;
-    this.size = new Vector(16, 16, 0);
+    this.size = new Vector(10, 10, 0);
     this.renderer = Renderer.getInstance();
     this.ctx = this.renderer.ctx;
     this.color = COLOR_MAP.pink;
@@ -41,16 +41,9 @@ export default class RallyPoint implements Drawable {
     const x = (this.pos.x - offset.x - this.size.x / 2) * offset.z;
     // Flip canvas coordinates upsideown
     const y = (-1 * (this.pos.y - h) - offset.y - this.size.y / 2) * offset.z;
-    // this.ctx.fillRect(x, y, this.size.x * offset.z, this.size.y * offset.z);
 
     this.ctx.beginPath();
-    this.ctx.arc(
-      x - this.size.x / 2,
-      y - this.size.y / 2,
-      this.size.x * offset.z,
-      0,
-      2 * Math.PI
-    );
+    this.ctx.arc(x, y, this.size.x * offset.z, 0, 2 * Math.PI);
     this.ctx.fill();
   }
 }

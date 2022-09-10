@@ -149,7 +149,7 @@ const personFlock1 = new PersonFlock(people.slice(0, 3));
 const personFlock2 = new PersonFlock(people.slice(3, 6));
 const personFlocks = [personFlock1, personFlock2];
 
-currentStage.people = people;
+currentStage.setPeople(people);
 currentStage.gulls = gulls;
 currentStage.gullFlocks = gullFlocks;
 currentStage.personFlocks = personFlocks;
@@ -157,6 +157,13 @@ currentStage.recalculateAvailableBirds();
 
 const ui = Ui.getInstance();
 ui.createUi(currentStage);
+
+function drawHouse(t: number) {
+  safeHouseLeft.draw(t);
+  safeHouseRight.draw(t);
+  safeHouseDoor.draw();
+  safeHouseTop.draw(t);
+}
 
 function tick(t: number) {
   requestAnimationFrame(tick);
@@ -176,10 +183,7 @@ function tick(t: number) {
     }
   }
 
-  safeHouseLeft.draw(t);
-  safeHouseRight.draw(t);
-  safeHouseDoor.draw();
-  safeHouseTop.draw(t);
+  drawHouse(t);
   trashCans.forEach((trashCan) => trashCan.draw(t));
   cars.forEach((car) => car.draw(t));
 
