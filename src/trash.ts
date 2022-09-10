@@ -15,7 +15,7 @@ export default class Trash extends Sprite implements Drawable, IBox {
   health = 50;
 
   constructor(pos: Vector, stage: Stage) {
-    const scale = 2;
+    const scale = 4;
     const idle = new SpriteAnimation("idle", 1, 0, 0);
 
     const props: ISpriteProps = {

@@ -12,6 +12,9 @@ import Trash from "./trash";
 import Car from "./car";
 import { AttackState } from "./ui_states";
 import SafeHouse from "./safe_house";
+import { stage1 } from "./stages";
+
+const bloodSystem = BloodSystem.getInstance();
 
 const canvas: HTMLCanvasElement = document.getElementById(
   "game"
@@ -22,6 +25,8 @@ const desiredWidth = 640;
 const desiredHeight = 480;
 const width = desiredWidth;
 const height = desiredHeight;
+canvas.width = width;
+canvas.height = height;
 
 const desiredAspectRatio = width / height;
 let aspectRatio = null;
@@ -29,102 +34,93 @@ let canvasWindowScale = 0;
 
 const renderer = Renderer.getInstance();
 
-canvas.width = width;
-canvas.height = height;
+const currentStage = stage1;
 
-const currentStage = new Stage(new Vector(width, height, 0));
-const gulls: Gull[] = [];
-const gullFlocks: GullFlock[] = [];
+// const currentStage = new Stage(new Vector(width, height, 0));
+// const gulls: Gull[] = [];
+// const gullFlocks: GullFlock[] = [];
 
-const safeHouse = new SafeHouse(new Vector(16 * 2, 16 * 15, 0), currentStage);
+// const safeHouse = new SafeHouse(new Vector(16 * 2, 16 * 15, 0), currentStage);
 
-const trashCans = [];
-for (let i = 0; i < 13; i++) {
-  const trashCan = new Trash(
-    new Vector(20 * 16, 28 * 16 - i * 8 * 2, 0),
-    currentStage
-  );
-  trashCans.push(trashCan);
-}
+// const trashCans = [];
+// for (let i = 0; i < 13; i++) {
+//   const trashCan = new Trash(
+//     new Vector(20 * 16, 28 * 16 - i * 8 * 2, 0),
+//     currentStage
+//   );
+//   trashCans.push(trashCan);
+// }
 
-const cars = [];
-const car1 = new Car(new Vector(3 * 16, 8 * 16, 0), currentStage);
+// const cars = [];
+// const car1 = new Car(new Vector(3 * 16, 8 * 16, 0), currentStage);
 
-cars.push(car1);
+// cars.push(car1);
 
-const bumpables = [safeHouse, ...trashCans, ...cars];
+// const bumpables = [safeHouse, ...trashCans, ...cars];
 
-currentStage.bumpables = bumpables;
+// currentStage.bumpables = bumpables;
 
-const bloodSystem = BloodSystem.getInstance();
-const people: Person[] = [];
+// const bloodSystem = BloodSystem.getInstance();
+// const people: Person[] = [];
 
 const input = Input.getInstance();
 input.addEventListeners(canvas);
 
-for (let i = 0; i < 10; i++) {
-  const pos = new Vector(
-    randomFloatBetween(0, canvas.width),
-    randomFloatBetween(0, canvas.height),
-    0
-  );
-  const gull = new Gull(pos, currentStage);
-  gull.vel.x = randomFloatBetween(-5, 5);
-  gull.vel.y = randomFloatBetween(-0.5, 5);
-  gulls.push(gull);
-}
+// for (let i = 0; i < 10; i++) {
+//   const pos = new Vector(
+//     randomFloatBetween(0, canvas.width),
+//     randomFloatBetween(0, canvas.height),
+//     0
+//   );
+//   const gull = new Gull(pos, currentStage);
+//   gull.vel.x = randomFloatBetween(-5, 5);
+//   gull.vel.y = randomFloatBetween(-0.5, 5);
+//   gulls.push(gull);
+// }
 
-for (let i = 0; i < 3; i++) {
-  const randomOffset = 50;
-  const pos = new Vector(
-    width + randomFloatBetween(-1 * randomOffset, randomOffset),
-    height + randomFloatBetween(-1 * randomOffset, randomOffset),
-    10
-  );
-  const person = new Person(pos, currentStage);
-  person.vel.x = randomFloatBetween(-5, 5);
-  person.vel.y = randomFloatBetween(-0.5, 5);
+// for (let i = 0; i < 3; i++) {
+//   const randomOffset = 50;
+//   const pos = new Vector(
+//     width + randomFloatBetween(-1 * randomOffset, randomOffset),
+//     height + randomFloatBetween(-1 * randomOffset, randomOffset),
+//     10
+//   );
+//   const person = new Person(pos, currentStage);
+//   person.vel.x = randomFloatBetween(-5, 5);
+//   person.vel.y = randomFloatBetween(-0.5, 5);
 
-  person.safeHouse = safeHouse;
-  people.push(person);
-}
+//   person.safeHouse = safeHouse;
+//   people.push(person);
+// }
 
-for (let i = 0; i < 3; i++) {
-  const randomOffset = 50;
-  const pos = new Vector(
-    100 + randomFloatBetween(-1 * randomOffset, randomOffset),
-    50 + randomFloatBetween(-1 * randomOffset, randomOffset),
-    10
-  );
-  const person = new Person(pos, currentStage);
-  person.vel.x = randomFloatBetween(-5, 5);
-  person.vel.y = randomFloatBetween(-0.5, 5);
-  // person.safeHouseDoors = [safeHouseDoor];
-  // person.safeHouseCells = [safeHouse.doorCell];
-  person.safeHouse = safeHouse;
-  people.push(person);
-}
+// for (let i = 0; i < 3; i++) {
+//   const randomOffset = 50;
+//   const pos = new Vector(
+//     100 + randomFloatBetween(-1 * randomOffset, randomOffset),
+//     50 + randomFloatBetween(-1 * randomOffset, randomOffset),
+//     10
+//   );
+//   const person = new Person(pos, currentStage);
+//   person.vel.x = randomFloatBetween(-5, 5);
+//   person.vel.y = randomFloatBetween(-0.5, 5);
+//   // person.safeHouseDoors = [safeHouseDoor];
+//   // person.safeHouseCells = [safeHouse.doorCell];
+//   person.safeHouse = safeHouse;
+//   people.push(person);
+// }
 
-const personFlock1 = new PersonFlock(people.slice(0, 3));
-const personFlock2 = new PersonFlock(people.slice(3, 6));
-const personFlocks = [personFlock1, personFlock2];
+// const personFlock1 = new PersonFlock(people.slice(0, 3));
+// const personFlock2 = new PersonFlock(people.slice(3, 6));
+// const personFlocks = [personFlock1, personFlock2];
 
-currentStage.setPeople(people);
-currentStage.gulls = gulls;
-currentStage.gullFlocks = gullFlocks;
-currentStage.personFlocks = personFlocks;
-currentStage.recalculateAvailableBirds();
+// currentStage.setPeople(people);
+// currentStage.gulls = gulls;
+// currentStage.gullFlocks = gullFlocks;
+// currentStage.personFlocks = personFlocks;
+// currentStage.recalculateAvailableBirds();
 
 const ui = Ui.getInstance();
 ui.createUi(currentStage);
-
-function drawHouse(t: number) {
-  safeHouse.draw(t);
-  // safeHouseLeft.draw(t);
-  // safeHouseRight.draw(t);
-  // safeHouseDoor.draw();
-  // safeHouseTop.draw(t);
-}
 
 function tick(t: number) {
   requestAnimationFrame(tick);
@@ -144,17 +140,18 @@ function tick(t: number) {
     }
   }
 
-  drawHouse(t);
-  trashCans.forEach((trashCan) => trashCan.draw(t));
-  cars.forEach((car) => car.draw(t));
+  currentStage.safeHouse.draw(t);
+
+  currentStage.trashCans.forEach((trashCan) => trashCan.draw(t));
+  currentStage.cars.forEach((car) => car.draw(t));
 
   currentStage.gulls.forEach((gull) => {
     gull.update(t);
     gull.draw(t);
   });
 
-  for (let i = 0; i < people.length; i++) {
-    const person = people[i];
+  for (let i = 0; i < currentStage.people.length; i++) {
+    const person = currentStage.people[i];
     if (person.safe || person.dead) continue;
     person.update(t);
     person.draw(t);
@@ -175,7 +172,7 @@ function tick(t: number) {
   if (ui.state instanceof AttackState) {
     currentStage.people.forEach((person) => {
       if (!person.dead && !person.safe) {
-        gulls.forEach((gull) => {
+        currentStage.gulls.forEach((gull) => {
           if (overlaps(gull, person)) {
             person.damage(1, t);
           }
@@ -192,7 +189,6 @@ function tick(t: number) {
 
   ui.update();
 
-  // currentStage.fillCell(safeHouse.doorCell, "red");
   // renderer.drawGrid();
 }
 

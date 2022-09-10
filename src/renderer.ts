@@ -79,20 +79,24 @@ export default class Renderer {
     this.ctx.font = "10px sans serif";
     this.ctx.textAlign = "center";
 
-    this.ctx.fillStyle = "purple";
+    let fillStyle = "purple";
     const unwalkable = [];
     for (let i = 0; i < this.stage.size.x / gridSize; i++) {
       for (let j = 0; j < this.stage.size.y / gridSize; j++) {
-        const walkable = this.stage.cells[j][i].walkable;
+        const cell = this.stage.cells[j][i];
+        const walkable = cell.walkable;
         if (!walkable) {
           unwalkable.push(unwalkable);
           const y = (-1 * (gridSize * j - h) - this.offset.y) * scale;
-          // this.ctx.fillRect(
-          //   (gridSize * i - this.offset.x) * scale,
-          //   y,
-          //   gridSize * scale,
-          //   gridSize * scale
-          // );
+
+          this.ctx.fillStyle = fillStyle;
+
+          this.ctx.fillRect(
+            (gridSize * i - this.offset.x) * scale,
+            y,
+            gridSize * scale,
+            gridSize * scale
+          );
         }
 
         if ((i + j) % 2 == 0) {

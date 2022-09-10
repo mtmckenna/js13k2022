@@ -6,14 +6,13 @@ import personImageDataUrl from "../assets/spritesheet.png";
 import { align, cohere, separate } from "./flock";
 import SpriteAnimation from "./sprite_animation";
 import Blood from "./blood";
-// import SafeHouseDoors from "./safe_house_door";
 import Search from "./search";
 import { PeaceState, PERSON_FIGHT_INPUTS } from "./person_battle_states";
 import { AttackState } from "./ui_states";
 import SafeHouse from "./safe_house";
 
 const MAX_WALKING_SPEED = 0.1;
-const MAX_RUNNING_SPEED = 1;
+const MAX_RUNNING_SPEED = 0.75;
 const MAX_HEALTH_BAR_WIDTH = 50;
 const HEALTH_BAR_Y_OFFSET = 5;
 const HEALTH_BAR_OUTSIDE_HEIGHT = 10;
@@ -217,8 +216,8 @@ export default class Person extends Sprite implements Damagable {
     super.draw(t);
     this.drawHealthBar();
 
-    // for (const cell of this.path) {
-    //   this.stage.strokeCell(cell, "yellow");
-    // }
+    for (const cell of this.path) {
+      this.stage.strokeCell(cell, "yellow");
+    }
   }
 }

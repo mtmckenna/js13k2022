@@ -191,7 +191,7 @@ export default class Sprite implements Drawable, Updatable, Damagable {
       for (let j = 0; j < this.clampedNumCellsDown; j++) {
         const cell = this.stage.getCell(mainCell.x + i, mainCell.y - j);
 
-        cell.cost = Stage.WALKABLE_COST;
+        cell.cost = breakable ? Stage.BREAKABLE_COST : Stage.WALKABLE_COST;
         cell.walkable = walkable;
         cell.breakable = breakable;
         cell.sprite = this;

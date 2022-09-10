@@ -8,29 +8,43 @@ import Gull from "./gull";
 import PersonFlock from "./person_flock";
 import GullFlock from "./gull_flock";
 import { COLOR_MAP } from "./blood";
+import { IStageProps } from "./stages";
+import SafeHouse from "./safe_house";
+import Car from "./car";
+import Trash from "./trash";
 
 const DEFAULT_COST = 1;
 
 export default class Stage {
-  static BREAKABLE_COST = 2;
+  static BREAKABLE_COST = 3;
   static WALKABLE_COST = 1;
+  static CELL_SIZE = 16;
 
   public bumpables: Sprite[];
   public size: Vector;
   public cells: ICell[][] = [];
   public numCellsTall: number;
   public numCellsWide: number;
-  public cellSize = 16;
+  public cellSize = Stage.CELL_SIZE;
   public people: Person[];
   public gulls: Gull[];
   public personFlocks: PersonFlock[];
   public gullFlocks: GullFlock[];
   public availableGulls: Gull[];
   public center: Vector;
+  public topLeft: Vector;
+  public topCenter: Vector;
+  public topRight: Vector;
+  public bottomRight: Vector;
+  public bottomCenter: Vector;
+  public bottomLeft: Vector;
   public selectedFlock: GullFlock;
   public numPeopleSafe = 0;
   public numPeopleKilled = 0;
   public totalNumberOfPeople = 0;
+  public cars: Car[];
+  public trashCans: Trash[];
+  public safeHouse: SafeHouse;
 
   private renderer: Renderer;
   private sky: Box;
@@ -39,12 +53,21 @@ export default class Stage {
   private lot: Box;
 
   constructor(size: Vector) {
+    const C = Stage.CELL_SIZE;
+
     this.size = size;
     this.center = new Vector(
       Math.round(this.size.x / 2),
       Math.round(this.size.y / 2),
       0
     );
+
+    this.topLeft = new Vector(this.size.x / 4, this.size.y - C, 0);
+    this.topCenter = new Vector(this.size.x / 2, this.size.y - C, 0);
+    this.topRight = new Vector((this.size.x * 3) / 4, this.size.y - C, 0);
+    this.bottomRight = new Vector((this.size.x * 3) / 4, 0 + C, 0);
+    this.bottomCenter = new Vector(this.size.x / 2, 0 + 2 * C, 0);
+    this.bottomLeft = new Vector(this.size.x / 4, 0 + C, 0);
 
     this.renderer = Renderer.getInstance();
 
@@ -55,8 +78,26 @@ export default class Stage {
     this.selectedFlock = null;
   }
 
-  get gullsInFlocks() {
-    return this.gullFlocks.flatMap((gullFlock) => gullFlock.sprites);
+  processStageProps(stageProps: IStageProps) {
+    this.bumpables = [
+      ...stageProps.trashCans,
+      ...stageProps.cars,
+      stageProps.safeHouse,
+    ];
+    this.safeHouse = stageProps.safeHouse;
+    this.trashCans = stageProps.trashCans;
+    this.cars = stageProps.cars;
+    this.personFlocks = stageProps.personFlocks;
+    this.gulls = stageProps.gulls;
+    this.gullFlocks = [];
+    this.recalculateAvailableBirds();
+    const people = this.personFlocks.flatMap(
+      (personFlock) => personFlock.sprites
+    );
+    this.setPeople(people);
+    this.people.forEach((person) => {
+      person.safeHouse = this.safeHouse;
+    });
   }
 
   setPeople(people: Person[]) {
@@ -118,9 +159,11 @@ export default class Stage {
   recalculateAvailableBirds() {
     const { gulls: allGulls } = this;
 
-    this.availableGulls = allGulls.filter(
-      (x) => !this.gullsInFlocks.includes(x)
+    const gullsInFlocks = this.gullFlocks.flatMap(
+      (gullFlock) => gullFlock.sprites
     );
+
+    this.availableGulls = allGulls.filter((x) => !gullsInFlocks.includes(x));
   }
 
   selectNextFlock() {
@@ -248,18 +291,18 @@ export default class Stage {
   //   );
   // }
 
-  // strokeCell(cell, color) {
-  //   const y = (this.numCellsTall - 1) * this.cellSize;
-  //   const scale = this.renderer.offset.z;
+  strokeCell(cell, color) {
+    const y = (this.numCellsTall - 1) * this.cellSize;
+    const scale = this.renderer.offset.z;
 
-  //   this.renderer.ctx.strokeStyle = color;
-  //   this.renderer.ctx.strokeRect(
-  //     (cell.x * this.cellSize - this.renderer.offset.x) * scale,
-  //     (y - cell.y * this.cellSize - this.renderer.offset.y) * scale,
-  //     this.cellSize * scale,
-  //     this.cellSize * scale
-  //   );
-  // }
+    this.renderer.ctx.strokeStyle = color;
+    this.renderer.ctx.strokeRect(
+      (cell.x * this.cellSize - this.renderer.offset.x) * scale,
+      (y - cell.y * this.cellSize - this.renderer.offset.y) * scale,
+      this.cellSize * scale,
+      this.cellSize * scale
+    );
+  }
 
   neighbors(cell) {
     const result = [];
