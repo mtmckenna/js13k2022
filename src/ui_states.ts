@@ -15,6 +15,8 @@ export class DefaultState implements IState<Ui, UI_INPUTS> {
         break;
       case UI_INPUTS.SELECT_OBSTACLE:
         state = new SelectObstacleState();
+        state.enter(ui);
+
         break;
       default:
         state = this; // eslint-disable-line
@@ -32,29 +34,17 @@ export class AttackState implements IState<Ui, UI_INPUTS> {
     gulls.forEach((gull) => gull.attack());
   }
 
+  // once in the attack state, no going back
   handleInput(ui: Ui, input: UI_INPUTS) {
-    let state = null;
-
-    switch (input) {
-      case UI_INPUTS.DEFAULT:
-        state = new DefaultState();
-        break;
-      case UI_INPUTS.ATTACK:
-        state = this; // eslint-disable-line
-        break;
-      case UI_INPUTS.SELECT_OBSTACLE:
-        state = new SelectObstacleState();
-        break;
-      default:
-        state = this; // eslint-disable-line
-    }
-
-    ui.state = state;
-    return state;
+    return this;
   }
 }
 
 export class SelectObstacleState implements IState<Ui, UI_INPUTS> {
+  enter(ui: Ui) {
+    console.log("select");
+  }
+
   handleInput(ui: Ui, input: UI_INPUTS) {
     let state = null;
 

@@ -5,13 +5,14 @@ import Stage from "./stage";
 
 import houseImageDataUrl from "../assets/spritesheet.png";
 import SpriteAnimation from "./sprite_animation";
+import SafeHouseLeft from "./safe_house_left";
 
 export default class SafeHouseRight extends Sprite implements Drawable, IBox {
   canBump = false;
   startOffset = 156;
 
   constructor(pos: Vector, stage: Stage) {
-    const scale = 3;
+    const scale = SafeHouseLeft.DEFAULT_SCALE;
     const idle = new SpriteAnimation("idle", 1, 0, 0);
 
     const props: ISpriteProps = {

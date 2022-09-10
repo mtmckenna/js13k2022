@@ -35,7 +35,6 @@ export default class Stage {
 
   constructor(size: Vector) {
     this.size = size;
-    // this.camera = camera;
     this.renderer = Renderer.getInstance();
 
     this.numCellsWide = Math.ceil(this.size.x / this.cellSize);
@@ -161,6 +160,7 @@ export default class Stage {
 
   selectObstacle(pos: Vector): Sprite {
     const cell = this.getCellForPos(pos);
+    console.log(pos, cell);
     if (!cell.breakable) return null;
     return cell.sprite;
   }

@@ -102,11 +102,14 @@ export default class Renderer {
             gridSize * scale
           );
         }
-        this.ctx.fillText(
-          `${i},${j}`,
-          (gridSize / 2 + gridSize * i - this.offset.x) * scale,
-          (h - j * gridSize - this.offset.y - gridSize / 2) * scale
-        );
+
+        if ((i + j) % 2 == 0) {
+          this.ctx.fillText(
+            `${i},${j}`,
+            (gridSize / 2 + gridSize * i - this.offset.x) * scale,
+            (h - j * gridSize - this.offset.y - gridSize / 2) * scale
+          );
+        }
       }
     }
 

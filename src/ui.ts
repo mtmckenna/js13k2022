@@ -1,4 +1,9 @@
-import { DefaultState, SelectObstacleState, UI_INPUTS } from "./ui_states";
+import {
+  AttackState,
+  DefaultState,
+  SelectObstacleState,
+  UI_INPUTS,
+} from "./ui_states";
 import { IState } from "./interfaces";
 import Stage from "./stage";
 
@@ -36,14 +41,35 @@ export default class Ui {
   }
 
   update() {
-    // console.log(gullFlock.modeState);
-    // if (gullFlock.flockState instanceof AttackState) {
-    //   select(this.attackButton);
-    //   unselect(this.moveButton);
-    // } else if (gullFlock.flockState instanceof CircleTargetState) {
-    //   unselect(this.attackButton);
-    //   select(this.moveButton);
-    // }
+    this.updateCursor();
+    this.updateAttackButton();
+    this.updateMoveObstacleButton();
+  }
+
+  updateAttackButton() {
+    if (this.state instanceof DefaultState) {
+      enable(this.attackButton);
+    } else {
+      disable(this.attackButton);
+    }
+  }
+
+  updateMoveObstacleButton() {
+    if (this.state instanceof AttackState) {
+      disable(this.moveButton);
+    } else {
+      enable(this.moveButton);
+    }
+  }
+
+  updateCursor() {
+    if (this.state instanceof DefaultState) {
+      document.body.style.cursor = "default";
+    } else if (this.state instanceof SelectObstacleState) {
+      document.body.style.cursor = "grab";
+    } else {
+      document.body.style.cursor = "default";
+    }
   }
 }
 
@@ -59,8 +85,26 @@ export function select(node) {
   node.classList.add("selected");
 }
 
+export function disable(node) {
+  if (node.disabled == true) return;
+  node.disabled = true;
+}
+
+export function enable(node) {
+  if (node.disabled == false) return;
+  node.disable = false;
+}
+
 export function unselect(node) {
   node.classList.remove("selected");
+}
+
+export function width100(node) {
+  node.classList.remove("width100");
+}
+
+export function height100(node) {
+  node.classList.remove("heigh100");
 }
 
 export function createButton(text, node, classes = []) {
