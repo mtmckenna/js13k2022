@@ -46,9 +46,12 @@ const stage1Props: IStageProps = {
   safeHouse: stage1House,
   personFlocks: [stage1PersonFlock],
   gulls: generateGulls(5, stage1),
+  number: 1,
 };
 
 stage1.processStageProps(stage1Props);
+
+export const stages = [stage1];
 
 function generatePersonFlock(
   location: Vector,
@@ -92,4 +95,5 @@ export interface IStageProps {
   safeHouse: SafeHouse;
   personFlocks: PersonFlock[];
   gulls: Gull[];
+  number: number;
 }

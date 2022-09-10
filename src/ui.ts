@@ -23,6 +23,7 @@ export default class Ui {
   bottomWrapper: HTMLElement;
   topWrapper: HTMLElement;
   titleDiv: HTMLElement;
+  resultsDiv: HTMLElement;
 
   state: IState<Ui, UI_INPUTS>;
   public stage: Stage;
@@ -37,6 +38,8 @@ export default class Ui {
     this.stage = stage;
 
     const title = document.getElementById("title-screen");
+    const results = document.getElementById("results");
+
     const uiWrapperBottom = document.getElementById("ui-wrapper-bottom");
     const uiWrapperTop = document.getElementById("ui-wrapper-top");
     const attack = createButton("Attack", uiWrapperBottom);
@@ -87,6 +90,7 @@ export default class Ui {
     this.topWrapper = uiWrapperTop;
     this.bottomWrapper = uiWrapperBottom;
     this.titleDiv = title;
+    this.resultsDiv = results;
   }
 
   hideUi() {
@@ -103,10 +107,22 @@ export default class Ui {
     hide(this.titleDiv);
   }
 
+  showRetryResults() {
+    show(this.resultsDiv);
+  }
+
+  showWinResults() {
+    show(this.resultsDiv);
+  }
+
+  hideResults() {
+    hide(this.resultsDiv);
+  }
+
   update() {
     const killText = `Killed: ${this.stage.numPeopleKilled}`;
     const escapeText = `Escaped: ${this.stage.numPeopleSafe}`;
-    const percentText = this.stage.percentKilled;
+    const percentText = `${(this.stage.percentKilled * 100).toFixed(0)}%`;
     if (this.killDiv.innerText !== killText) {
       this.killDiv.innerText = killText;
     }

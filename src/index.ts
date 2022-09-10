@@ -4,7 +4,7 @@ import Renderer from "./renderer";
 import Ui from "./ui";
 import BloodSystem from "./blood_system";
 import { AttackState } from "./ui_states";
-import { stage1 } from "./stages";
+import { stages } from "./stages";
 
 const bloodSystem = BloodSystem.getInstance();
 
@@ -22,10 +22,11 @@ const desiredAspectRatio = desiredWidth / desiredHeight;
 let aspectRatio = null;
 let canvasWindowScale = 0;
 let gameStarted = false;
+let pause = false;
 
 const renderer = Renderer.getInstance();
 
-let currentStage = stage1;
+let currentStage = stages[0];
 
 const input = Input.getInstance();
 input.addEventListeners(canvas);
@@ -37,12 +38,24 @@ function tick(t: number) {
   requestAnimationFrame(tick);
   resize();
   renderer.renderTick(currentStage);
-
   ctx.imageSmoothingEnabled = false;
+
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
   currentStage.draw();
+  updateSprites(t);
+  ui.update();
 
+  if (currentStage.peopleLeft <= 0) {
+    if (currentStage.percentKilled < 0.5) {
+      console.log("show retry");
+      ui.showRetryResults();
+    }
+  }
+
+  // renderer.drawGrid();
+}
+
+function updateSprites(t: number) {
   for (let i = 0; i < bloodSystem.bloods.length; i++) {
     const blood = bloodSystem.bloods[i];
     if (blood.inUse()) {
@@ -99,16 +112,10 @@ function tick(t: number) {
       );
     });
   }
-
-  ui.update();
-
-  // renderer.drawGrid();
 }
 
 function rallyPointClickCallback(pos: Vector) {
-  console.log("HI");
   if (!gameStarted) {
-    console.log("star");
     startGame();
     return;
   }
@@ -139,7 +146,6 @@ function screenToGameCoordinates(pos: Vector): Vector {
   return pos;
 }
 
-console.log("reg");
 input.registerClickCallback(rallyPointClickCallback);
 
 showMainMenu();
@@ -179,8 +185,25 @@ function resize(force = false) {
   canvasWindowScale = window.innerHeight / scaledHeight;
 }
 
+function retryStage() {
+  ui.hideResults();
+}
+
+function goToNextStage() {
+  const currentIndex = stages.indexOf(currentStage);
+  if (currentIndex === stages.length - 1) {
+    win();
+    return;
+  }
+  const nextIndex = currentIndex + 1;
+  currentStage = stages[nextIndex];
+}
+
+function win() {
+  console.log("win!");
+}
+
 function startGame() {
-  console.log("in startgame");
   ui.showUi();
   ui.hideTitle();
   gameStarted = true;
@@ -189,3 +212,19 @@ function startGame() {
 function showMainMenu() {
   ui.hideUi();
 }
+
+document.addEventListener(
+  "keyup",
+  (event) => {
+    const keyName = event.key;
+
+    console.log(keyName);
+    // As the user releases the Ctrl key, the key is no longer active,
+    // so event.ctrlKey is false.
+    if (keyName === "p") {
+      console.log("p");
+      pause = true;
+    }
+  },
+  false
+);

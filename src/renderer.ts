@@ -25,6 +25,7 @@ export default class Renderer {
   public renderTick(stage: Stage) {
     this.stage = stage;
     this.offset.set(-this.canvasOffset.x, -this.canvasOffset.y, 1);
+
     this.previousRenderNumber = this.currentRenderNumber;
     this.currentRenderNumber++;
   }

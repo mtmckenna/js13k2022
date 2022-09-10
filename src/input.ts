@@ -40,7 +40,6 @@ export default class Input {
   // }
 
   inputPressed(x: number, y: number) {
-    console.log("input");
     this.clickCallbacks.forEach((callback) => callback(new Vector(x, y, 0)));
   }
 

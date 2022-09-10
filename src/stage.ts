@@ -45,6 +45,7 @@ export default class Stage {
   public cars: Car[];
   public trashCans: Trash[];
   public safeHouse: SafeHouse;
+  public number: number;
 
   private renderer: Renderer;
   private sky: Box;
@@ -98,6 +99,7 @@ export default class Stage {
     this.people.forEach((person) => {
       person.safeHouse = this.safeHouse;
     });
+    this.number = stageProps.number;
   }
 
   setPeople(people: Person[]) {
@@ -156,6 +158,10 @@ export default class Stage {
     }
   }
 
+  get peopleLeft(): number {
+    return this.totalNumberOfPeople - this.numPeopleKilled - this.numPeopleSafe;
+  }
+
   recalculateAvailableBirds() {
     const { gulls: allGulls } = this;
 
@@ -190,10 +196,8 @@ export default class Stage {
     this.numPeopleKilled++;
   }
 
-  get percentKilled(): string {
-    return `${((this.numPeopleKilled / this.totalNumberOfPeople) * 100).toFixed(
-      0
-    )}%`;
+  get percentKilled(): number {
+    return this.numPeopleKilled / this.totalNumberOfPeople;
   }
 
   draw() {
