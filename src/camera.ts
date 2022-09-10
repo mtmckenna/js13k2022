@@ -1,5 +1,6 @@
 import { Vector } from "./math";
 
+// TODO: delete camera?
 export default class Camera {
   pos: Vector;
   speed = 3;

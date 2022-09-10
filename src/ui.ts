@@ -99,14 +99,6 @@ export function unselect(node) {
   node.classList.remove("selected");
 }
 
-export function width100(node) {
-  node.classList.remove("width100");
-}
-
-export function height100(node) {
-  node.classList.remove("heigh100");
-}
-
 export function createButton(text, node, classes = []) {
   const elt = document.createElement("button");
   elt.innerText = text;

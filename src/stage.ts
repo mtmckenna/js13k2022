@@ -86,6 +86,19 @@ export default class Stage {
     }
   }
 
+  fillCell(cell, color) {
+    const y = (this.numCellsTall - 1) * this.cellSize;
+    const scale = this.renderer.offset.z;
+
+    this.renderer.ctx.fillStyle = color;
+    this.renderer.ctx.fillRect(
+      (cell.x * this.cellSize - this.renderer.offset.x) * scale,
+      (y - cell.y * this.cellSize - this.renderer.offset.y) * scale,
+      this.cellSize * scale,
+      this.cellSize * scale
+    );
+  }
+
   strokeCell(cell, color) {
     const y = (this.numCellsTall - 1) * this.cellSize;
     const scale = this.renderer.offset.z;
@@ -143,24 +156,26 @@ export default class Stage {
     return this.cells[y][x];
   }
 
-  getCellForPos(pos: Vector) {
-    const x = clamp(
-      Math.round(pos.x / this.cellSize),
-      0,
-      this.numCellsWide - 1
-    );
-    const y = clamp(
-      Math.round(pos.y / this.cellSize),
-      0,
-      this.numCellsTall - 1
-    );
+  getCellForPos(pos: Vector, floor = false) {
+    const rawX = pos.x / this.cellSize;
+    const rawY = pos.y / this.cellSize;
+    let intX = Math.round(rawX);
+    let intY = Math.round(rawY);
+
+    if (floor) {
+      intX = Math.floor(rawX);
+      intY = Math.floor(rawY);
+    }
+
+    const x = clamp(intX, 0, this.numCellsWide - 1);
+    const y = clamp(intY, 0, this.numCellsTall - 1);
 
     return this.getCell(x, y);
   }
 
   selectObstacle(pos: Vector): Sprite {
-    const cell = this.getCellForPos(pos);
-    console.log(pos, cell);
+    const cell = this.getCellForPos(pos, true);
+    console.log("obstacle", pos, cell, cell.sprite);
     if (!cell.breakable) return null;
     return cell.sprite;
   }

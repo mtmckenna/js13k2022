@@ -236,9 +236,30 @@ function tick(t: number) {
   ui.update();
 
   if (debug) renderer.drawGrid();
+  currentStage.fillCell(mouseCell, "blue");
 }
 
-function clickCallback(pos: Vector) {
+function moveObjectClickCallback(pos: Vector) {
+  const gamePos = screenToGameCoordinates(pos);
+  const obstacle = currentStage.selectObstacle(pos);
+  console.log("move");
+}
+
+let mouseCell = { x: 0, y: 0 };
+function moveMouseCallback(pos: Vector) {
+  const gamePos = screenToGameCoordinates(pos);
+  // console.log(gamePos);
+  const cell = currentStage.getCellForPos(gamePos, true);
+  // console.log("move");
+  mouseCell = { x: cell.x, y: cell.y };
+}
+
+function rallyPointClickCallback(pos: Vector) {
+  const gamePos = screenToGameCoordinates(pos);
+  rallyPoints[0].pos.set(gamePos.x, gamePos.y, gamePos.z);
+}
+
+function screenToGameCoordinates(pos: Vector): Vector {
   // I don't know how this works but it's supposed to scale from screen to game
   pos.set(
     (pos.x / canvasWindowScale + renderer.offset.x * renderer.offset.z) /
@@ -250,8 +271,8 @@ function clickCallback(pos: Vector) {
 
   const h = currentStage.size.y;
   pos.set(pos.x, h - pos.y, pos.z);
-  // rallyPoints[0] = new RallyPoint(pos, currentStage);
-  rallyPoints[0].pos.set(pos.x, pos.y, pos.z);
+
+  return pos;
 }
 
 // function keydownCallback(keyCode: string) {
@@ -281,7 +302,9 @@ function clickCallback(pos: Vector) {
 //   // resetCameraWhenAtLimit();
 // }
 
-input.registerClickCallback(clickCallback);
+input.registerClickCallback(rallyPointClickCallback);
+input.registerClickCallback(moveObjectClickCallback);
+input.registermoveCallback(moveMouseCallback);
 
 requestAnimationFrame(tick);
 

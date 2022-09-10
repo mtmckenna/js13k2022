@@ -23,7 +23,7 @@ const HEALTH_BAR_INSIDE_OFFSET = HEALTH_BAR_BORDER / 2;
 
 const PEOPLE_CALM_ALIGNMENT_STRENGTH = 0.05;
 const PEOPLE_CALM_COHERENCE_STRENGTH = 0.4;
-const PEOPLE_CALM_SEPARATION_STRENGTH = 0.7;
+const PEOPLE_CALM_SEPARATION_STRENGTH = 0.8;
 
 export default class Person extends Sprite implements Damagable {
   public pos: Vector;
