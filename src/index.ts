@@ -145,11 +145,6 @@ function tick(t: number) {
   currentStage.trashCans.forEach((trashCan) => trashCan.draw(t));
   currentStage.cars.forEach((car) => car.draw(t));
 
-  currentStage.gulls.forEach((gull) => {
-    gull.update(t);
-    gull.draw(t);
-  });
-
   for (let i = 0; i < currentStage.people.length; i++) {
     const person = currentStage.people[i];
     if (person.safe || person.dead) continue;
@@ -159,9 +154,16 @@ function tick(t: number) {
 
   currentStage.gullFlocks.forEach((gullFlock) => {
     gullFlock.rallyPoint.draw();
-    gullFlock.sprites.forEach((gull) =>
-      gull.flock(gullFlock.sprites, gullFlock.rallyPoint.pos)
-    );
+    gullFlock.sprites.forEach((gull) => {
+      gull.flock(gullFlock.sprites, gullFlock.rallyPoint.pos);
+      if (currentStage.selectedFlock === gullFlock)
+        gullFlock.rallyPoint.drawLineToGull(gull);
+    });
+  });
+
+  currentStage.gulls.forEach((gull) => {
+    gull.update(t);
+    gull.draw(t);
   });
 
   currentStage.availableGulls.forEach((gull) => {

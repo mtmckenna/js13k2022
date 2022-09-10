@@ -3,6 +3,7 @@ import { Drawable } from "./interfaces";
 import Renderer from "./renderer";
 import Stage from "./stage";
 import { COLOR_MAP } from "./blood";
+import Gull from "./gull";
 
 export default class RallyPoint implements Drawable {
   pos: Vector;
@@ -45,5 +46,29 @@ export default class RallyPoint implements Drawable {
     this.ctx.beginPath();
     this.ctx.arc(x, y, this.size.x * offset.z, 0, 2 * Math.PI);
     this.ctx.fill();
+  }
+
+  drawLineToGull(gull: Gull) {
+    const h = this.stage.size.y;
+    const offset = this.renderer.offset;
+
+    this.ctx.strokeStyle = COLOR_MAP.pink;
+
+    const fromX = (this.pos.x - offset.x - this.size.x / 2) * offset.z;
+    const fromY =
+      (-1 * (this.pos.y - h) - offset.y - this.size.y / 2) * offset.z;
+
+    const toX = (gull.center.x - offset.x) * offset.z;
+    const toY = (-1 * (gull.center.y - h) - offset.y) * offset.z;
+
+    // this.ctx.beginPath();
+    // this.ctx.arc(x, y, this.size.x * offset.z, 0, 2 * Math.PI);
+    // this.ctx.fill();
+
+    this.ctx.lineWidth = 1;
+    this.ctx.beginPath();
+    this.ctx.moveTo(fromX, fromY);
+    this.ctx.lineTo(toX, toY);
+    this.ctx.stroke();
   }
 }
