@@ -1,17 +1,9 @@
-import Gull from "./gull";
-import Person from "./person";
-import PersonFlock from "./person_flock";
-import GullFlock from "./gull_flock";
-import Stage from "./stage";
-import { randomFloatBetween, Vector, overlaps } from "./math";
+import { Vector, overlaps } from "./math";
 import Input from "./input";
 import Renderer from "./renderer";
 import Ui from "./ui";
 import BloodSystem from "./blood_system";
-import Trash from "./trash";
-import Car from "./car";
 import { AttackState } from "./ui_states";
-import SafeHouse from "./safe_house";
 import { stage1 } from "./stages";
 
 const bloodSystem = BloodSystem.getInstance();
@@ -23,12 +15,10 @@ const ctx: CanvasRenderingContext2D = canvas.getContext("2d");
 
 const desiredWidth = 640;
 const desiredHeight = 480;
-const width = desiredWidth;
-const height = desiredHeight;
-canvas.width = width;
-canvas.height = height;
+canvas.width = desiredWidth;
+canvas.height = desiredHeight;
 
-const desiredAspectRatio = width / height;
+const desiredAspectRatio = desiredWidth / desiredHeight;
 let aspectRatio = null;
 let canvasWindowScale = 0;
 
@@ -36,88 +26,8 @@ const renderer = Renderer.getInstance();
 
 const currentStage = stage1;
 
-// const currentStage = new Stage(new Vector(width, height, 0));
-// const gulls: Gull[] = [];
-// const gullFlocks: GullFlock[] = [];
-
-// const safeHouse = new SafeHouse(new Vector(16 * 2, 16 * 15, 0), currentStage);
-
-// const trashCans = [];
-// for (let i = 0; i < 13; i++) {
-//   const trashCan = new Trash(
-//     new Vector(20 * 16, 28 * 16 - i * 8 * 2, 0),
-//     currentStage
-//   );
-//   trashCans.push(trashCan);
-// }
-
-// const cars = [];
-// const car1 = new Car(new Vector(3 * 16, 8 * 16, 0), currentStage);
-
-// cars.push(car1);
-
-// const bumpables = [safeHouse, ...trashCans, ...cars];
-
-// currentStage.bumpables = bumpables;
-
-// const bloodSystem = BloodSystem.getInstance();
-// const people: Person[] = [];
-
 const input = Input.getInstance();
 input.addEventListeners(canvas);
-
-// for (let i = 0; i < 10; i++) {
-//   const pos = new Vector(
-//     randomFloatBetween(0, canvas.width),
-//     randomFloatBetween(0, canvas.height),
-//     0
-//   );
-//   const gull = new Gull(pos, currentStage);
-//   gull.vel.x = randomFloatBetween(-5, 5);
-//   gull.vel.y = randomFloatBetween(-0.5, 5);
-//   gulls.push(gull);
-// }
-
-// for (let i = 0; i < 3; i++) {
-//   const randomOffset = 50;
-//   const pos = new Vector(
-//     width + randomFloatBetween(-1 * randomOffset, randomOffset),
-//     height + randomFloatBetween(-1 * randomOffset, randomOffset),
-//     10
-//   );
-//   const person = new Person(pos, currentStage);
-//   person.vel.x = randomFloatBetween(-5, 5);
-//   person.vel.y = randomFloatBetween(-0.5, 5);
-
-//   person.safeHouse = safeHouse;
-//   people.push(person);
-// }
-
-// for (let i = 0; i < 3; i++) {
-//   const randomOffset = 50;
-//   const pos = new Vector(
-//     100 + randomFloatBetween(-1 * randomOffset, randomOffset),
-//     50 + randomFloatBetween(-1 * randomOffset, randomOffset),
-//     10
-//   );
-//   const person = new Person(pos, currentStage);
-//   person.vel.x = randomFloatBetween(-5, 5);
-//   person.vel.y = randomFloatBetween(-0.5, 5);
-//   // person.safeHouseDoors = [safeHouseDoor];
-//   // person.safeHouseCells = [safeHouse.doorCell];
-//   person.safeHouse = safeHouse;
-//   people.push(person);
-// }
-
-// const personFlock1 = new PersonFlock(people.slice(0, 3));
-// const personFlock2 = new PersonFlock(people.slice(3, 6));
-// const personFlocks = [personFlock1, personFlock2];
-
-// currentStage.setPeople(people);
-// currentStage.gulls = gulls;
-// currentStage.gullFlocks = gullFlocks;
-// currentStage.personFlocks = personFlocks;
-// currentStage.recalculateAvailableBirds();
 
 const ui = Ui.getInstance();
 ui.createUi(currentStage);
@@ -235,15 +145,15 @@ function resize(force = false) {
     aspectRatio = newAspectRatio;
   }
 
-  let scaledWidth = width;
-  let scaledHeight = height;
+  let scaledWidth = desiredWidth;
+  let scaledHeight = desiredHeight;
 
   if (aspectRatio >= desiredAspectRatio) {
-    scaledHeight = height;
-    scaledWidth = height * aspectRatio;
+    scaledHeight = desiredHeight;
+    scaledWidth = desiredHeight * aspectRatio;
   } else {
-    scaledHeight = width / aspectRatio;
-    scaledWidth = width;
+    scaledHeight = desiredWidth / aspectRatio;
+    scaledWidth = desiredWidth;
   }
 
   canvas.width = scaledWidth;
