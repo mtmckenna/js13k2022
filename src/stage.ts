@@ -8,7 +8,6 @@ import Gull from "./gull";
 import PersonFlock from "./person_flock";
 import GullFlock from "./gull_flock";
 import { COLOR_MAP } from "./blood";
-import SoundEffects from "./sound_effects";
 
 const DEFAULT_COST = 1;
 
@@ -141,12 +140,10 @@ export default class Stage {
   }
 
   personSafe() {
-    SoundEffects.getInstance().safe.play();
     this.numPeopleSafe++;
   }
 
   personKilled() {
-    SoundEffects.getInstance().kill.play();
     this.numPeopleKilled++;
   }
 

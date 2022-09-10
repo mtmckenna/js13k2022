@@ -11,10 +11,7 @@ import BloodSystem from "./blood_system";
 import Trash from "./trash";
 import Car from "./car";
 import { AttackState } from "./ui_states";
-import SoundEffects from "./sound_effects";
 import SafeHouse from "./safe_house";
-
-const soundEffect = SoundEffects.getInstance();
 
 const canvas: HTMLCanvasElement = document.getElementById(
   "game"
