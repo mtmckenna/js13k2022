@@ -22,6 +22,10 @@ export default class Stage {
   public gulls: Gull[];
   public personFlocks: PersonFlock[];
   public gullFlocks: GullFlock[];
+  public availableGulls: Gull[];
+  public center: Vector;
+  public topLeft: Vector;
+  public selectedFlock: GullFlock;
 
   private renderer: Renderer;
 
@@ -35,12 +39,25 @@ export default class Stage {
 
   constructor(size: Vector) {
     this.size = size;
+    this.center = new Vector(
+      Math.round(this.size.x / 2),
+      Math.round(this.size.y / 2),
+      0
+    );
+
+    this.topLeft = new Vector(
+      Math.round(this.size.x / 4),
+      Math.round((this.size.y * 3) / 4),
+      0
+    );
+
     this.renderer = Renderer.getInstance();
 
     this.numCellsWide = Math.ceil(this.size.x / this.cellSize);
     this.numCellsTall = Math.ceil(this.size.y / this.cellSize);
     this.createCells();
     this.createBackground();
+    this.selectedFlock = null;
   }
 
   get gullsInFlocks() {
@@ -71,8 +88,6 @@ export default class Stage {
 
     this.lot = new Box(lotPos, lotSize);
   }
-
-  available;
 
   createCells() {
     for (let i = 0; i < this.numCellsTall; i++) {
@@ -105,10 +120,12 @@ export default class Stage {
     );
   }
 
-  availableBirds() {
+  recalculateAvailableBirds() {
     const { gulls: allGulls } = this;
 
-    allGulls.filter((x) => !this.gullsInFlocks.includes(x));
+    this.availableGulls = allGulls.filter(
+      (x) => !this.gullsInFlocks.includes(x)
+    );
   }
 
   strokeCell(cell, color) {
@@ -185,12 +202,21 @@ export default class Stage {
     return this.getCell(x, y);
   }
 
-  // selectObstacle(pos: Vector): Sprite {
-  //   const cell = this.getCellForPos(pos, true);
-  //   console.log("obstacle", pos, cell, cell.sprite);
-  //   if (!cell.breakable) return null;
-  //   return cell.sprite;
-  // }
+  get lastFlock() {
+    if (this.gullFlocks.length <= 0) return;
+    return this.gullFlocks[this.gullFlocks.length - 1];
+  }
+
+  addBird(flock: GullFlock) {
+    flock.sprites.push(this.availableGulls.pop());
+    this.recalculateAvailableBirds();
+  }
+
+  removeBird(flock: GullFlock) {
+    console.log(flock.sprites);
+    if (flock.sprites.length > 0) flock.sprites.pop();
+    this.recalculateAvailableBirds();
+  }
 
   posForCell(cell: ICell) {
     const x = cell.x * this.cellSize;

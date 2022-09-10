@@ -48,8 +48,6 @@ const rallyPoints: RallyPoint[] = [
 ];
 const gulls: Gull[] = [];
 const gullFlocks: GullFlock[] = [];
-const gullFlock: GullFlock = new GullFlock(gulls, rallyPoints[0]);
-gullFlocks.push(gullFlock);
 
 const safeHouseLeft = new SafeHouseLeft(
   new Vector(8 * 4, 32 * 3 * 2, 0),
@@ -115,7 +113,7 @@ const people: Person[] = [];
 const input = Input.getInstance();
 input.addEventListeners(canvas);
 
-for (let i = 0; i < 4; i++) {
+for (let i = 0; i < 10; i++) {
   const pos = new Vector(
     randomFloatBetween(0, canvas.width),
     randomFloatBetween(0, canvas.height),
@@ -126,6 +124,9 @@ for (let i = 0; i < 4; i++) {
   gull.vel.y = randomFloatBetween(-0.5, 5);
   gulls.push(gull);
 }
+
+const gullFlock: GullFlock = new GullFlock(gulls.slice(0, 3), rallyPoints[0]);
+gullFlocks.push(gullFlock);
 
 for (let i = 0; i < 3; i++) {
   const randomOffset = 50;
@@ -163,6 +164,7 @@ currentStage.people = people;
 currentStage.gulls = gulls;
 currentStage.gullFlocks = gullFlocks;
 currentStage.personFlocks = personFlocks;
+currentStage.recalculateAvailableBirds();
 
 const ui = Ui.getInstance();
 ui.createUi(currentStage);
@@ -177,9 +179,7 @@ function tick(t: number) {
 
   currentStage.draw();
 
-  // const flockCenter = rallyPoints[0].pos;
-
-  rallyPoints.forEach((rallyPoint) => rallyPoint.draw());
+  // rallyPoints.forEach((rallyPoint) => rallyPoint.draw());
 
   for (let i = 0; i < bloodSystem.bloods.length; i++) {
     const blood = bloodSystem.bloods[i];
@@ -196,7 +196,7 @@ function tick(t: number) {
   trashCans.forEach((trashCan) => trashCan.draw(t));
   cars.forEach((car) => car.draw(t));
 
-  gulls.forEach((gull) => {
+  currentStage.gulls.forEach((gull) => {
     gull.update(t);
     gull.draw(t);
   });
@@ -209,9 +209,14 @@ function tick(t: number) {
   }
 
   currentStage.gullFlocks.forEach((gullFlock) => {
+    gullFlock.rallyPoint.draw();
     gullFlock.sprites.forEach((gull) =>
       gull.flock(gullFlock.sprites, gullFlock.rallyPoint.pos)
     );
+  });
+
+  currentStage.availableGulls.forEach((gull) => {
+    gull.flock(gullFlock.sprites, currentStage.center);
   });
 
   // Panic if under attack

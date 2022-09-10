@@ -15,7 +15,6 @@ export default class Ui {
   addBirdButton: HTMLButtonElement;
   removeBirdButton: HTMLButtonElement;
   doneWithFlock: HTMLButtonElement;
-  disperseFlockButton: HTMLButtonElement;
 
   state: IState<Ui, UI_INPUTS>;
   public stage: Stage;
@@ -34,7 +33,6 @@ export default class Ui {
     const createFlock = createButton("Create flock", uiWrapper, []);
     const addBird = createButton("Add bird", uiWrapper, []);
     const removeBird = createButton("Remove bird", uiWrapper, []);
-    const disperse = createButton("Disperse flock", uiWrapper, []);
     const done = createButton("Done", uiWrapper, []);
 
     attack.addEventListener("click", () =>
@@ -49,12 +47,18 @@ export default class Ui {
       this.state.handleInput(this, UI_INPUTS.DEFAULT)
     );
 
+    addBird.addEventListener("click", () =>
+      this.stage.addBird(this.stage.selectedFlock)
+    );
+    removeBird.addEventListener("click", () =>
+      this.stage.removeBird(this.stage.selectedFlock)
+    );
+
     this.attackButton = attack;
     this.createFlockButton = createFlock;
     this.addBirdButton = addBird;
     this.removeBirdButton = removeBird;
     this.doneWithFlock = done;
-    this.disperseFlockButton = disperse;
   }
 
   update() {
@@ -63,7 +67,7 @@ export default class Ui {
       show(this.createFlockButton);
       enable(this.attackButton);
 
-      if (this.stage.availableBirds.length > 0) {
+      if (this.stage.availableGulls.length > 0) {
         enable(this.createFlockButton);
       } else {
         disable(this.createFlockButton);
@@ -72,7 +76,6 @@ export default class Ui {
       hide(this.addBirdButton);
       hide(this.removeBirdButton);
       hide(this.doneWithFlock);
-      hide(this.disperseFlockButton);
     } else if (this.state instanceof AttackState) {
       show(this.attackButton);
       show(this.createFlockButton);
@@ -81,27 +84,23 @@ export default class Ui {
       hide(this.addBirdButton);
       hide(this.removeBirdButton);
       hide(this.doneWithFlock);
-      hide(this.disperseFlockButton);
     } else if (this.state instanceof CreateFlockState) {
       hide(this.attackButton);
       hide(this.createFlockButton);
       show(this.addBirdButton);
       show(this.removeBirdButton);
       show(this.doneWithFlock);
-      show(this.disperseFlockButton);
 
-      if (this.stage.availableBirds.length > 0) {
+      if (this.stage.availableGulls.length > 0) {
         enable(this.addBirdButton);
       } else {
         disable(this.addBirdButton);
       }
 
-      if (this.stage.gullsInFlocks.length > 0) {
+      if (this.stage.selectedFlock.sprites.length > 0) {
         enable(this.removeBirdButton);
-        enable(this.disperseFlockButton);
       } else {
         disable(this.removeBirdButton);
-        disable(this.disperseFlockButton);
       }
     }
   }
@@ -126,7 +125,7 @@ export function disable(node) {
 
 export function enable(node) {
   if (node.disabled == false) return;
-  node.disable = false;
+  node.disabled = false;
 }
 
 export function unselect(node) {
