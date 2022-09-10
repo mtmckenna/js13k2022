@@ -133,6 +133,22 @@ export default class Stage {
     );
   }
 
+  selectNextFlock() {
+    const currIndex = this.gullFlocks.indexOf(this.selectedFlock);
+    let index = currIndex + 1;
+    if (currIndex === this.gullFlocks.length - 1) index = 0;
+    const newFlock = this.gullFlocks[index];
+    this.selectFlock(newFlock);
+  }
+
+  selectPrevFlock() {
+    const currIndex = this.gullFlocks.indexOf(this.selectedFlock);
+    let index = currIndex - 1;
+    if (currIndex === 0) index = this.gullFlocks.length - 1;
+    const newFlock = this.gullFlocks[index];
+    this.selectFlock(newFlock);
+  }
+
   strokeCell(cell, color) {
     const y = (this.numCellsTall - 1) * this.cellSize;
     const scale = this.renderer.offset.z;

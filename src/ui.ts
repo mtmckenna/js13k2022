@@ -18,6 +18,8 @@ export default class Ui {
   killDiv: HTMLDivElement;
   escapeDiv: HTMLDivElement;
   percentDiv: HTMLDivElement;
+  prevButton: HTMLButtonElement;
+  nextButton: HTMLButtonElement;
 
   state: IState<Ui, UI_INPUTS>;
   public stage: Stage;
@@ -38,6 +40,8 @@ export default class Ui {
     const addBird = createButton("Add bird", uiWrapperBottom);
     const removeBird = createButton("Remove bird", uiWrapperBottom);
     const done = createButton("Done", uiWrapperBottom);
+    const next = createButton("Next flock", uiWrapperBottom);
+    const prev = createButton("Prev flock", uiWrapperBottom);
 
     const kill = createDiv("Killed: 0", uiWrapperTop, ["inline"]);
     const escape = createDiv("Escaped: 0", uiWrapperTop, ["inline"]);
@@ -55,6 +59,9 @@ export default class Ui {
       this.state.handleInput(this, UI_INPUTS.DEFAULT)
     );
 
+    next.addEventListener("click", () => this.stage.selectNextFlock());
+    prev.addEventListener("click", () => this.stage.selectPrevFlock());
+
     addBird.addEventListener("click", () =>
       this.stage.addBird(this.stage.selectedFlock)
     );
@@ -68,6 +75,8 @@ export default class Ui {
     this.addBirdButton = addBird;
     this.removeBirdButton = removeBird;
     this.doneWithFlock = done;
+    this.nextButton = next;
+    this.prevButton = prev;
     this.killDiv = kill;
     this.escapeDiv = escape;
     this.percentDiv = percent;
@@ -92,13 +101,22 @@ export default class Ui {
     if (this.state instanceof DefaultState) {
       show(this.attackButton);
       show(this.createFlockButton);
-
+      show(this.nextButton);
+      show(this.prevButton);
       enable(this.attackButton);
 
       if (this.stage.availableGulls.length > 0) {
         enable(this.createFlockButton);
       } else {
         disable(this.createFlockButton);
+      }
+
+      if (this.stage.gullFlocks.length > 1) {
+        enable(this.nextButton);
+        enable(this.prevButton);
+      } else {
+        disable(this.nextButton);
+        disable(this.prevButton);
       }
 
       hide(this.addBirdButton);
@@ -117,6 +135,8 @@ export default class Ui {
       hide(this.createFlockButton);
       show(this.addBirdButton);
       show(this.removeBirdButton);
+      hide(this.nextButton);
+      hide(this.prevButton);
       show(this.doneWithFlock);
 
       if (this.stage.availableGulls.length > 0) {
