@@ -10,7 +10,7 @@ import SpriteAnimation from "./sprite_animation";
 export default class Trash extends Sprite implements Drawable, IBox {
   canBump = true;
   canBreak = true;
-  startOffset = 296;
+  startOffset = 232;
   bloodColor = COLOR_MAP.gray;
   health = 50;
 

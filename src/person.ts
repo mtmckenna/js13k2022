@@ -38,7 +38,7 @@ export default class Person extends Sprite implements Damagable {
   path: ICell[] = [];
   safe = false;
   battleState: IState<Person, PERSON_FIGHT_INPUTS>;
-  startOffset = 200;
+  startOffset = 136;
 
   constructor(pos: Vector, stage: Stage) {
     const scale = 3;

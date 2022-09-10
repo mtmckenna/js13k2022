@@ -11,7 +11,7 @@ export default class SafeHouseLeft extends Sprite implements Drawable, IBox {
   public static DEFAULT_SCALE = 3;
 
   canBump = false;
-  startOffset = 144;
+  startOffset = 80;
 
   constructor(pos: Vector, stage: Stage) {
     const scale = SafeHouseLeft.DEFAULT_SCALE;

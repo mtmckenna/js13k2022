@@ -38,9 +38,8 @@ export class DefaultState implements IState<Ui, UI_INPUTS> {
 
 export class AttackState implements IState<Ui, UI_INPUTS> {
   enter(ui: Ui) {
-    const { people, gulls } = ui.stage;
+    const { people } = ui.stage;
     people.forEach((person) => person.scare());
-    gulls.forEach((gull) => gull.attack());
   }
 
   // once in the attack state, no going back

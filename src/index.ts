@@ -15,8 +15,11 @@ import SafeHouseDoor from "./safe_house_door";
 import Trash from "./trash";
 import Car from "./car";
 import { AttackState } from "./ui_states";
+import SoundEffects from "./sound_effects";
 
 const debug = false;
+
+const soundEffect = SoundEffects.getInstance();
 
 const canvas: HTMLCanvasElement = document.getElementById(
   "game"

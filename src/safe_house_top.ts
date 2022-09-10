@@ -9,7 +9,7 @@ import SafeHouseLeft from "./safe_house_left";
 
 export default class SafeHouseTop extends Sprite implements Drawable, IBox {
   canBump = true;
-  startOffset = 168;
+  startOffset = 104;
 
   constructor(pos: Vector, stage: Stage) {
     const scale = SafeHouseLeft.DEFAULT_SCALE;
