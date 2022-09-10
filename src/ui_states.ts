@@ -1,6 +1,6 @@
 import GullFlock from "./gull_flock";
 import { IState } from "./interfaces";
-import { Vector } from "./math";
+import { randomIntBetween, Vector } from "./math";
 import RallyPoint from "./rally_point";
 import Ui from "./ui";
 
@@ -9,8 +9,6 @@ export class DefaultState implements IState<Ui, UI_INPUTS> {
     ui.stage.gullFlocks = ui.stage.gullFlocks.filter(
       (flock) => flock.sprites.length > 0
     );
-
-    ui.stage.selectedFlock = null;
   }
 
   handleInput(ui: Ui, input: UI_INPUTS) {
@@ -53,12 +51,16 @@ export class AttackState implements IState<Ui, UI_INPUTS> {
 
 export class CreateFlockState implements IState<Ui, UI_INPUTS> {
   enter(ui: Ui) {
-    const pos = ui.stage.topLeft;
+    const pos = new Vector(
+      randomIntBetween(0, ui.stage.size.x),
+      randomIntBetween(0, ui.stage.size.y),
+      0
+    );
 
     const rallyPoint = new RallyPoint(new Vector(pos.x, pos.y, 0), ui.stage);
     const flock = new GullFlock([], rallyPoint);
     ui.stage.gullFlocks.push(flock);
-    ui.stage.selectedFlock = flock;
+    ui.stage.selectFlock(flock);
   }
 
   handleInput(ui: Ui, input: UI_INPUTS) {

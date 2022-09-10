@@ -43,9 +43,6 @@ canvas.width = width;
 canvas.height = height;
 
 const currentStage = new Stage(new Vector(width, height, 0));
-const rallyPoints: RallyPoint[] = [
-  new RallyPoint(new Vector(width / 4, height / 2, 0), currentStage),
-];
 const gulls: Gull[] = [];
 const gullFlocks: GullFlock[] = [];
 
@@ -125,9 +122,6 @@ for (let i = 0; i < 10; i++) {
   gulls.push(gull);
 }
 
-const gullFlock: GullFlock = new GullFlock(gulls.slice(0, 3), rallyPoints[0]);
-gullFlocks.push(gullFlock);
-
 for (let i = 0; i < 3; i++) {
   const randomOffset = 50;
   const pos = new Vector(
@@ -179,8 +173,6 @@ function tick(t: number) {
 
   currentStage.draw();
 
-  // rallyPoints.forEach((rallyPoint) => rallyPoint.draw());
-
   for (let i = 0; i < bloodSystem.bloods.length; i++) {
     const blood = bloodSystem.bloods[i];
     if (blood.inUse()) {
@@ -216,7 +208,7 @@ function tick(t: number) {
   });
 
   currentStage.availableGulls.forEach((gull) => {
-    gull.flock(gullFlock.sprites, currentStage.center);
+    gull.flock(currentStage.availableGulls, currentStage.center);
   });
 
   // Panic if under attack
@@ -241,27 +233,17 @@ function tick(t: number) {
   ui.update();
 
   if (debug) renderer.drawGrid();
-  currentStage.fillCell(mouseCell, "blue");
-}
-
-// function moveObjectClickCallback(pos: Vector) {
-//   const gamePos = screenToGameCoordinates(pos);
-//   const obstacle = currentStage.selectObstacle(pos);
-//   console.log("move");
-// }
-
-let mouseCell = { x: 0, y: 0 };
-function moveMouseCallback(pos: Vector) {
-  const gamePos = screenToGameCoordinates(pos);
-  // console.log(gamePos);
-  const cell = currentStage.getCellForPos(gamePos, true);
-  // console.log("move");
-  mouseCell = { x: cell.x, y: cell.y };
 }
 
 function rallyPointClickCallback(pos: Vector) {
+  if (!currentStage.selectedFlock) return;
+
   const gamePos = screenToGameCoordinates(pos);
-  rallyPoints[0].pos.set(gamePos.x, gamePos.y, gamePos.z);
+  currentStage.selectedFlock.rallyPoint.pos.set(
+    gamePos.x,
+    gamePos.y,
+    gamePos.z
+  );
 }
 
 function screenToGameCoordinates(pos: Vector): Vector {
@@ -308,8 +290,6 @@ function screenToGameCoordinates(pos: Vector): Vector {
 // }
 
 input.registerClickCallback(rallyPointClickCallback);
-// input.registerClickCallback(moveObjectClickCallback);
-input.registermoveCallback(moveMouseCallback);
 
 requestAnimationFrame(tick);
 

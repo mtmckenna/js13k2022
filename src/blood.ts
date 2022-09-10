@@ -11,6 +11,8 @@ export enum COLOR_MAP {
   red = "#a12f18",
   gray = "#45484d",
   blue = "#285cc4",
+  pink = "#f23fae",
+  dark_gray = "#303336",
 }
 
 export default class Blood implements Drawable, IBox {
@@ -21,7 +23,7 @@ export default class Blood implements Drawable, IBox {
   renderer: Renderer;
   timeLeft: number;
   groundLevel: number;
-  color: COLOR_MAP.gray | COLOR_MAP.blue | COLOR_MAP.red;
+  color: COLOR_MAP;
 
   constructor(pos: Vector, renderer: Renderer) {
     this.pos = pos;
@@ -37,7 +39,7 @@ export default class Blood implements Drawable, IBox {
     return this.timeLeft > 0;
   }
 
-  regen(box: IBox, color: COLOR_MAP.red | COLOR_MAP.gray | COLOR_MAP.blue) {
+  regen(box: IBox, color: COLOR_MAP) {
     const { pos, size } = box;
     this.timeLeft = LIFE_SPAN;
     const x = randomFloatBetween(

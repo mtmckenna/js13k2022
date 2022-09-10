@@ -17,10 +17,7 @@ export default class BloodSystem {
     }
   }
 
-  regenBlood(
-    box: IBox,
-    color: COLOR_MAP.red | COLOR_MAP.gray | COLOR_MAP.blue
-  ) {
+  regenBlood(box: IBox, color: COLOR_MAP) {
     let blood: Blood | null = null;
     for (let i = 0; i < this.bloods.length; i++) {
       blood = this.bloods[i];

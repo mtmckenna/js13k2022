@@ -158,16 +158,27 @@ export function overlaps(box1: IBox, box2: IBox) {
   );
 }
 
-export function pointInsideBox(point: Vector, box: IBox) {
-  const left = box.pos.x;
-  const right = box.pos.x + box.size.x;
-  const top = box.pos.y;
-  const bottom = box.pos.y + box.size.y;
+// export function pointInsideBox(point: Vector, box: IBox) {
+//   const left = box.pos.x;
+//   const right = box.pos.x + box.size.x;
+//   const top = box.pos.y;
+//   const bottom = box.pos.y - box.size.y;
 
-  return (
-    point.x >= left && point.x <= right && point.y <= top && point.y >= bottom
-  );
-}
+//   console.log(
+//     left,
+//     right,
+//     top,
+//     bottom,
+//     point.x >= left,
+//     point.x <= right,
+//     point.y >= top,
+//     point.y <= bottom
+//   );
+
+//   return (
+//     point.x >= left && point.x <= right && point.y >= top && point.y <= bottom
+//   );
+// }
 
 export function dist(vec1: Vector, vec2: Vector) {
   return Math.hypot(vec2.x - vec1.x, vec2.y - vec1.y, vec2.z - vec1.z);

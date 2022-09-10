@@ -1,8 +1,8 @@
 import { Vector } from "./math";
 import { Drawable } from "./interfaces";
 import Renderer from "./renderer";
-import Blood from "./blood";
 import Stage from "./stage";
+import { COLOR_MAP } from "./blood";
 
 export default class RallyPoint implements Drawable {
   pos: Vector;
@@ -10,23 +10,26 @@ export default class RallyPoint implements Drawable {
   renderer: Renderer;
   ctx: CanvasRenderingContext2D;
   color: string;
-  bloods: Blood[];
-  lastBleedAt: number;
-  maxBleedBloods = 20;
-  maxDeathBloods = 20;
-  bloodTimeDelta = 1;
-  dead: boolean;
   stage: Stage;
+
+  private _center: Vector = new Vector(0, 0, 0);
 
   constructor(pos: Vector, stage: Stage) {
     this.pos = pos;
-    this.size = new Vector(10, 10, 0);
+    this.size = new Vector(16, 16, 0);
     this.renderer = Renderer.getInstance();
     this.ctx = this.renderer.ctx;
-    this.color = "#f23fae";
-    this.lastBleedAt = 0;
-    this.dead = false;
+    this.color = COLOR_MAP.pink;
     this.stage = stage;
+  }
+
+  get center() {
+    this._center.set(
+      this.pos.x + this.size.x / 2,
+      this.pos.y - this.size.y / 2,
+      this.pos.z
+    );
+    return this._center;
   }
 
   draw() {
@@ -41,7 +44,13 @@ export default class RallyPoint implements Drawable {
     // this.ctx.fillRect(x, y, this.size.x * offset.z, this.size.y * offset.z);
 
     this.ctx.beginPath();
-    this.ctx.arc(x, y, this.size.x * offset.z, 0, 2 * Math.PI);
+    this.ctx.arc(
+      x - this.size.x / 2,
+      y - this.size.y / 2,
+      this.size.x * offset.z,
+      0,
+      2 * Math.PI
+    );
     this.ctx.fill();
   }
 }

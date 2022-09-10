@@ -9,7 +9,6 @@ export default class Input {
   renderer: Renderer;
 
   clickCallbacks: Array<(pos: Vector) => void> = [];
-  moveCallbacks: Array<(pos: Vector) => void> = [];
   keydownCallbacks: Array<(keyCode: string) => void> = [];
 
   public static getInstance(): Input {
@@ -25,7 +24,6 @@ export default class Input {
   addEventListeners(element: HTMLElement) {
     element.addEventListener("mousedown", this.mousePressed.bind(this));
 
-    element.addEventListener("mousemove", this.mouseMoved.bind(this));
     element.addEventListener("touchstart", this.touchPressed.bind(this), {
       passive: true,
     });
@@ -35,10 +33,6 @@ export default class Input {
 
   registerClickCallback(callback: (pos: Vector) => void) {
     this.clickCallbacks.push(callback);
-  }
-
-  registermoveCallback(callback: (pos: Vector) => void) {
-    this.moveCallbacks.push(callback);
   }
 
   // registerKeydownCallback(callback: (keyCode: string) => void) {
@@ -53,16 +47,6 @@ export default class Input {
     e.preventDefault();
     const pos = this.positionFromEvent(e);
     this.inputPressed(pos.x, pos.y);
-  }
-
-  mouseMoved(e: MouseEvent) {
-    e.preventDefault();
-    const pos = this.positionFromEvent(e);
-    this.moveCallbacks.forEach((callback) =>
-      callback(new Vector(pos.x, pos.y, 0))
-    );
-
-    // this.inputPressed(pos.x, pos.y);
   }
 
   positionFromEvent(e: MouseEvent | TouchEvent) {

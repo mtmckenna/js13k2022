@@ -7,6 +7,7 @@ import Person from "./person";
 import Gull from "./gull";
 import PersonFlock from "./person_flock";
 import GullFlock from "./gull_flock";
+import { COLOR_MAP } from "./blood";
 
 const DEFAULT_COST = 1;
 
@@ -62,6 +63,14 @@ export default class Stage {
 
   get gullsInFlocks() {
     return this.gullFlocks.flatMap((gullFlock) => gullFlock.sprites);
+  }
+
+  selectFlock(flock: GullFlock) {
+    this.gullFlocks.forEach(
+      (gullFlock) => (gullFlock.rallyPoint.color = COLOR_MAP.dark_gray)
+    );
+    this.selectedFlock = flock;
+    this.selectedFlock.rallyPoint.color = COLOR_MAP.pink;
   }
 
   createBackground() {
@@ -213,7 +222,6 @@ export default class Stage {
   }
 
   removeBird(flock: GullFlock) {
-    console.log(flock.sprites);
     if (flock.sprites.length > 0) flock.sprites.pop();
     this.recalculateAvailableBirds();
   }
