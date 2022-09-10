@@ -13,8 +13,10 @@ import SoundEffects from "./sound_effects";
 const DEFAULT_COST = 1;
 
 export default class Stage {
-  public bumpables: Sprite[];
+  static BREAKABLE_COST = 2;
+  static WALKABLE_COST = 1;
 
+  public bumpables: Sprite[];
   public size: Vector;
   public cells: ICell[][] = [];
   public numCellsTall: number;
@@ -26,33 +28,22 @@ export default class Stage {
   public gullFlocks: GullFlock[];
   public availableGulls: Gull[];
   public center: Vector;
-  public topLeft: Vector;
   public selectedFlock: GullFlock;
   public numPeopleSafe = 0;
   public numPeopleKilled = 0;
   public totalNumberOfPeople = 0;
 
   private renderer: Renderer;
-
   private sky: Box;
   private beach: Box;
   private sun: Box;
   private lot: Box;
-
-  static BREAKABLE_COST = 2;
-  static WALKABLE_COST = 1;
 
   constructor(size: Vector) {
     this.size = size;
     this.center = new Vector(
       Math.round(this.size.x / 2),
       Math.round(this.size.y / 2),
-      0
-    );
-
-    this.topLeft = new Vector(
-      Math.round(this.size.x / 4),
-      Math.round((this.size.y * 3) / 4),
       0
     );
 
@@ -147,19 +138,6 @@ export default class Stage {
     if (currIndex === 0) index = this.gullFlocks.length - 1;
     const newFlock = this.gullFlocks[index];
     this.selectFlock(newFlock);
-  }
-
-  strokeCell(cell, color) {
-    const y = (this.numCellsTall - 1) * this.cellSize;
-    const scale = this.renderer.offset.z;
-
-    this.renderer.ctx.strokeStyle = color;
-    this.renderer.ctx.strokeRect(
-      (cell.x * this.cellSize - this.renderer.offset.x) * scale,
-      (y - cell.y * this.cellSize - this.renderer.offset.y) * scale,
-      this.cellSize * scale,
-      this.cellSize * scale
-    );
   }
 
   personSafe() {
@@ -259,6 +237,32 @@ export default class Stage {
     const y = cell.y * this.cellSize;
     return new Vector(x, y, 0);
   }
+
+  // fillCell(cell, color) {
+  //   const y = (this.numCellsTall - 1) * this.cellSize;
+  //   const scale = this.renderer.offset.z;
+
+  //   this.renderer.ctx.fillStyle = color;
+  //   this.renderer.ctx.fillRect(
+  //     (cell.x * this.cellSize - this.renderer.offset.x) * scale,
+  //     (y - cell.y * this.cellSize - this.renderer.offset.y) * scale,
+  //     this.cellSize * scale,
+  //     this.cellSize * scale
+  //   );
+  // }
+
+  // strokeCell(cell, color) {
+  //   const y = (this.numCellsTall - 1) * this.cellSize;
+  //   const scale = this.renderer.offset.z;
+
+  //   this.renderer.ctx.strokeStyle = color;
+  //   this.renderer.ctx.strokeRect(
+  //     (cell.x * this.cellSize - this.renderer.offset.x) * scale,
+  //     (y - cell.y * this.cellSize - this.renderer.offset.y) * scale,
+  //     this.cellSize * scale,
+  //     this.cellSize * scale
+  //   );
+  // }
 
   neighbors(cell) {
     const result = [];

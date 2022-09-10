@@ -18,17 +18,9 @@ export default class BloodSystem {
   }
 
   regenBlood(box: IBox, color: COLOR_MAP) {
-    let blood: Blood | null = null;
-    for (let i = 0; i < this.bloods.length; i++) {
-      blood = this.bloods[i];
-      if (!blood.inUse()) {
-        blood.regen(box, color);
-        break;
-      }
-    }
-
+    const blood = this.bloods.find((blood) => !blood.inUse());
+    blood.regen(box, color);
     return blood;
-    // return this.bloods.find((blood) => !blood.inUse()).regen(person);
   }
 
   public static getInstance(): BloodSystem {

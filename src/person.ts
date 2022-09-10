@@ -6,12 +6,13 @@ import personImageDataUrl from "../assets/spritesheet.png";
 import { align, cohere, separate } from "./flock";
 import SpriteAnimation from "./sprite_animation";
 import Blood from "./blood";
-import SafeHouseDoors from "./safe_house_door";
+// import SafeHouseDoors from "./safe_house_door";
 import Search from "./search";
 import { PeaceState, PERSON_FIGHT_INPUTS } from "./person_battle_states";
 import { AttackState } from "./ui_states";
+import SafeHouse from "./safe_house";
 
-const MAX_WALKING_SPEED = 0.03;
+const MAX_WALKING_SPEED = 0.1;
 const MAX_RUNNING_SPEED = 1;
 const MAX_HEALTH_BAR_WIDTH = 50;
 const HEALTH_BAR_Y_OFFSET = 5;
@@ -20,9 +21,9 @@ const HEALTH_BAR_BORDER = 4;
 const HEALTH_BAR_INSIDE_HEIGHT = HEALTH_BAR_OUTSIDE_HEIGHT - HEALTH_BAR_BORDER;
 const HEALTH_BAR_INSIDE_OFFSET = HEALTH_BAR_BORDER / 2;
 
-const PEOPLE_CALM_ALIGNMENT_STRENGTH = 0.05;
-const PEOPLE_CALM_COHERENCE_STRENGTH = 0.4;
-const PEOPLE_CALM_SEPARATION_STRENGTH = 0.8;
+const PEOPLE_CALM_ALIGNMENT_STRENGTH = 0.7;
+const PEOPLE_CALM_COHERENCE_STRENGTH = 0.3;
+const PEOPLE_CALM_SEPARATION_STRENGTH = 0.7;
 
 export default class Person extends Sprite implements Damagable {
   public pos: Vector;
@@ -31,14 +32,15 @@ export default class Person extends Sprite implements Damagable {
   maxBleedBloods = Sprite.MAX_HEALTH;
   maxDeathBloods = 50;
   bloodTimeDelta = 5;
-  safeHouseDoors: SafeHouseDoors[] = [];
+  // safeHouseCells: ICell[] = [];
+  safeHouse: SafeHouse;
   canBump = true;
   canMove = true;
   search: Search;
   path: ICell[] = [];
   safe = false;
   battleState: IState<Person, PERSON_FIGHT_INPUTS>;
-  startOffset = 136;
+  startOffset = 112;
 
   constructor(pos: Vector, stage: Stage) {
     const scale = 3;
@@ -106,14 +108,17 @@ export default class Person extends Sprite implements Damagable {
 
     if (this.ui.state instanceof AttackState) {
       const start = this.stage.getCellForPos(this.center);
-      const end = this.stage.getCellForPos(this.safeHouseDoors[0].center);
+      // const end = this.safeHouseCells[0];
+      const end = this.safeHouse.doorCell;
       const path = this.search.search(start, end);
       this.path = path;
 
       // Check to see if we've arrived at the safe house door
       if (path.length === 0) {
         // they're in the house
-        if (overlaps(this, this.safeHouseDoors[0])) {
+        // if (overlaps(this, this.safeHouseDoors[0])) {
+        if (overlaps(this, this.safeHouse.door)) {
+          // if (start === end) {
           this.safe = true;
           this.stage.personSafe();
         } else {
@@ -212,8 +217,8 @@ export default class Person extends Sprite implements Damagable {
     super.draw(t);
     this.drawHealthBar();
 
-    for (const cell of this.path) {
-      this.stage.strokeCell(cell, "yellow");
-    }
+    // for (const cell of this.path) {
+    //   this.stage.strokeCell(cell, "yellow");
+    // }
   }
 }

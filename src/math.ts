@@ -184,3 +184,25 @@ export function easeOutElastic(x: number): number {
     ? 1
     : Math.pow(2, -10 * x) * Math.sin((x * 10 - 0.75) * c4) + 1;
 }
+
+export function pointInsideBox(point: Vector, box: IBox) {
+  const left = box.pos.x;
+  const right = box.pos.x + box.size.x;
+  const top = box.pos.y;
+  const bottom = box.pos.y - box.size.y;
+
+  console.log(
+    left,
+    right,
+    top,
+    bottom,
+    point.x >= left,
+    point.x <= right,
+    point.y >= top,
+    point.y <= bottom
+  );
+
+  return (
+    point.x >= left && point.x <= right && point.y >= top && point.y <= bottom
+  );
+}

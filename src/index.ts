@@ -8,16 +8,11 @@ import Input from "./input";
 import Renderer from "./renderer";
 import Ui from "./ui";
 import BloodSystem from "./blood_system";
-import SafeHouseTop from "./safe_house_top";
-import SafeHouseLeft from "./safe_house_left";
-import SafeHouseRight from "./safe_house_right";
-import SafeHouseDoor from "./safe_house_door";
 import Trash from "./trash";
 import Car from "./car";
 import { AttackState } from "./ui_states";
 import SoundEffects from "./sound_effects";
-
-const debug = false;
+import SafeHouse from "./safe_house";
 
 const soundEffect = SoundEffects.getInstance();
 
@@ -44,40 +39,7 @@ const currentStage = new Stage(new Vector(width, height, 0));
 const gulls: Gull[] = [];
 const gullFlocks: GullFlock[] = [];
 
-const safeHouseLeft = new SafeHouseLeft(
-  new Vector(8 * 4, 32 * 3 * 2, 0),
-  currentStage
-);
-
-const safeHouseDoor = new SafeHouseDoor(
-  new Vector(
-    safeHouseLeft.pos.x + safeHouseLeft.size.x,
-    safeHouseLeft.pos.y,
-    0
-  ),
-  currentStage
-);
-
-const safeHouseRight = new SafeHouseRight(
-  new Vector(
-    safeHouseLeft.pos.x + safeHouseLeft.size.x + safeHouseDoor.size.x,
-    safeHouseLeft.pos.y,
-    0
-  ),
-  currentStage
-);
-
-const safeHouseTop = new SafeHouseTop(
-  new Vector(safeHouseLeft.pos.x, safeHouseLeft.pos.y, 0),
-  currentStage
-);
-
-safeHouseTop.pos.set(
-  safeHouseTop.pos.x,
-  safeHouseTop.pos.y + safeHouseTop.size.y,
-  safeHouseTop.pos.z
-);
-safeHouseTop.setOverlappingCellsWalkability();
+const safeHouse = new SafeHouse(new Vector(16 * 2, 16 * 15, 0), currentStage);
 
 const trashCans = [];
 for (let i = 0; i < 13; i++) {
@@ -93,13 +55,8 @@ const car1 = new Car(new Vector(3 * 16, 8 * 16, 0), currentStage);
 
 cars.push(car1);
 
-const bumpables = [
-  safeHouseTop,
-  safeHouseLeft,
-  safeHouseRight,
-  ...trashCans,
-  ...cars,
-];
+const bumpables = [safeHouse, ...trashCans, ...cars];
+
 currentStage.bumpables = bumpables;
 
 const bloodSystem = BloodSystem.getInstance();
@@ -130,7 +87,8 @@ for (let i = 0; i < 3; i++) {
   const person = new Person(pos, currentStage);
   person.vel.x = randomFloatBetween(-5, 5);
   person.vel.y = randomFloatBetween(-0.5, 5);
-  person.safeHouseDoors = [safeHouseDoor];
+
+  person.safeHouse = safeHouse;
   people.push(person);
 }
 
@@ -144,7 +102,9 @@ for (let i = 0; i < 3; i++) {
   const person = new Person(pos, currentStage);
   person.vel.x = randomFloatBetween(-5, 5);
   person.vel.y = randomFloatBetween(-0.5, 5);
-  person.safeHouseDoors = [safeHouseDoor];
+  // person.safeHouseDoors = [safeHouseDoor];
+  // person.safeHouseCells = [safeHouse.doorCell];
+  person.safeHouse = safeHouse;
   people.push(person);
 }
 
@@ -162,10 +122,11 @@ const ui = Ui.getInstance();
 ui.createUi(currentStage);
 
 function drawHouse(t: number) {
-  safeHouseLeft.draw(t);
-  safeHouseRight.draw(t);
-  safeHouseDoor.draw();
-  safeHouseTop.draw(t);
+  safeHouse.draw(t);
+  // safeHouseLeft.draw(t);
+  // safeHouseRight.draw(t);
+  // safeHouseDoor.draw();
+  // safeHouseTop.draw(t);
 }
 
 function tick(t: number) {
@@ -234,7 +195,8 @@ function tick(t: number) {
 
   ui.update();
 
-  // if (debug) renderer.drawGrid();
+  // currentStage.fillCell(safeHouse.doorCell, "red");
+  // renderer.drawGrid();
 }
 
 function rallyPointClickCallback(pos: Vector) {
