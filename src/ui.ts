@@ -1,7 +1,7 @@
 import {
   AttackState,
+  CreateFlockState,
   DefaultState,
-  SelectObstacleState,
   UI_INPUTS,
 } from "./ui_states";
 import { IState } from "./interfaces";
@@ -11,7 +11,12 @@ export default class Ui {
   private static instance: Ui;
 
   attackButton: HTMLButtonElement;
-  moveButton: HTMLButtonElement;
+  createFlockButton: HTMLButtonElement;
+  addBirdButton: HTMLButtonElement;
+  removeBirdButton: HTMLButtonElement;
+  doneWithFlock: HTMLButtonElement;
+  disperseFlockButton: HTMLButtonElement;
+
   state: IState<Ui, UI_INPUTS>;
   public stage: Stage;
 
@@ -26,49 +31,54 @@ export default class Ui {
 
     const uiWrapper = document.getElementById("ui-wrapper");
     const attack = createButton("Attack", uiWrapper, []);
-    const move = createButton("Move obstacle", uiWrapper, []);
+    const createFlock = createButton("Create flock", uiWrapper, []);
+    const addBird = createButton("Add bird", uiWrapper, []);
+    const removeBird = createButton("Remove bird", uiWrapper, []);
+    const disperse = createButton("Disperse flock", uiWrapper, []);
+    const done = createButton("Done", uiWrapper, []);
 
-    // attack.addEventListener("click", gullFlock.attack.bind(gullFlock));
     attack.addEventListener("click", () =>
       this.state.handleInput(this, UI_INPUTS.ATTACK)
     );
-    move.addEventListener("click", () =>
-      this.state.handleInput(this, UI_INPUTS.SELECT_OBSTACLE)
+
+    createFlock.addEventListener("click", () =>
+      this.state.handleInput(this, UI_INPUTS.CREATE_FLOCK)
     );
 
     this.attackButton = attack;
-    this.moveButton = move;
+    this.createFlockButton = createFlock;
+    this.addBirdButton = addBird;
+    this.removeBirdButton = removeBird;
+    this.doneWithFlock = done;
+    this.disperseFlockButton = disperse;
   }
 
   update() {
-    this.updateCursor();
-    this.updateAttackButton();
-    this.updateMoveObstacleButton();
-  }
-
-  updateAttackButton() {
     if (this.state instanceof DefaultState) {
+      show(this.attackButton);
+      show(this.createFlockButton);
       enable(this.attackButton);
-    } else {
+      enable(this.createFlockButton);
+      hide(this.addBirdButton);
+      hide(this.removeBirdButton);
+      hide(this.doneWithFlock);
+      hide(this.disperseFlockButton);
+    } else if (this.state instanceof AttackState) {
+      show(this.attackButton);
+      show(this.createFlockButton);
       disable(this.attackButton);
-    }
-  }
-
-  updateMoveObstacleButton() {
-    if (this.state instanceof AttackState) {
-      disable(this.moveButton);
-    } else {
-      enable(this.moveButton);
-    }
-  }
-
-  updateCursor() {
-    if (this.state instanceof DefaultState) {
-      document.body.style.cursor = "default";
-    } else if (this.state instanceof SelectObstacleState) {
-      document.body.style.cursor = "grab";
-    } else {
-      document.body.style.cursor = "default";
+      disable(this.createFlockButton);
+      hide(this.addBirdButton);
+      hide(this.removeBirdButton);
+      hide(this.doneWithFlock);
+      hide(this.disperseFlockButton);
+    } else if (this.state instanceof CreateFlockState) {
+      hide(this.attackButton);
+      hide(this.createFlockButton);
+      show(this.addBirdButton);
+      show(this.removeBirdButton);
+      show(this.doneWithFlock);
+      show(this.disperseFlockButton);
     }
   }
 }

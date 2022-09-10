@@ -239,11 +239,11 @@ function tick(t: number) {
   currentStage.fillCell(mouseCell, "blue");
 }
 
-function moveObjectClickCallback(pos: Vector) {
-  const gamePos = screenToGameCoordinates(pos);
-  const obstacle = currentStage.selectObstacle(pos);
-  console.log("move");
-}
+// function moveObjectClickCallback(pos: Vector) {
+//   const gamePos = screenToGameCoordinates(pos);
+//   const obstacle = currentStage.selectObstacle(pos);
+//   console.log("move");
+// }
 
 let mouseCell = { x: 0, y: 0 };
 function moveMouseCallback(pos: Vector) {
@@ -303,7 +303,7 @@ function screenToGameCoordinates(pos: Vector): Vector {
 // }
 
 input.registerClickCallback(rallyPointClickCallback);
-input.registerClickCallback(moveObjectClickCallback);
+// input.registerClickCallback(moveObjectClickCallback);
 input.registermoveCallback(moveMouseCallback);
 
 requestAnimationFrame(tick);

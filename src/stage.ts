@@ -173,12 +173,12 @@ export default class Stage {
     return this.getCell(x, y);
   }
 
-  selectObstacle(pos: Vector): Sprite {
-    const cell = this.getCellForPos(pos, true);
-    console.log("obstacle", pos, cell, cell.sprite);
-    if (!cell.breakable) return null;
-    return cell.sprite;
-  }
+  // selectObstacle(pos: Vector): Sprite {
+  //   const cell = this.getCellForPos(pos, true);
+  //   console.log("obstacle", pos, cell, cell.sprite);
+  //   if (!cell.breakable) return null;
+  //   return cell.sprite;
+  // }
 
   posForCell(cell: ICell) {
     const x = cell.x * this.cellSize;

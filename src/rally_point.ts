@@ -23,7 +23,7 @@ export default class RallyPoint implements Drawable {
     this.size = new Vector(10, 10, 0);
     this.renderer = Renderer.getInstance();
     this.ctx = this.renderer.ctx;
-    this.color = "pink";
+    this.color = "#f23fae";
     this.lastBleedAt = 0;
     this.dead = false;
     this.stage = stage;
@@ -35,13 +35,13 @@ export default class RallyPoint implements Drawable {
 
     this.ctx.fillStyle = this.color;
 
+    const x = (this.pos.x - offset.x - this.size.x / 2) * offset.z;
     // Flip canvas coordinates upsideown
     const y = (-1 * (this.pos.y - h) - offset.y - this.size.y / 2) * offset.z;
-    this.ctx.fillRect(
-      (this.pos.x - offset.x - this.size.x / 2) * offset.z,
-      y,
-      this.size.x * offset.z,
-      this.size.y * offset.z
-    );
+    // this.ctx.fillRect(x, y, this.size.x * offset.z, this.size.y * offset.z);
+
+    this.ctx.beginPath();
+    this.ctx.arc(x, y, this.size.x * offset.z, 0, 2 * Math.PI);
+    this.ctx.fill();
   }
 }
