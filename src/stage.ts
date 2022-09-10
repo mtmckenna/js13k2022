@@ -175,7 +175,12 @@ export default class Stage {
   }
 
   resetRallyPointCosts() {
-    this.cells.flat().forEach((cell) => (cell.hasRallyPoint = false));
+    this.cells.forEach((cellRow) => {
+      cellRow.forEach((cell) => {
+        cell.hasRallyPoint = false;
+      });
+    });
+
     this.gullFlocks.forEach((gullFlock) => {
       gullFlock.rallyPoint.addToCell();
     });
@@ -268,11 +273,6 @@ export default class Stage {
     const y = clamp(intY, 0, this.numCellsTall - 1);
 
     return this.getCell(x, y);
-  }
-
-  get lastFlock() {
-    if (this.gullFlocks.length <= 0) return;
-    return this.gullFlocks[this.gullFlocks.length - 1];
   }
 
   addBird(flock: GullFlock) {

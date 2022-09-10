@@ -42,14 +42,30 @@ export default class RallyPoint implements Drawable {
       this.stage.neighbors(neighbor)
     );
 
-    const cells = [mainCell, ...neighbors, ...neighbors2.flat()];
+    mainCell.hasRallyPoint = true;
+    mainCell.cost += Stage.RALLY_POINT_COST;
+
+    neighbors.forEach((neighbor) => {
+      neighbor.hasRallyPoint = true;
+      neighbor.cost += Stage.RALLY_POINT_COST;
+    });
+
+    neighbors2.forEach((neighborsArray) => {
+      neighborsArray.forEach((neighbor) => {
+        neighbor.hasRallyPoint = true;
+        neighbor.cost += Stage.RALLY_POINT_COST;
+      });
+    });
+
+    // This was too costly
+    // const cells = [mainCell, ...neighbors, ...neighbors2.flat()];
 
     // Add to neighboring cells
-    cells.forEach((cell) => {
-      if (cell.hasRallyPoint) return;
-      cell.hasRallyPoint = true;
-      cell.cost += Stage.RALLY_POINT_COST;
-    });
+    // cells.forEach((cell) => {
+    //   if (cell.hasRallyPoint) return;
+    //   cell.hasRallyPoint = true;
+    //   cell.cost += Stage.RALLY_POINT_COST;
+    // });
   }
 
   draw() {

@@ -83,7 +83,6 @@ export function cohere(
 
   if (total > 0) {
     steering.div(total);
-    // steering.setMag(MAX_SPEED);
   } else {
     steering.set(posToCircle.x, posToCircle.y, posToCircle.z);
   }

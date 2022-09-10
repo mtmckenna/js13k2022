@@ -71,10 +71,7 @@ export class Vector {
       this.y /= y;
       this.z /= z;
     } else {
-      console.warn(
-        "Vector.div:",
-        "contains components that are either undefined or not finite numbers"
-      );
+      console.warn("Vector.div:", "undefined or not finite numbers");
     }
     return this;
   }
@@ -99,10 +96,7 @@ export class Vector {
       this.y *= y;
       this.z *= z;
     } else {
-      console.warn(
-        "Vector.mult:",
-        "x contains components that are either undefined or not finite numbers"
-      );
+      console.warn("Vector.mult:", "undefined or not finite numbers");
     }
     return this;
   }
@@ -172,37 +166,4 @@ export function randomFloatBetween(min: number, max: number) {
 
 export function randomIntBetween(min, max) {
   return Math.floor(randomFloatBetween(min, max + 1));
-}
-
-// https://easings.net/
-export function easeOutElastic(x: number): number {
-  const c4 = (2 * Math.PI) / 3;
-
-  return x === 0
-    ? 0
-    : x === 1
-    ? 1
-    : Math.pow(2, -10 * x) * Math.sin((x * 10 - 0.75) * c4) + 1;
-}
-
-export function pointInsideBox(point: Vector, box: IBox) {
-  const left = box.pos.x;
-  const right = box.pos.x + box.size.x;
-  const top = box.pos.y;
-  const bottom = box.pos.y - box.size.y;
-
-  console.log(
-    left,
-    right,
-    top,
-    bottom,
-    point.x >= left,
-    point.x <= right,
-    point.y >= top,
-    point.y <= bottom
-  );
-
-  return (
-    point.x >= left && point.x <= right && point.y >= top && point.y <= bottom
-  );
 }
