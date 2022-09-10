@@ -45,6 +45,10 @@ export default class Ui {
       this.state.handleInput(this, UI_INPUTS.CREATE_FLOCK)
     );
 
+    done.addEventListener("click", () =>
+      this.state.handleInput(this, UI_INPUTS.DEFAULT)
+    );
+
     this.attackButton = attack;
     this.createFlockButton = createFlock;
     this.addBirdButton = addBird;
@@ -58,7 +62,13 @@ export default class Ui {
       show(this.attackButton);
       show(this.createFlockButton);
       enable(this.attackButton);
-      enable(this.createFlockButton);
+
+      if (this.stage.availableBirds.length > 0) {
+        enable(this.createFlockButton);
+      } else {
+        disable(this.createFlockButton);
+      }
+
       hide(this.addBirdButton);
       hide(this.removeBirdButton);
       hide(this.doneWithFlock);
@@ -79,6 +89,20 @@ export default class Ui {
       show(this.removeBirdButton);
       show(this.doneWithFlock);
       show(this.disperseFlockButton);
+
+      if (this.stage.availableBirds.length > 0) {
+        enable(this.addBirdButton);
+      } else {
+        disable(this.addBirdButton);
+      }
+
+      if (this.stage.gullsInFlocks.length > 0) {
+        enable(this.removeBirdButton);
+        enable(this.disperseFlockButton);
+      } else {
+        disable(this.removeBirdButton);
+        disable(this.disperseFlockButton);
+      }
     }
   }
 }

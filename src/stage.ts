@@ -43,6 +43,10 @@ export default class Stage {
     this.createBackground();
   }
 
+  get gullsInFlocks() {
+    return this.gullFlocks.flatMap((gullFlock) => gullFlock.sprites);
+  }
+
   createBackground() {
     const width = this.size.x;
     const height = this.size.y;
@@ -67,6 +71,8 @@ export default class Stage {
 
     this.lot = new Box(lotPos, lotSize);
   }
+
+  available;
 
   createCells() {
     for (let i = 0; i < this.numCellsTall; i++) {
@@ -97,6 +103,12 @@ export default class Stage {
       this.cellSize * scale,
       this.cellSize * scale
     );
+  }
+
+  availableBirds() {
+    const { gulls: allGulls } = this;
+
+    allGulls.filter((x) => !this.gullsInFlocks.includes(x));
   }
 
   strokeCell(cell, color) {
