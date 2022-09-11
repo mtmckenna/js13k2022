@@ -81,17 +81,22 @@ export default class Sprite implements Drawable, Updatable, Damagable {
     return Sprite.imageCache[this.name];
   }
 
-  get clampedNumCellsAcross() {
+  clampedNumCellsAcross(width = null) {
+    let width2 = width;
+    if (width2 === null) width2 = this.size.x;
     return clamp(
-      Math.floor(this.size.x / this.stage.cellSize),
+      Math.floor(width2 / this.stage.cellSize),
       1,
       this.stage.numCellsWide
     );
   }
 
-  get clampedNumCellsDown() {
+  clampedNumCellsDown(height = null) {
+    let height2 = height;
+    if (height2 === null) height2 = this.size.y;
+
     return clamp(
-      Math.floor(this.size.y / this.stage.cellSize),
+      Math.floor(height2 / this.stage.cellSize),
       1,
       this.stage.numCellsWide
     );
@@ -178,20 +183,42 @@ export default class Sprite implements Drawable, Updatable, Damagable {
     this.renderer.draw(this);
   }
 
-  setOverlappingCellsWalkability(walkable = false, breakable = false) {
+  setOverlappingCellsWalkability(
+    walkable = false,
+    breakable = false,
+    width = null,
+    height = null
+  ) {
     this.unwalkable = [];
     this.breakable = [];
     const mainCell = this.stage.getCellForPos(this.pos);
-    this.setCell(mainCell, walkable, breakable);
+
+    const width2 = width || this.size.x;
+    const height2 = height || this.size.y;
+
+    const cellsAcross = this.clampedNumCellsAcross(width2);
+    const cellsDown = this.clampedNumCellsDown(height2);
+
+    this.setCell(mainCell, walkable, breakable, cellsAcross, cellsDown);
   }
 
-  setCell(mainCell: ICell, walkable = false, breakable = false) {
-    for (let i = 0; i < this.clampedNumCellsAcross; i++) {
-      for (let j = 0; j < this.clampedNumCellsDown; j++) {
+  setCell(
+    mainCell: ICell,
+    walkable = false,
+    breakable = false,
+    cellsAcross?: number,
+    cellsDown?: number
+  ) {
+    const cellsAcross2 = cellsAcross || this.clampedNumCellsAcross;
+    const cellsDown2 = cellsDown || this.clampedNumCellsDown;
+
+    for (let i = 0; i < cellsAcross2; i++) {
+      for (let j = 0; j < cellsDown2; j++) {
         const cell = this.stage.getCell(mainCell.x + i, mainCell.y - j);
 
         let cost = Stage.WALKABLE_COST;
         if (breakable) cost += Stage.BREAKABLE_COST;
+        if (this.name === "safe_house") cost -= Stage.SAFE_HOUSE_COST;
 
         cell.cost = cost;
         cell.walkable = walkable;
@@ -202,6 +229,7 @@ export default class Sprite implements Drawable, Updatable, Damagable {
   }
 
   edgesMirror() {
+    if (!this.canBump) return;
     if (this.pos.x + this.size.x >= this.stage.size.x) {
       this.pos.x = this.stage.size.x - this.size.x - 1;
       this.acc.x = -1 * Math.abs(this.acc.x);

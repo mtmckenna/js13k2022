@@ -120,7 +120,6 @@ export default class Ui {
   }
 
   hideResults() {
-    console.log("HIDE");
     hide(this.resultsDiv);
   }
 

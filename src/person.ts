@@ -112,7 +112,6 @@ export default class Person extends Sprite implements Damagable {
         // they're in the house
         // if (overlaps(this, this.safeHouseDoors[0])) {
         if (overlaps(this, this.safeHouse.door)) {
-          // if (start === end) {
           this.safe = true;
           this.stage.personSafe();
         } else {
@@ -207,8 +206,8 @@ export default class Person extends Sprite implements Damagable {
     super.draw(t);
     this.drawHealthBar();
 
-    // for (const cell of this.path) {
-    //   this.stage.strokeCell(cell, "yellow");
-    // }
+    for (const cell of this.path) {
+      this.stage.strokeCell(cell, "yellow");
+    }
   }
 }

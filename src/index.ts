@@ -34,7 +34,7 @@ let gameState: GAME_STATES = GAME_STATES.TITLE;
 
 const renderer = Renderer.getInstance();
 
-let currentStage = stages[0];
+let currentStage = stages[1];
 
 const input = Input.getInstance();
 input.addEventListeners(canvas);
@@ -168,7 +168,6 @@ function rallyPointClickCallback(pos: Vector) {
 function regenerateStage(index) {
   stages[index] = stageGenerators[index](); // regenerate stage
   currentStage = stages[index];
-  console.log(currentStage.gullFlocks);
   reset();
 }
 

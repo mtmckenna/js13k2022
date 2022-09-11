@@ -18,8 +18,9 @@ const DEFAULT_COST = 1;
 export default class Stage {
   static BREAKABLE_COST = 3;
   static WALKABLE_COST = 1;
-  static RALLY_POINT_COST = 2;
+  static RALLY_POINT_COST = 1.5;
   static CELL_SIZE = 16;
+  static SAFE_HOUSE_COST = -3;
 
   public bumpables: Sprite[];
   public size: Vector;
@@ -56,6 +57,7 @@ export default class Stage {
 
   constructor(size: Vector) {
     const C = Stage.CELL_SIZE;
+    const C2 = Stage.CELL_SIZE * 2;
 
     this.size = size;
     this.center = new Vector(
@@ -64,12 +66,12 @@ export default class Stage {
       0
     );
 
-    this.topLeft = new Vector(this.size.x / 4, this.size.y - C, 0);
-    this.topCenter = new Vector(this.size.x / 2, this.size.y - C, 0);
-    this.topRight = new Vector((this.size.x * 3) / 4, this.size.y - C, 0);
-    this.bottomRight = new Vector((this.size.x * 3) / 4, 0 + C, 0);
-    this.bottomCenter = new Vector(this.size.x / 2, 0 + 2 * C, 0);
-    this.bottomLeft = new Vector(this.size.x / 4, 0 + C, 0);
+    this.topLeft = new Vector(this.size.x / 4, this.size.y - C2, 0);
+    this.topCenter = new Vector(this.size.x / 2, this.size.y - C2, 0);
+    this.topRight = new Vector((this.size.x * 3) / 4, this.size.y - C2, 0);
+    this.bottomRight = new Vector((this.size.x * 3) / 4, 0 + C2, 0);
+    this.bottomCenter = new Vector(this.size.x / 2, 0 + C2, 0);
+    this.bottomLeft = new Vector(this.size.x / 4, 0 + C2, 0);
 
     this.renderer = Renderer.getInstance();
 
@@ -306,18 +308,18 @@ export default class Stage {
   //   );
   // }
 
-  // strokeCell(cell, color) {
-  //   const y = (this.numCellsTall - 1) * this.cellSize;
-  //   const scale = this.renderer.offset.z;
+  strokeCell(cell, color) {
+    const y = (this.numCellsTall - 1) * this.cellSize;
+    const scale = this.renderer.offset.z;
 
-  //   this.renderer.ctx.strokeStyle = color;
-  //   this.renderer.ctx.strokeRect(
-  //     (cell.x * this.cellSize - this.renderer.offset.x) * scale,
-  //     (y - cell.y * this.cellSize - this.renderer.offset.y) * scale,
-  //     this.cellSize * scale,
-  //     this.cellSize * scale
-  //   );
-  // }
+    this.renderer.ctx.strokeStyle = color;
+    this.renderer.ctx.strokeRect(
+      (cell.x * this.cellSize - this.renderer.offset.x) * scale,
+      (y - cell.y * this.cellSize - this.renderer.offset.y) * scale,
+      this.cellSize * scale,
+      this.cellSize * scale
+    );
+  }
 
   neighbors(cell) {
     const result = [];
