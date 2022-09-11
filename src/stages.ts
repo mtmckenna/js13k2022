@@ -67,7 +67,6 @@ function generateStage1(): Stage {
 }
 
 stageGenerators.push(generateStage1);
-stages.push(stage1);
 
 function generateStage2(): Stage {
   const stage = new Stage(stageSize);
