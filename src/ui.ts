@@ -120,7 +120,7 @@ export default class Ui {
   }
 
   update() {
-    const killText = `Killed: ${this.stage.numPeopleKilled}`;
+    const killText = `Eliminated: ${this.stage.numPeopleKilled}`;
     const escapeText = `Escaped: ${this.stage.numPeopleSafe}`;
     const percentText = `${(this.stage.percentKilled * 100).toFixed(0)}%`;
     if (this.killDiv.innerText !== killText) {
@@ -140,7 +140,12 @@ export default class Ui {
       show(this.createFlockButton);
       show(this.nextButton);
       show(this.prevButton);
-      enable(this.attackButton);
+
+      if (this.stage.gullFlocks.length > 0) {
+        enable(this.attackButton);
+      } else {
+        disable(this.attackButton);
+      }
 
       if (this.stage.availableGulls.length > 0) {
         enable(this.createFlockButton);
