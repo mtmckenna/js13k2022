@@ -36,7 +36,30 @@ export default class Renderer {
   }
 
   public draw(sprite: Sprite) {
-    this.drawSprite(sprite);
+    if (sprite.dead) return;
+    const h = sprite.stage.size.y;
+
+    sprite.updateCurrentFrame(this.previousRenderNumber);
+
+    const scale = this.offset.z;
+
+    const x = Math.round((sprite.pos.x - this.offset.x) * scale);
+    const y = Math.round((h - sprite.pos.y - this.offset.y) * scale);
+
+    const xSize = Math.round(sprite.size.x * scale);
+    const ySize = Math.round(sprite.size.y * scale);
+
+    this.ctx.drawImage(
+      sprite.image,
+      sprite.startOffset + sprite.currentFrame * sprite.originalSize.x,
+      0,
+      sprite.originalSize.x,
+      sprite.originalSize.y,
+      x,
+      y,
+      xSize,
+      ySize
+    );
   }
 
   // drawGrid() {
@@ -119,31 +142,4 @@ export default class Renderer {
   //     this.stage.size.y * scale
   //   );
   // }
-
-  private drawSprite(sprite: Sprite) {
-    if (sprite.dead) return;
-    const h = sprite.stage.size.y;
-
-    sprite.updateCurrentFrame(this.previousRenderNumber);
-
-    const scale = this.offset.z;
-
-    const x = Math.round((sprite.pos.x - this.offset.x) * scale);
-    const y = Math.round((h - sprite.pos.y - this.offset.y) * scale);
-
-    const xSize = Math.round(sprite.size.x * scale);
-    const ySize = Math.round(sprite.size.y * scale);
-
-    this.ctx.drawImage(
-      sprite.image,
-      sprite.startOffset + sprite.currentFrame * sprite.originalSize.x,
-      0,
-      sprite.originalSize.x,
-      sprite.originalSize.y,
-      x,
-      y,
-      xSize,
-      ySize
-    );
-  }
 }

@@ -4,7 +4,12 @@ const TerserJSPlugin = require("terser-webpack-plugin");
 
 module.exports = {
   optimization: {
-    minimizer: [new TerserJSPlugin({})],
+    minimizer: [
+      new TerserJSPlugin({
+        terserOptions: { compress: true, mangle: { properties: true } },
+      }),
+    ],
+    minimize: true,
   },
   plugins: [
     new HtmlWebpackPlugin({ template: "src/index.html", inject: "body" }),

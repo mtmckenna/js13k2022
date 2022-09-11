@@ -5,7 +5,6 @@ import Stage from "./stage";
 
 import houseImageDataUrl from "../assets/spritesheet.png";
 import SpriteAnimation from "./sprite_animation";
-import Box from "./box";
 
 export default class SafeHouse extends Sprite implements Drawable, IBox {
   public static ORIGINAL_SIZE = new Vector(32, 32, 1);
@@ -53,7 +52,7 @@ export default class SafeHouse extends Sprite implements Drawable, IBox {
       this.stage.cellSize * 2,
       0
     );
-    this.door = new Box(bottomMiddle, size);
+    this.door = { pos: bottomMiddle, size };
 
     this.setOverlappingCellsWalkability();
   }

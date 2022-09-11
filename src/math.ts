@@ -18,9 +18,9 @@ export class Vector {
     return new Vector(vec1.x - vec2.x, vec1.y - vec2.y, vec1.z - vec2.z);
   }
 
-  toString() {
-    console.log(`[${this.x}, ${this.y}, ${this.z}]`);
-  }
+  // toString() {
+  //   console.log(`[${this.x}, ${this.y}, ${this.z}]`);
+  // }
 
   add(otherVector: Vector) {
     this.x += otherVector.x;
@@ -53,9 +53,9 @@ export class Vector {
     let z = 0;
 
     if (otherVector instanceof Vector) {
-      x = otherVector.x;
-      y = otherVector.y;
-      z = otherVector.z;
+      // x = otherVector.x;
+      // y = otherVector.y;
+      // z = otherVector.z;
     } else {
       x = otherVector;
       y = x;
@@ -64,14 +64,14 @@ export class Vector {
 
     if (Number.isFinite(x) && Number.isFinite(y) && Number.isFinite(z)) {
       if (x === 0 || y === 0 || z === 0) {
-        console.warn("Vector.div:", "divide by 0");
+        // console.warn("Vector.div:", "divide by 0");
         return this;
       }
       this.x /= x;
       this.y /= y;
       this.z /= z;
     } else {
-      console.warn("Vector.div:", "undefined or not finite numbers");
+      // console.warn("Vector.div:", "undefined or not finite numbers");
     }
     return this;
   }
@@ -96,7 +96,7 @@ export class Vector {
       this.y *= y;
       this.z *= z;
     } else {
-      console.warn("Vector.mult:", "undefined or not finite numbers");
+      // console.warn("Vector.mult:", "undefined or not finite numbers");
     }
     return this;
   }

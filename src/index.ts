@@ -54,7 +54,12 @@ function tick(t: number) {
   updateSprites(t);
   ui.update();
 
-  if (currentStage.peopleLeft <= 0) {
+  const numPeopleLeft =
+    currentStage.totalNumberOfPeople -
+    currentStage.numPeopleKilled -
+    currentStage.numPeopleSafe;
+
+  if (numPeopleLeft <= 0) {
     if (currentStage.percentKilled < 0.5) {
       ui.showRetryResults();
       gameState = GAME_STATES.WAITING_FOR_RETRY;

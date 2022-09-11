@@ -1,8 +1,7 @@
 import { Vector, clamp, pointInsideBox } from "./math";
 import Renderer from "./renderer";
-import Box from "./box";
 import Sprite from "./sprite";
-import { ICell } from "./interfaces";
+import { IBox, ICell } from "./interfaces";
 import Person from "./person";
 import Gull from "./gull";
 import PersonFlock from "./person_flock";
@@ -50,10 +49,10 @@ export default class Stage {
   public index: number;
 
   private renderer: Renderer;
-  private sky: Box;
-  private beach: Box;
-  private sun: Box;
-  private lot: Box;
+  private sky: IBox;
+  private beach: IBox;
+  private sun: IBox;
+  private lot: IBox;
 
   constructor(size: Vector) {
     const C = Stage.CELL_SIZE;
@@ -125,15 +124,15 @@ export default class Stage {
     const height = this.size.y;
     const skyPos: Vector = new Vector(0, 0, 0);
     const skySize: Vector = new Vector(width, 50, 0);
-    this.sky = new Box(skyPos, skySize);
+    this.sky = { pos: skyPos, size: skySize };
 
     const beachPos: Vector = new Vector(0, skyPos.y + skySize.y, 0);
     const beachSize: Vector = new Vector(width, 100, 0);
-    this.beach = new Box(beachPos, beachSize);
+    this.beach = { pos: beachPos, size: beachSize };
 
     const sunPos: Vector = new Vector(width / 2, skyPos.y + skySize.y, 0);
     const sunSize: Vector = new Vector(beachSize.y / 2.5, beachSize.y / 2.5, 0);
-    this.sun = new Box(sunPos, sunSize);
+    this.sun = { pos: sunPos, size: sunSize };
 
     const lotPos: Vector = new Vector(0, beachPos.y + beachSize.y, 0);
     const lotSize: Vector = new Vector(
@@ -142,7 +141,7 @@ export default class Stage {
       0
     );
 
-    this.lot = new Box(lotPos, lotSize);
+    this.lot = { pos: lotPos, size: lotSize };
   }
 
   createCells() {
@@ -164,9 +163,9 @@ export default class Stage {
     }
   }
 
-  get peopleLeft(): number {
-    return this.totalNumberOfPeople - this.numPeopleKilled - this.numPeopleSafe;
-  }
+  // get peopleLeft(): number {
+  //   return this.totalNumberOfPeople - this.numPeopleKilled - this.numPeopleSafe;
+  // }
 
   recalculateAvailableBirds() {
     const { gulls: allGulls } = this;

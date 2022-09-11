@@ -13,29 +13,17 @@ export default class RallyPoint implements Drawable {
   ctx: CanvasRenderingContext2D;
   color: string;
   stage: Stage;
-  sizeForSearch: Vector;
 
-  private _center: Vector = new Vector(0, 0, 0);
   private _posForSelect: Vector = new Vector(0, 0, 0);
 
   constructor(pos: Vector, stage: Stage) {
     this.pos = pos;
     this.size = new Vector(15, 15, 0);
     this.selectSize = new Vector(75, 75, 0);
-    this.sizeForSearch = new Vector(20, 20, 0);
     this.renderer = Renderer.getInstance();
     this.ctx = this.renderer.ctx;
     this.color = COLOR_MAP.pink;
     this.stage = stage;
-  }
-
-  get center() {
-    this._center.set(
-      this.pos.x + this.size.x / 2,
-      this.pos.y - this.size.y / 2,
-      this.pos.z
-    );
-    return this._center;
   }
 
   get selectPos() {

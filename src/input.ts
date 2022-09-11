@@ -40,8 +40,6 @@ export default class Input {
       passive: true,
     });
     element.addEventListener("touchcancel", this.inputReleased.bind(this));
-
-    // window.addEventListener("keydown", this.keydown.bind(this));
   }
 
   registerClickCallback(callback: (pos: Vector) => void) {
@@ -55,10 +53,6 @@ export default class Input {
   registerReleaseCallback(callback: (pos: Vector) => void) {
     this.releaseCallbacks.push(callback);
   }
-
-  // registerKeydownCallback(callback: (keyCode: string) => void) {
-  //   this.keydownCallbacks.push(callback);
-  // }
 
   inputPressed(x: number, y: number) {
     this.clickCallbacks.forEach((callback) => callback(new Vector(x, y, 0)));

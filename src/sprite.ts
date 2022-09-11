@@ -70,7 +70,6 @@ export default class Sprite implements Drawable, Updatable, Damagable {
     this.numFrames = props.numFrames;
     this.renderer = Renderer.getInstance();
     this.timeOffset = randomIntBetween(0, 999999999);
-    this.zoom = this.size.copy().mult(this.originalSize);
     this.id = crypto.randomUUID();
     this.stage = props.stage;
     this.spriteAnimations = props.spriteAnimations;

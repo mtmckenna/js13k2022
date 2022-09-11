@@ -39,7 +39,7 @@ export class DefaultState implements IState<Ui, UI_INPUTS> {
 export class AttackState implements IState<Ui, UI_INPUTS> {
   enter(ui: Ui) {
     const { people } = ui.stage;
-    people.forEach((person) => person.scare());
+    people.forEach((person) => (person.canBump = false));
   }
 
   // once in the attack state, no going back
@@ -104,7 +104,5 @@ export class CreateFlockState implements IState<Ui, UI_INPUTS> {
 export enum UI_INPUTS {
   DEFAULT = "DEFAULT",
   ATTACK = "ATTACK",
-  SELECT_OBSTACLE = "SELECT_OBSTACLE",
-  MOVE_OBSTACLE = "MOVE_OBSTACLE",
   CREATE_FLOCK = "CREATE_FLOCK",
 }

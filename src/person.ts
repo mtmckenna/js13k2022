@@ -87,10 +87,6 @@ export default class Person extends Sprite implements Damagable {
     this.acc.add(separation.mult(PEOPLE_CALM_SEPARATION_STRENGTH));
   }
 
-  scare() {
-    this.canBump = false;
-  }
-
   die() {
     if (this.health <= 0 && !this.dead) {
       this.stage.personKilled();
@@ -179,13 +175,6 @@ export default class Person extends Sprite implements Damagable {
     }
   }
 
-  healthBarWidth(): number {
-    return (
-      (MAX_HEALTH_BAR_WIDTH * this.health) / Sprite.MAX_HEALTH -
-      HEALTH_BAR_INSIDE_OFFSET * 2
-    );
-  }
-
   drawHealthBar() {
     if (this.health <= 0) return;
     const ctx = this.renderer.ctx;
@@ -193,6 +182,9 @@ export default class Person extends Sprite implements Damagable {
     const x = this.pos.x - (MAX_HEALTH_BAR_WIDTH - this.size.x) / 2;
     const y = h - this.pos.y + this.size.y + HEALTH_BAR_Y_OFFSET;
     const offset = this.renderer.offset;
+    const healthBarWidth =
+      (MAX_HEALTH_BAR_WIDTH * this.health) / Sprite.MAX_HEALTH -
+      HEALTH_BAR_INSIDE_OFFSET * 2;
 
     ctx.fillStyle = "white";
     ctx.fillRect(
@@ -206,7 +198,7 @@ export default class Person extends Sprite implements Damagable {
     ctx.fillRect(
       (x + HEALTH_BAR_INSIDE_OFFSET - offset.x) * offset.z,
       (y + HEALTH_BAR_INSIDE_OFFSET - offset.y) * offset.z,
-      this.healthBarWidth() * offset.z,
+      healthBarWidth * offset.z,
       HEALTH_BAR_INSIDE_HEIGHT * offset.z
     );
   }
