@@ -215,8 +215,8 @@ export default class Person extends Sprite implements Damagable {
     super.draw(t);
     this.drawHealthBar();
 
-    for (const cell of this.path) {
-      this.stage.strokeCell(cell, "yellow");
-    }
+    // for (const cell of this.path) {
+    //   this.stage.strokeCell(cell, "yellow");
+    // }
   }
 }

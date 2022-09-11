@@ -39,86 +39,86 @@ export default class Renderer {
     this.drawSprite(sprite);
   }
 
-  drawGrid() {
-    const gridSize = this.stage.cellSize;
-    this.ctx.lineWidth = 1;
-    const scale = this.offset.z;
-    const h = this.stage.size.y;
+  // drawGrid() {
+  //   const gridSize = this.stage.cellSize;
+  //   this.ctx.lineWidth = 1;
+  //   const scale = this.offset.z;
+  //   const h = this.stage.size.y;
 
-    this.ctx.strokeStyle = "red";
-    // vertical
-    for (let i = 0; i < this.stage.size.x / gridSize; i++) {
-      this.ctx.beginPath();
+  //   this.ctx.strokeStyle = "red";
+  //   // vertical
+  //   for (let i = 0; i < this.stage.size.x / gridSize; i++) {
+  //     this.ctx.beginPath();
 
-      this.ctx.moveTo(
-        (i * gridSize - this.offset.x) * scale,
-        (h - 0 - this.offset.y) * scale
-      );
+  //     this.ctx.moveTo(
+  //       (i * gridSize - this.offset.x) * scale,
+  //       (h - 0 - this.offset.y) * scale
+  //     );
 
-      this.ctx.lineTo(
-        (i * gridSize - this.offset.x) * scale,
-        (h - this.stage.size.y - this.offset.y) * scale
-      );
+  //     this.ctx.lineTo(
+  //       (i * gridSize - this.offset.x) * scale,
+  //       (h - this.stage.size.y - this.offset.y) * scale
+  //     );
 
-      this.ctx.stroke();
-    }
+  //     this.ctx.stroke();
+  //   }
 
-    this.ctx.strokeStyle = "pink";
-    // horizontal
-    for (let j = 0; j < this.stage.size.y / gridSize; j++) {
-      this.ctx.beginPath();
-      this.ctx.moveTo(
-        (0 - this.offset.x) * scale,
-        (h - j * gridSize - this.offset.y) * scale
-      );
-      this.ctx.lineTo(
-        (this.stage.size.x - this.offset.x) * scale,
-        (h - j * gridSize - this.offset.y) * scale
-      );
-      this.ctx.stroke();
-    }
-    this.ctx.font = "10px sans serif";
-    this.ctx.textAlign = "center";
+  //   this.ctx.strokeStyle = "pink";
+  //   // horizontal
+  //   for (let j = 0; j < this.stage.size.y / gridSize; j++) {
+  //     this.ctx.beginPath();
+  //     this.ctx.moveTo(
+  //       (0 - this.offset.x) * scale,
+  //       (h - j * gridSize - this.offset.y) * scale
+  //     );
+  //     this.ctx.lineTo(
+  //       (this.stage.size.x - this.offset.x) * scale,
+  //       (h - j * gridSize - this.offset.y) * scale
+  //     );
+  //     this.ctx.stroke();
+  //   }
+  //   this.ctx.font = "10px sans serif";
+  //   this.ctx.textAlign = "center";
 
-    const unwalkable = [];
-    for (let i = 0; i < this.stage.size.x / gridSize; i++) {
-      for (let j = 0; j < this.stage.size.y / gridSize; j++) {
-        const cell = this.stage.cells[j][i];
-        const walkable = cell.walkable;
-        const hasRallyPoint = cell.hasRallyPoint;
-        if (!walkable || hasRallyPoint) {
-          unwalkable.push(unwalkable);
-          const y = (-1 * (gridSize * j - h) - this.offset.y) * scale;
+  //   const unwalkable = [];
+  //   for (let i = 0; i < this.stage.size.x / gridSize; i++) {
+  //     for (let j = 0; j < this.stage.size.y / gridSize; j++) {
+  //       const cell = this.stage.cells[j][i];
+  //       const walkable = cell.walkable;
+  //       const hasRallyPoint = cell.hasRallyPoint;
+  //       if (!walkable || hasRallyPoint) {
+  //         unwalkable.push(unwalkable);
+  //         const y = (-1 * (gridSize * j - h) - this.offset.y) * scale;
 
-          this.ctx.fillStyle = "purple";
+  //         this.ctx.fillStyle = "purple";
 
-          this.ctx.fillRect(
-            (gridSize * i - this.offset.x) * scale,
-            y,
-            gridSize * scale,
-            gridSize * scale
-          );
-        }
+  //         this.ctx.fillRect(
+  //           (gridSize * i - this.offset.x) * scale,
+  //           y,
+  //           gridSize * scale,
+  //           gridSize * scale
+  //         );
+  //       }
 
-        if ((i + j) % 2 == 0) {
-          this.ctx.fillText(
-            `${i},${j}`,
-            (gridSize / 2 + gridSize * i - this.offset.x) * scale,
-            (h - j * gridSize - this.offset.y - gridSize / 2) * scale
-          );
-        }
-      }
-    }
+  //       if ((i + j) % 2 == 0) {
+  //         this.ctx.fillText(
+  //           `${i},${j}`,
+  //           (gridSize / 2 + gridSize * i - this.offset.x) * scale,
+  //           (h - j * gridSize - this.offset.y - gridSize / 2) * scale
+  //         );
+  //       }
+  //     }
+  //   }
 
-    // Draw box around stage
-    this.ctx.strokeStyle = "yellow";
-    this.ctx.strokeRect(
-      -this.offset.x * scale,
-      -this.offset.y * scale,
-      this.stage.size.x * scale,
-      this.stage.size.y * scale
-    );
-  }
+  //   // Draw box around stage
+  //   this.ctx.strokeStyle = "yellow";
+  //   this.ctx.strokeRect(
+  //     -this.offset.x * scale,
+  //     -this.offset.y * scale,
+  //     this.stage.size.x * scale,
+  //     this.stage.size.y * scale
+  //   );
+  // }
 
   private drawSprite(sprite: Sprite) {
     if (sprite.dead) return;
