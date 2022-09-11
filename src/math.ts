@@ -167,3 +167,14 @@ export function randomFloatBetween(min: number, max: number) {
 export function randomIntBetween(min, max) {
   return Math.floor(randomFloatBetween(min, max + 1));
 }
+
+export function pointInsideBox(point: Vector, box: IBox) {
+  const left = box.pos.x;
+  const right = box.pos.x + box.size.x;
+  const top = box.pos.y;
+  const bottom = box.pos.y - box.size.y;
+
+  return (
+    point.x >= left && point.x <= right && point.y <= top && point.y >= bottom
+  );
+}

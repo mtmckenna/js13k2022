@@ -5,6 +5,7 @@ import Ui from "./ui";
 import BloodSystem from "./blood_system";
 import { AttackState } from "./ui_states";
 import { stages } from "./stages";
+import RallyPoint from "./rally_point";
 
 const bloodSystem = BloodSystem.getInstance();
 
@@ -113,22 +114,37 @@ function updateSprites(t: number) {
   }
 }
 
+function moveCallback(pos: Vector) {
+  if (!input.selectedRallyPoint) return;
+  const rallyPoint = input.selectedRallyPoint;
+  if (!rallyPoint) return;
+  const gamePos = screenToGameCoordinates(pos);
+  rallyPoint.pos.set(gamePos.x, gamePos.y, gamePos.z);
+  currentStage.resetRallyPointCosts();
+}
+
 function rallyPointClickCallback(pos: Vector) {
   if (!gameStarted) {
     startGame();
     return;
   }
 
-  if (!currentStage.selectedFlock) return;
-
   const gamePos = screenToGameCoordinates(pos);
-  currentStage.selectedFlock.rallyPoint.pos.set(
-    gamePos.x,
-    gamePos.y,
-    gamePos.z
-  );
+  const rallyPoint = currentStage.rallyPointForPos(gamePos);
+  if (!rallyPoint) return;
 
-  currentStage.resetRallyPointCosts();
+  setFlockFromRallyPoint(rallyPoint);
+}
+
+input.registerClickCallback(rallyPointClickCallback);
+input.registerMoveCallback(moveCallback);
+
+function setFlockFromRallyPoint(rallyPoint: RallyPoint) {
+  const gullFlock = currentStage.gullFlocks.find(
+    (flock) => flock.rallyPoint === rallyPoint
+  );
+  currentStage.selectFlock(gullFlock);
+  input.selectedRallyPoint = rallyPoint;
 }
 
 function screenToGameCoordinates(pos: Vector): Vector {
@@ -146,8 +162,6 @@ function screenToGameCoordinates(pos: Vector): Vector {
 
   return pos;
 }
-
-input.registerClickCallback(rallyPointClickCallback);
 
 showMainMenu();
 requestAnimationFrame(tick);

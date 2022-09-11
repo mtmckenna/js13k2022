@@ -1,5 +1,6 @@
 import { Vector } from "./math";
 import Renderer from "./renderer";
+import RallyPoint from "./rally_point";
 
 export default class Input {
   private static instance: Input;
@@ -8,8 +9,12 @@ export default class Input {
   canvas: HTMLCanvasElement;
   renderer: Renderer;
 
+  selectedRallyPoint: null | RallyPoint;
+
   clickCallbacks: Array<(pos: Vector) => void> = [];
   keydownCallbacks: Array<(keyCode: string) => void> = [];
+  moveCallbacks: Array<(pos: Vector) => void> = [];
+  releaseCallbacks: Array<(pos: Vector) => void> = [];
 
   public static getInstance(): Input {
     if (!Input.instance) Input.instance = new Input();
@@ -23,16 +28,32 @@ export default class Input {
 
   addEventListeners(element: HTMLElement) {
     element.addEventListener("mousedown", this.mousePressed.bind(this));
+    element.addEventListener("mousemove", this.mouseMoved.bind(this));
+    element.addEventListener("mouseup", this.inputReleased.bind(this));
 
     element.addEventListener("touchstart", this.touchPressed.bind(this), {
       passive: true,
     });
-    element.addEventListener("touchcancel", this.preventDefault.bind(this));
+    element.addEventListener("touchend", this.inputReleased.bind(this));
+
+    element.addEventListener("touchmove", this.touchMoved.bind(this), {
+      passive: true,
+    });
+    element.addEventListener("touchcancel", this.inputReleased.bind(this));
+
     // window.addEventListener("keydown", this.keydown.bind(this));
   }
 
   registerClickCallback(callback: (pos: Vector) => void) {
     this.clickCallbacks.push(callback);
+  }
+
+  registerMoveCallback(callback: (pos: Vector) => void) {
+    this.moveCallbacks.push(callback);
+  }
+
+  registerReleaseCallback(callback: (pos: Vector) => void) {
+    this.releaseCallbacks.push(callback);
   }
 
   // registerKeydownCallback(callback: (keyCode: string) => void) {
@@ -79,5 +100,32 @@ export default class Input {
 
   keydown(e: KeyboardEvent) {
     this.keydownCallbacks.forEach((callback) => callback(e.key));
+  }
+
+  mouseMoved(e: MouseEvent) {
+    const pos = this.positionFromEvent(e);
+    this.inputMoved(pos.x, pos.y);
+  }
+
+  touchMoved(e: TouchEvent) {
+    const pos = this.positionFromEvent(e);
+    this.inputMoved(pos.x, pos.y);
+  }
+
+  inputMoved(x, y) {
+    this.moveCallbacks.forEach((callback) => callback(new Vector(x, y, 0)));
+  }
+
+  inputReleased(e: MouseEvent | TouchEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const currPos = this.positionFromEvent(e);
+
+    this.clickCallbacks.forEach((callback) =>
+      callback(new Vector(currPos.x, currPos.y, 0))
+    );
+
+    this.selectedRallyPoint = null;
   }
 }

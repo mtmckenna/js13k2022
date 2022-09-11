@@ -51,8 +51,8 @@ export class AttackState implements IState<Ui, UI_INPUTS> {
 export class CreateFlockState implements IState<Ui, UI_INPUTS> {
   enter(ui: Ui) {
     const pos = new Vector(
-      randomIntBetween(0, ui.stage.size.x),
-      randomIntBetween(0, ui.stage.size.y),
+      randomIntBetween(ui.stage.size.x / 4, (3 * ui.stage.size.x) / 4),
+      randomIntBetween(ui.stage.size.y / 4, (3 * ui.stage.size.y) / 4),
       0
     );
 

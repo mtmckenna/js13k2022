@@ -1,4 +1,4 @@
-import { Vector, clamp } from "./math";
+import { Vector, clamp, overlaps, pointInsideBox } from "./math";
 import Renderer from "./renderer";
 import Box from "./box";
 import Sprite from "./sprite";
@@ -12,6 +12,7 @@ import { IStageProps } from "./stages";
 import SafeHouse from "./safe_house";
 import Car from "./car";
 import Trash from "./trash";
+import RallyPoint from "./rally_point";
 
 const DEFAULT_COST = 1;
 
@@ -289,6 +290,21 @@ export default class Stage {
     const x = cell.x * this.cellSize;
     const y = cell.y * this.cellSize;
     return new Vector(x, y, 0);
+  }
+
+  rallyPointForPos(pos: Vector): RallyPoint | null {
+    let rallyPoint = null;
+    for (let i = 0; i < this.gullFlocks.length; i++) {
+      const gullFlock = this.gullFlocks[i];
+      const rp = gullFlock.rallyPoint;
+      const box = { size: rp.selectSize, pos: rp.selectPos };
+      if (pointInsideBox(pos, box)) {
+        rallyPoint = rp;
+        break;
+      }
+    }
+
+    return rallyPoint;
   }
 
   // fillCell(cell, color) {

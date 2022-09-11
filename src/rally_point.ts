@@ -8,6 +8,7 @@ import Gull from "./gull";
 export default class RallyPoint implements Drawable {
   pos: Vector;
   size: Vector;
+  selectSize: Vector;
   renderer: Renderer;
   ctx: CanvasRenderingContext2D;
   color: string;
@@ -15,10 +16,12 @@ export default class RallyPoint implements Drawable {
   sizeForSearch: Vector;
 
   private _center: Vector = new Vector(0, 0, 0);
+  private _posForSelect: Vector = new Vector(0, 0, 0);
 
   constructor(pos: Vector, stage: Stage) {
     this.pos = pos;
     this.size = new Vector(10, 10, 0);
+    this.selectSize = new Vector(50, 50, 0);
     this.sizeForSearch = new Vector(20, 20, 0);
     this.renderer = Renderer.getInstance();
     this.ctx = this.renderer.ctx;
@@ -33,6 +36,15 @@ export default class RallyPoint implements Drawable {
       this.pos.z
     );
     return this._center;
+  }
+
+  get selectPos() {
+    this._posForSelect.set(
+      this.pos.x - this.selectSize.x / 2,
+      this.pos.y + this.selectSize.y / 2,
+      this.pos.z
+    );
+    return this._posForSelect;
   }
 
   addToCell() {
@@ -78,6 +90,15 @@ export default class RallyPoint implements Drawable {
     // Flip canvas coordinates upsideown
     const y = (-1 * (this.pos.y - h) - offset.y) * offset.z;
 
+    // this.ctx.fillStyle = "yellow";
+    // this.ctx.fillRect(
+    //   (this.selectPos.x - offset.x) * offset.z,
+    //   (h - this.selectPos.y - offset.y) * offset.z,
+    //   this.selectSize.x * offset.z,
+    //   this.selectSize.y * offset.z
+    // );
+
+    this.ctx.fillStyle = this.color;
     this.ctx.beginPath();
     this.ctx.arc(x, y, this.size.x * offset.z, 0, 2 * Math.PI);
     this.ctx.fill();
