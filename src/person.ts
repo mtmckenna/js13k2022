@@ -31,7 +31,6 @@ export default class Person extends Sprite implements Damagable {
   maxBleedBloods = Sprite.MAX_HEALTH;
   maxDeathBloods = 50;
   bloodTimeDelta = 5;
-  // safeHouseCells: ICell[] = [];
   safeHouse: SafeHouse;
   canBump = true;
   canMove = true;

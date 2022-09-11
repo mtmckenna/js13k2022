@@ -5,7 +5,6 @@
     rel="icon"
     href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐦</text></svg>"
   />
-  <meta charset="utf-8" />
   <meta
     name="viewport"
     content="initial-scale=1.0,width=device-width,user-scalable=no,viewport-fit=cover,maximum-scale=1.0, user-scalable=no"
@@ -32,7 +31,6 @@
         padding: 0;
         position: fixed;
         overflow: hidden;
-        user-select: none;
       }
 
       body {
@@ -41,15 +39,12 @@
 
       #game {
         background-color: rgb(113, 213, 104);
-        image-rendering: -moz-crisp-edges;
-        image-rendering: -webkit-crisp-edges;
         image-rendering: pixelated;
         image-rendering: crisp-edges;
         top: 0;
         left: 0;
         width: 100%;
         height:100%;
-        touch-action: manipulation;
       }
 
       #title-screen {
@@ -62,7 +57,6 @@
         left: 50%;
         transform: translate(-50%, -50%);
         text-shadow: 1px 1px 1px black;
-        /* height: 100%; */
         top: 50%;
         text-align: left;
         pointer-events: none;
@@ -82,7 +76,6 @@
         position: absolute;
         width: 100%;
         text-align: center;
-        /* bottom: 0; */
         padding: 25px;
       }
 
@@ -126,7 +119,6 @@
         font-size: 20px;
         display: inline-block;
         text-shadow: 1px 1px 1px black;
-
         padding: 0 5px;
       }
 
