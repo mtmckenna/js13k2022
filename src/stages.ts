@@ -12,46 +12,55 @@ const height = 480;
 const stageSize = new Vector(width, height, 0);
 const C = Stage.CELL_SIZE;
 
-export const stage1 = new Stage(stageSize);
-const stage1House = new SafeHouse(stage1.topCenter, stage1);
-const stage1Car1 = new Car(stage1.center, stage1);
-const stage1Car2 = new Car(
-  new Vector(stage1.center.x + C * 6, stage1.center.y - C * 5, 0),
-  stage1
-);
-const stage1Car3 = new Car(
-  new Vector(stage1.center.x - C * 6, stage1.center.y + C * 5, 0),
-  stage1
-);
-const stage1PersonFlock = generatePersonFlock(stage1.bottomCenter, 3, stage1);
+export const stages = [];
+export const stageGenerators = [];
 
-const trashCan1 = new Trash(
-  new Vector(stage1.center.x, stage1.center.y + C * 3, 0),
-  stage1
-);
+function generateStage1(): Stage {
+  const stage1 = new Stage(stageSize);
+  const stage1House = new SafeHouse(stage1.topCenter, stage1);
+  const stage1Car1 = new Car(stage1.center, stage1);
+  const stage1Car2 = new Car(
+    new Vector(stage1.center.x + C * 6, stage1.center.y - C * 5, 0),
+    stage1
+  );
+  const stage1Car3 = new Car(
+    new Vector(stage1.center.x - C * 6, stage1.center.y + C * 5, 0),
+    stage1
+  );
+  const stage1PersonFlock = generatePersonFlock(stage1.bottomCenter, 3, stage1);
 
-const trashCan2 = new Trash(
-  new Vector(stage1.center.x, stage1.center.y + C * 5, 0),
-  stage1
-);
+  const trashCan1 = new Trash(
+    new Vector(stage1.center.x, stage1.center.y + C * 3, 0),
+    stage1
+  );
 
-const trashCan3 = new Trash(
-  new Vector(stage1.center.x + C * 2, stage1.center.y + C * 2, 0),
-  stage1
-);
+  const trashCan2 = new Trash(
+    new Vector(stage1.center.x, stage1.center.y + C * 5, 0),
+    stage1
+  );
 
-const stage1Props: IStageProps = {
-  trashCans: [trashCan1, trashCan2, trashCan3],
-  cars: [stage1Car1, stage1Car2, stage1Car3],
-  safeHouse: stage1House,
-  personFlocks: [stage1PersonFlock],
-  gulls: generateGulls(5, stage1),
-  number: 1,
-};
+  const trashCan3 = new Trash(
+    new Vector(stage1.center.x + C * 2, stage1.center.y + C * 2, 0),
+    stage1
+  );
 
-stage1.processStageProps(stage1Props);
+  const stage1Props: IStageProps = {
+    trashCans: [trashCan1, trashCan2, trashCan3],
+    cars: [stage1Car1, stage1Car2, stage1Car3],
+    safeHouse: stage1House,
+    personFlocks: [stage1PersonFlock],
+    gulls: generateGulls(5, stage1),
+    index: 0,
+  };
 
-export const stages = [stage1];
+  stage1.processStageProps(stage1Props);
+
+  return stage1;
+}
+const stage1 = generateStage1();
+
+stageGenerators.push(generateStage1);
+stages.push(stage1);
 
 function generatePersonFlock(
   location: Vector,
@@ -95,5 +104,5 @@ export interface IStageProps {
   safeHouse: SafeHouse;
   personFlocks: PersonFlock[];
   gulls: Gull[];
-  number: number;
+  index: number;
 }

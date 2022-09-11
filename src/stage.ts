@@ -1,4 +1,4 @@
-import { Vector, clamp, overlaps, pointInsideBox } from "./math";
+import { Vector, clamp, pointInsideBox } from "./math";
 import Renderer from "./renderer";
 import Box from "./box";
 import Sprite from "./sprite";
@@ -47,7 +47,7 @@ export default class Stage {
   public cars: Car[];
   public trashCans: Trash[];
   public safeHouse: SafeHouse;
-  public number: number;
+  public index: number;
 
   private renderer: Renderer;
   private sky: Box;
@@ -101,12 +101,15 @@ export default class Stage {
     this.people.forEach((person) => {
       person.safeHouse = this.safeHouse;
     });
-    this.number = stageProps.number;
+
+    this.index = stageProps.index;
   }
 
   setPeople(people: Person[]) {
     this.people = people;
     this.totalNumberOfPeople = people.length;
+    this.numPeopleKilled = 0;
+    this.numPeopleSafe = 0;
   }
 
   selectFlock(flock: GullFlock) {

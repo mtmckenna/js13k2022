@@ -44,7 +44,19 @@ export class AttackState implements IState<Ui, UI_INPUTS> {
 
   // once in the attack state, no going back
   handleInput(ui: Ui, input: UI_INPUTS) {
-    return this;
+    let state = null;
+
+    switch (input) {
+      // Only going to have the default state in here for resetting the game
+      case UI_INPUTS.DEFAULT:
+        state = new DefaultState(); // eslint-disable-line
+        break;
+      default:
+        state = this; // eslint-disable-line
+    }
+
+    ui.state = state;
+    return state;
   }
 }
 

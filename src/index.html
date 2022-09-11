@@ -48,6 +48,14 @@
       }
 
       #title-screen {
+        text-align: left;
+      }
+
+      #results {
+        text-align:left;
+      }
+
+      .overlay {
         font-family: "Pixelated MS Sans Serif", Arial;
         -webkit-font-smoothing: none;
         color:white;
@@ -60,10 +68,7 @@
         top: 50%;
         text-align: left;
         pointer-events: none;
-      }
 
-      #results {
-        pointer-events: none;
       }
 
       #game-title {
@@ -187,7 +192,7 @@
   <body>
 
     <canvas id="game"></canvas>
-    <div id="title-screen", class="ui">
+    <div id="title-screen" class="ui overlay">
       <div id="game-title">Bird Commander 2</div>
       <p style="padding-bottom:10px">
       Greetings, Commander Bird.
@@ -202,7 +207,7 @@
       <p>General Bird</p>
       <div id="click-to-play" class="blink">Click or tap to play</div>
     </div>
-    <div id="results" class="ui"></div>
+    <div id="results" class="ui overlay"></div>
     <div id="ui-wrapper-top" class="ui"></div>
     <div id="ui-wrapper-bottom" class="ui">
     </div>

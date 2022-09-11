@@ -3,8 +3,8 @@ import Input from "./input";
 import Renderer from "./renderer";
 import Ui from "./ui";
 import BloodSystem from "./blood_system";
-import { AttackState } from "./ui_states";
-import { stages } from "./stages";
+import { AttackState, UI_INPUTS } from "./ui_states";
+import { stages, stageGenerators } from "./stages";
 import RallyPoint from "./rally_point";
 
 const bloodSystem = BloodSystem.getInstance();
@@ -14,6 +14,14 @@ const canvas: HTMLCanvasElement = document.getElementById(
 ) as HTMLCanvasElement;
 const ctx: CanvasRenderingContext2D = canvas.getContext("2d");
 
+enum GAME_STATES {
+  TITLE = "TITLE",
+  PLAYING = "PLAYING",
+  WAITING_FOR_RETRY = "WAITING_FOR_RETRY",
+  WAITING_FOR_NEXT = "WAITING_FOR_NEXT",
+  WON = "WON",
+}
+
 const desiredWidth = 640;
 const desiredHeight = 480;
 canvas.width = desiredWidth;
@@ -22,7 +30,8 @@ canvas.height = desiredHeight;
 const desiredAspectRatio = desiredWidth / desiredHeight;
 let aspectRatio = null;
 let canvasWindowScale = 0;
-let gameStarted = false;
+// let gameStarted = false;
+let gameState: GAME_STATES = GAME_STATES.TITLE;
 
 const renderer = Renderer.getInstance();
 
@@ -47,8 +56,16 @@ function tick(t: number) {
 
   if (currentStage.peopleLeft <= 0) {
     if (currentStage.percentKilled < 0.5) {
-      // console.log("show retry");
       ui.showRetryResults();
+      gameState = GAME_STATES.WAITING_FOR_RETRY;
+    } else {
+      const curr = stages.indexOf(currentStage) + 1;
+      ui.showWinResults(curr, stages.length);
+      if (curr === stages.length) {
+        gameState = GAME_STATES.WON;
+      } else {
+        gameState = GAME_STATES.WAITING_FOR_NEXT;
+      }
     }
   }
 
@@ -124,9 +141,17 @@ function moveCallback(pos: Vector) {
 }
 
 function rallyPointClickCallback(pos: Vector) {
-  if (!gameStarted) {
+  if (gameState === GAME_STATES.TITLE) {
     startGame();
     return;
+  } else if (gameState === GAME_STATES.WAITING_FOR_RETRY) {
+    ui.hideResults();
+    regenerateStage(currentStage.index);
+    gameState = GAME_STATES.PLAYING;
+  } else if (gameState === GAME_STATES.WAITING_FOR_NEXT) {
+    ui.hideResults();
+    goToNextStage();
+    gameState = GAME_STATES.PLAYING;
   }
 
   const gamePos = screenToGameCoordinates(pos);
@@ -134,6 +159,19 @@ function rallyPointClickCallback(pos: Vector) {
   if (!rallyPoint) return;
 
   setFlockFromRallyPoint(rallyPoint);
+}
+
+function regenerateStage(index) {
+  stages[index] = stageGenerators[index](); // regenerate stage
+  currentStage = stages[index];
+  console.log(currentStage.gullFlocks);
+  reset();
+}
+
+function reset() {
+  bloodSystem.reset();
+  ui.state.handleInput(ui, UI_INPUTS.DEFAULT);
+  ui.stage = currentStage;
 }
 
 input.registerClickCallback(rallyPointClickCallback);
@@ -200,28 +238,20 @@ function resize(force = false) {
   canvasWindowScale = window.innerHeight / scaledHeight;
 }
 
-function retryStage() {
-  ui.hideResults();
-}
-
 function goToNextStage() {
   const currentIndex = stages.indexOf(currentStage);
   if (currentIndex === stages.length - 1) {
-    win();
     return;
   }
   const nextIndex = currentIndex + 1;
   currentStage = stages[nextIndex];
-}
-
-function win() {
-  console.log("win!");
+  reset();
 }
 
 function startGame() {
   ui.showUi();
   ui.hideTitle();
-  gameStarted = true;
+  gameState = GAME_STATES.PLAYING;
 }
 
 function showMainMenu() {

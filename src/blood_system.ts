@@ -23,6 +23,10 @@ export default class BloodSystem {
     return blood;
   }
 
+  reset() {
+    this.bloods.forEach((blood) => (blood.timeLeft = 0));
+  }
+
   public static getInstance(): BloodSystem {
     if (!BloodSystem.instance)
       BloodSystem.instance = new BloodSystem(Renderer.getInstance());
