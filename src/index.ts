@@ -30,7 +30,6 @@ canvas.height = desiredHeight;
 const desiredAspectRatio = desiredWidth / desiredHeight;
 let aspectRatio = null;
 let canvasWindowScale = 0;
-// let gameStarted = false;
 let gameState: GAME_STATES = GAME_STATES.TITLE;
 
 const renderer = Renderer.getInstance();
@@ -262,19 +261,3 @@ function startGame() {
 function showMainMenu() {
   ui.hideUi();
 }
-
-// document.addEventListener(
-//   "keyup",
-//   (event) => {
-//     const keyName = event.key;
-
-//     console.log(keyName);
-//     // As the user releases the Ctrl key, the key is no longer active,
-//     // so event.ctrlKey is false.
-//     if (keyName === "p") {
-//       console.log("p");
-//       // pause = true;
-//     }
-//   },
-//   false
-// );
