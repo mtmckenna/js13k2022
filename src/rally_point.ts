@@ -20,8 +20,8 @@ export default class RallyPoint implements Drawable {
 
   constructor(pos: Vector, stage: Stage) {
     this.pos = pos;
-    this.size = new Vector(10, 10, 0);
-    this.selectSize = new Vector(50, 50, 0);
+    this.size = new Vector(15, 15, 0);
+    this.selectSize = new Vector(75, 75, 0);
     this.sizeForSearch = new Vector(20, 20, 0);
     this.renderer = Renderer.getInstance();
     this.ctx = this.renderer.ctx;
