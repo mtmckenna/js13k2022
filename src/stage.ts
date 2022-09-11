@@ -308,18 +308,18 @@ export default class Stage {
   //   );
   // }
 
-  strokeCell(cell, color) {
-    const y = (this.numCellsTall - 1) * this.cellSize;
-    const scale = this.renderer.offset.z;
+  // strokeCell(cell, color) {
+  //   const y = (this.numCellsTall - 1) * this.cellSize;
+  //   const scale = this.renderer.offset.z;
 
-    this.renderer.ctx.strokeStyle = color;
-    this.renderer.ctx.strokeRect(
-      (cell.x * this.cellSize - this.renderer.offset.x) * scale,
-      (y - cell.y * this.cellSize - this.renderer.offset.y) * scale,
-      this.cellSize * scale,
-      this.cellSize * scale
-    );
-  }
+  //   this.renderer.ctx.strokeStyle = color;
+  //   this.renderer.ctx.strokeRect(
+  //     (cell.x * this.cellSize - this.renderer.offset.x) * scale,
+  //     (y - cell.y * this.cellSize - this.renderer.offset.y) * scale,
+  //     this.cellSize * scale,
+  //     this.cellSize * scale
+  //   );
+  // }
 
   neighbors(cell) {
     const result = [];
