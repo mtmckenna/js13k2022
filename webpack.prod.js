@@ -5,10 +5,18 @@ const InlineChunkHtmlPlugin = require("./inline-chunk-html-plugin");
 const BundleAnalyzerPlugin =
   require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const path = require("path");
+const TerserJSPlugin = require("terser-webpack-plugin");
 
 module.exports = merge(common, {
   mode: "production",
-
+  optimization: {
+    minimizer: [
+      new TerserJSPlugin({
+        terserOptions: { compress: true, mangle: { properties: true } },
+      }),
+    ],
+    minimize: true,
+  },
   output: {
     path: path.join(process.cwd(), "dist"),
   },

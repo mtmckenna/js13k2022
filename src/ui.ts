@@ -99,9 +99,7 @@ export default class Ui {
   }
 
   showRetryResults() {
-    const text = `You only eliminated ${formatPercent(
-      this.stage.percentKilled
-    )}. Try again.`;
+    const text = `You didn't eliminate enough targets. Try again, Commander.`;
     if (this.resultsDiv.innerText !== text) {
       this.resultsDiv.innerText = text;
     }
@@ -112,7 +110,7 @@ export default class Ui {
     let text = `You eliminated enough targets to proceed to stage ${currentNum} of ${finalNum}. Proceed!`;
 
     if (currentNum === finalNum) {
-      text = `Congratulations, Commander Bird. We will all sleep easier tonight knowing you have eliminated so many targets. \n\nChirp chirp,\n\n\ General Bird.`;
+      text = `Congratulations, Commander Bird. We will all sleep easier tonight knowing you have eliminated so many targets. \n\nChirp chirp,\n\n General Bird`;
     }
 
     if (this.resultsDiv.innerText !== text) {

@@ -1,16 +1,16 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-const TerserJSPlugin = require("terser-webpack-plugin");
+// const TerserJSPlugin = require("terser-webpack-plugin");
 
 module.exports = {
-  optimization: {
-    minimizer: [
-      new TerserJSPlugin({
-        terserOptions: { compress: true, mangle: { properties: true } },
-      }),
-    ],
-    minimize: true,
-  },
+  // optimization: {
+  //   minimizer: [
+  //     new TerserJSPlugin({
+  //       terserOptions: { compress: true, mangle: { properties: true } },
+  //     }),
+  //   ],
+  //   minimize: true,
+  // },
   plugins: [
     new HtmlWebpackPlugin({ template: "src/index.html", inject: "body" }),
     new CleanWebpackPlugin(),
