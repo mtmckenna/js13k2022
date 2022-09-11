@@ -206,11 +206,11 @@ export default class Sprite implements Drawable, Updatable, Damagable {
     mainCell: ICell,
     walkable = false,
     breakable = false,
-    cellsAcross?: number,
-    cellsDown?: number
+    cellsAcross: number = null,
+    cellsDown: number = null
   ) {
-    const cellsAcross2 = cellsAcross || this.clampedNumCellsAcross;
-    const cellsDown2 = cellsDown || this.clampedNumCellsDown;
+    const cellsAcross2 = cellsAcross || this.clampedNumCellsAcross(this.size.x);
+    const cellsDown2 = cellsDown || this.clampedNumCellsDown(this.size.y);
 
     for (let i = 0; i < cellsAcross2; i++) {
       for (let j = 0; j < cellsDown2; j++) {

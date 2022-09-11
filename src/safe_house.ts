@@ -47,19 +47,21 @@ export default class SafeHouse extends Sprite implements Drawable, IBox {
       panicSize.z
     );
 
+    const size = new Vector(
+      this.stage.cellSize * 2,
+      this.stage.cellSize * 2,
+      0
+    );
+
     const bottomMiddle = this.pos.copy();
     bottomMiddle.set(
-      bottomMiddle.x + this.size.x / 2,
-      bottomMiddle.y - this.size.y,
+      bottomMiddle.x + size.x,
+      bottomMiddle.y - (3 * this.size.y) / 4,
       0
     );
 
     this.doorCell = this.stage.getCellForPos(bottomMiddle);
-    const size = new Vector(
-      this.stage.cellSize * 3,
-      this.stage.cellSize * 3,
-      0
-    );
+
     this.door = { pos: bottomMiddle, size };
 
     this.setOverlappingCellsWalkability(

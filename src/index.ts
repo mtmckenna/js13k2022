@@ -34,7 +34,7 @@ let gameState: GAME_STATES = GAME_STATES.TITLE;
 
 const renderer = Renderer.getInstance();
 
-let currentStage = stages[1];
+let currentStage = stages[0];
 
 const input = Input.getInstance();
 input.addEventListeners(canvas);
@@ -73,6 +73,15 @@ function tick(t: number) {
     }
   }
 
+  // const door = currentStage.safeHouse.door;
+  // const h = renderer.stage.size.y;
+  // ctx.fillStyle = "red";
+  // ctx.fillRect(
+  //   (door.pos.x - renderer.offset.x) * renderer.offset.z,
+  //   (h - door.pos.y - renderer.offset.y) * renderer.offset.z,
+  //   door.size.x * renderer.offset.z,
+  //   door.size.y * renderer.offset.z
+  // );
   // renderer.drawGrid();
 }
 
