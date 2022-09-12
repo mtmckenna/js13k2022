@@ -43,6 +43,7 @@ export default class Search {
       for (let i = 0; i < neighbors.length; i++) {
         const neighbor = neighbors[i];
         // const cost = costs.get(current) + neighbor.cost;
+        // const heuristic = manDist(end, neighbor);
         const cost = costs[current.id] + neighbor.cost;
 
         if (costs[neighbor.id] === undefined || cost < costs[neighbor.id]) {
@@ -71,4 +72,8 @@ export default class Search {
 
     return path;
   }
+}
+
+function manDist(cell1: ICell, cell2: ICell): number {
+  return Math.abs(cell1.x - cell2.x) + Math.abs(cell1.y - cell2.y);
 }
