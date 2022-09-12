@@ -38,6 +38,8 @@ export default class Person extends Sprite implements Damagable {
   safe = false;
   battleState: IState<Person, PERSON_FIGHT_INPUTS>;
   startOffset = 112;
+  lastSearchedAt = 0;
+  searchTimeDelta = (1 / 60) * 1000 * 10;
 
   constructor(pos: Vector, stage: Stage) {
     const scale = 3;
@@ -103,11 +105,15 @@ export default class Person extends Sprite implements Damagable {
       const start = this.stage.getCellForPos(this.center);
       // const end = this.safeHouseCells[0];
       const end = this.safeHouse.doorCell;
-      const path = this.search.search(start, end);
-      this.path = path;
+
+      if (t > this.lastSearchedAt + this.searchTimeDelta) {
+        const path = this.search.search(start, end);
+        this.path = path;
+        this.lastSearchedAt = t;
+      }
 
       // Check to see if we've arrived at the safe house door
-      if (path.length === 0) {
+      if (this.path.length === 0) {
         // they're in the house
         // if (overlaps(this, this.safeHouseDoors[0])) {
         if (overlaps(this, this.safeHouse.door)) {
@@ -120,7 +126,7 @@ export default class Person extends Sprite implements Damagable {
         }
       } else {
         // Otherwise run along the path
-        nextCell = path[0];
+        nextCell = this.path[0];
 
         // I'm sorry for this very long if statement
         // If current cell is breakable start punching

@@ -267,9 +267,9 @@ function generateStage5(): Stage {
 
   const stageHouse = new SafeHouse(housePos, stage);
 
-  const personFlock1 = generatePersonFlock(stage.topLeft, 8, stage);
-  const personFlock2 = generatePersonFlock(stage.topRight, 8, stage);
-  const personFlock3 = generatePersonFlock(stage.bottomRight, 8, stage);
+  const personFlock1 = generatePersonFlock(stage.topLeft, 10, stage);
+  const personFlock2 = generatePersonFlock(stage.topRight, 10, stage);
+  const personFlock3 = generatePersonFlock(stage.bottomRight, 10, stage);
 
   const trashCans = [];
 
