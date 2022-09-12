@@ -40,7 +40,7 @@ const input = Input.getInstance();
 input.addEventListeners(canvas);
 
 const ui = Ui.getInstance();
-ui.createUi(currentStage);
+ui.createUi(currentStage, stages);
 
 function tick(t: number) {
   requestAnimationFrame(tick);

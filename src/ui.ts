@@ -15,9 +15,7 @@ export default class Ui {
   addBirdButton: HTMLButtonElement;
   removeBirdButton: HTMLButtonElement;
   doneWithFlock: HTMLButtonElement;
-  killDiv: HTMLDivElement;
-  escapeDiv: HTMLDivElement;
-  percentDiv: HTMLDivElement;
+  topDiv: HTMLDivElement;
   bottomWrapper: HTMLElement;
   topWrapper: HTMLElement;
   titleDiv: HTMLElement;
@@ -25,15 +23,20 @@ export default class Ui {
 
   state: IState<Ui, UI_INPUTS>;
   public stage: Stage;
+  public stages: Stage[];
+
+  numStages: number;
 
   public static getInstance(): Ui {
     if (!Ui.instance) Ui.instance = new Ui();
     return Ui.instance;
   }
 
-  createUi(stage: Stage) {
+  createUi(stage: Stage, stages: Stage[]) {
     this.state = new DefaultState();
     this.stage = stage;
+    this.stages = stages;
+    this.numStages = this.stages.length;
 
     const title = document.getElementById("title-screen");
     const results = document.getElementById("results");
@@ -46,9 +49,9 @@ export default class Ui {
     const removeBird = createButton("Remove bird", uiWrapperBottom);
     const done = createButton("Done", uiWrapperBottom);
 
-    const kill = createDiv("Killed: 0", uiWrapperTop, ["inline"]);
-    const escape = createDiv("Escaped: 0", uiWrapperTop, ["inline"]);
-    const percent = createDiv("0%", uiWrapperTop, ["inline"]);
+    const top = createDiv("Killed: 0 Escaped 0% \n 1", uiWrapperTop, [
+      "inline",
+    ]);
 
     attack.addEventListener("click", () =>
       this.state.handleInput(this, UI_INPUTS.ATTACK)
@@ -75,9 +78,7 @@ export default class Ui {
     this.addBirdButton = addBird;
     this.removeBirdButton = removeBird;
     this.doneWithFlock = done;
-    this.killDiv = kill;
-    this.escapeDiv = escape;
-    this.percentDiv = percent;
+    this.topDiv = top;
     this.topWrapper = uiWrapperTop;
     this.bottomWrapper = uiWrapperBottom;
     this.titleDiv = title;
@@ -127,17 +128,14 @@ export default class Ui {
     const killText = `Eliminated: ${this.stage.numPeopleKilled}`;
     const escapeText = `Escaped: ${this.stage.numPeopleSafe}`;
     const percentText = formatPercent(this.stage.percentKilled);
-    if (this.killDiv.innerText !== killText) {
-      this.killDiv.innerText = killText;
+    const levelText = `Stage ${this.stage.index + 1} of ${this.numStages}`;
+    const topText = `${killText} ${escapeText} ${percentText}\n${levelText}`;
+    if (this.topDiv.innerText !== killText) {
+      this.topDiv.innerText = topText;
     }
-
-    if (this.escapeDiv.innerText !== escapeText) {
-      this.escapeDiv.innerText = escapeText;
-    }
-
-    if (this.percentDiv.innerText !== percentText) {
-      this.percentDiv.innerText = percentText;
-    }
+    // if (this.percentDiv.innerText !== percentText) {
+    //   this.percentDiv.innerText = percentText;
+    // }
 
     if (this.state instanceof DefaultState) {
       show(this.attackButton);
