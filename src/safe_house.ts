@@ -47,23 +47,33 @@ export default class SafeHouse extends Sprite implements Drawable, IBox {
       panicSize.z
     );
 
-    const size = new Vector(
+    const doorSize = new Vector(
       this.stage.cellSize * 2,
       this.stage.cellSize * 2,
       0
     );
 
     const bottomMiddle = this.pos.copy();
+
     bottomMiddle.set(
-      bottomMiddle.x + size.x,
-      bottomMiddle.y - (3 * this.size.y) / 4,
+      bottomMiddle.x + doorSize.x,
+      bottomMiddle.y - this.size.y + doorSize.y / 2,
       0
     );
 
-    this.doorCell = this.stage.getCellForPos(bottomMiddle);
+    // using the center of the door avoid the problem where the
+    // person can't get to the cell since the it finds the cell in the top left
+    const bottomMiddleCenter = new Vector(
+      bottomMiddle.x + doorSize.x / 2,
+      bottomMiddle.y - doorSize.y / 2,
+      0
+    );
 
-    this.door = { pos: bottomMiddle, size };
+    this.doorCell = this.stage.getCellForPos(bottomMiddleCenter);
 
+    this.door = { pos: bottomMiddle, size: doorSize };
+
+    // TODO: Do a separate overlap for the door!!!!!
     this.setOverlappingCellsWalkability(
       false,
       false,

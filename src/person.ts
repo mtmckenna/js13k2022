@@ -116,7 +116,8 @@ export default class Person extends Sprite implements Damagable {
           this.stage.personSafe();
         } else {
           // no way for them to access house
-          console.warn("Person can't get to house");
+          // console.warn("Person can't get to house");
+          console.warn("Yarp");
         }
       } else {
         // Otherwise run along the path
@@ -206,8 +207,8 @@ export default class Person extends Sprite implements Damagable {
     super.draw(t);
     this.drawHealthBar();
 
-    // for (const cell of this.path) {
-    //   this.stage.strokeCell(cell, "yellow");
-    // }
+    for (const cell of this.path) {
+      this.stage.strokeCell(cell, "yellow");
+    }
   }
 }
