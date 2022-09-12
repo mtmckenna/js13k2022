@@ -34,7 +34,7 @@ let gameState: GAME_STATES = GAME_STATES.TITLE;
 
 const renderer = Renderer.getInstance();
 
-let currentStage = stages[2];
+let currentStage = stages[3];
 
 const input = Input.getInstance();
 input.addEventListeners(canvas);
