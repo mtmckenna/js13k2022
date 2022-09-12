@@ -64,12 +64,15 @@ function tick(t: number) {
       gameState = GAME_STATES.WAITING_FOR_RETRY;
     } else {
       const curr = stages.indexOf(currentStage) + 1;
-      ui.showWinResults(curr, stages.length);
+      let wonGame = false;
       if (curr === stages.length) {
         gameState = GAME_STATES.WON;
+        wonGame = true;
       } else {
         gameState = GAME_STATES.WAITING_FOR_NEXT;
       }
+
+      ui.showWinResults(curr, stages.length, wonGame);
     }
   }
 
@@ -130,8 +133,9 @@ function updateSprites(t: number) {
     currentStage.people.forEach((person) => {
       if (!person.dead && !person.safe) {
         currentStage.gulls.forEach((gull) => {
-          if (overlaps(gull, person)) {
+          if (overlaps(gull, person) && gull.canAttack(t)) {
             person.damage(1, t);
+            gull.attack(t);
           }
         });
       }

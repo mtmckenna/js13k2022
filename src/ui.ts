@@ -107,10 +107,10 @@ export default class Ui {
     show(this.resultsDiv);
   }
 
-  showWinResults(currentNum, finalNum) {
+  showWinResults(currentNum, finalNum, wonGame) {
     let text = `You eliminated enough targets to proceed to stage ${currentNum} of ${finalNum}. Proceed!`;
 
-    if (currentNum === finalNum) {
+    if (wonGame) {
       text = `Congratulations, Commander Bird. We will all sleep easier tonight knowing you have eliminated so many targets. \n\nChirp chirp,\n\n General Bird`;
     }
 
@@ -133,9 +133,6 @@ export default class Ui {
     if (this.topDiv.innerText !== killText) {
       this.topDiv.innerText = topText;
     }
-    // if (this.percentDiv.innerText !== percentText) {
-    //   this.percentDiv.innerText = percentText;
-    // }
 
     if (this.state instanceof DefaultState) {
       show(this.attackButton);

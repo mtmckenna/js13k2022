@@ -17,6 +17,8 @@ export default class Gull extends Sprite {
   canBump = false;
   canMove = true;
   startOffset = 16;
+  lastAttackedAt = 0;
+  attackCoolDownTimeDelta = 50;
 
   constructor(pos: Vector, stage: Stage) {
     const scale = 2;
@@ -40,6 +42,14 @@ export default class Gull extends Sprite {
     };
 
     super(props);
+  }
+
+  canAttack(t: number): boolean {
+    return t > this.lastAttackedAt + this.attackCoolDownTimeDelta;
+  }
+
+  attack(t: number) {
+    this.lastAttackedAt = t;
   }
 
   flock(gulls: Gull[], posToCircle?: Vector) {

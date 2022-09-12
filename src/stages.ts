@@ -124,7 +124,7 @@ function generateStage2(): Stage {
     safeHouse: stageHouse,
     personFlocks: [personFlock1, personFlock2],
     gulls: generateGulls(4, stage),
-    index: 0,
+    index: 1,
   };
 
   stage.processStageProps(stageProps);
@@ -184,7 +184,7 @@ function generateStage3(): Stage {
     safeHouse: stageHouse,
     personFlocks: [personFlock1],
     gulls: generateGulls(8, stage),
-    index: 0,
+    index: 2,
   };
 
   stage.processStageProps(stageProps);
@@ -244,8 +244,8 @@ function generateStage4(): Stage {
     cars: [],
     safeHouse: stageHouse,
     personFlocks: [personFlock1, personFlock2],
-    gulls: generateGulls(20, stage),
-    index: 0,
+    gulls: generateGulls(50, stage),
+    index: 3,
   };
 
   stage.processStageProps(stageProps);
