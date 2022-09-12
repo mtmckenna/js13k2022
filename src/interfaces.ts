@@ -28,6 +28,7 @@ export interface ICell {
   cost: number;
   sprite: Sprite;
   hasRallyPoint: boolean;
+  id: string;
 }
 
 export interface Damagable {
@@ -52,4 +53,12 @@ export interface IBox {
 
 export interface Flockable {
   flock: (sprites: Sprite[]) => void;
+}
+
+export interface ICellHash {
+  [key: string]: ICell;
+}
+
+export interface ICellIdHash {
+  [key: string]: string;
 }

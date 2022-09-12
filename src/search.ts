@@ -4,7 +4,7 @@
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
 
 import Stage from "./stage";
-import { ICell } from "./interfaces";
+import { ICell, ICellIdHash } from "./interfaces";
 import { PriorityQueue } from "./queue";
 
 const MAX_STEPS = 50;
@@ -16,16 +16,24 @@ export default class Search {
     this.stage = stage;
   }
 
+  cell4Id(id: string) {
+    return this.stage.cellHash[id];
+  }
+
   search(start: ICell, end: ICell): ICell[] {
     const frontier: PriorityQueue = new PriorityQueue();
 
-    const cameFrom: Map<ICell, ICell> = new Map();
-    const costs: Map<ICell, number> = new Map();
+    // const cameFrom: Map<ICell, ICell> = new Map();
+    // const costs: Map<ICell, number> = new Map();
+    const cameFrom: ICellIdHash = {};
+    const costs: { [key: string]: number } = {};
     frontier.enqueue(start, 0);
-    cameFrom.set(start, null);
-    costs.set(start, 0);
+    cameFrom[start.id] = null;
+    costs[start.id] = 0;
+    // cameFrom.set(start, null);
+    // costs.set(start, 0);
 
-    let current = null;
+    let current: ICell = null;
     while (frontier.size > 0) {
       current = frontier.dequeue();
 
@@ -34,12 +42,13 @@ export default class Search {
       const neighbors = this.stage.neighbors(current);
       for (let i = 0; i < neighbors.length; i++) {
         const neighbor = neighbors[i];
-        const cost = costs.get(current) + neighbor.cost;
+        // const cost = costs.get(current) + neighbor.cost;
+        const cost = costs[current.id] + neighbor.cost;
 
-        if (!costs.has(neighbor) || cost < costs.get(neighbor)) {
+        if (costs[neighbor.id] === undefined || cost < costs[neighbor.id]) {
           if (!neighbor.walkable && !neighbor.breakable) continue;
-          costs.set(neighbor, cost);
-          cameFrom.set(neighbor, current);
+          costs[neighbor.id] = cost;
+          cameFrom[neighbor.id] = current.id;
           frontier.enqueue(neighbor, cost);
         }
       }
@@ -52,7 +61,8 @@ export default class Search {
 
     while (current !== start && i < MAX_STEPS) {
       path.push(current);
-      current = cameFrom.get(current);
+      const currentId = cameFrom[current.id];
+      current = this.stage.cellHash[currentId];
       if (current === undefined) break;
       i++;
     }

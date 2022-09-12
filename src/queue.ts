@@ -20,7 +20,7 @@ export class PriorityQueue {
     this.bubbleUp();
   }
 
-  dequeue(index = 0): number {
+  dequeue(index = 0): ICell {
     if (!this.size) return null;
     // this.array.sort();
     // const value = this.array.shift();

@@ -1,7 +1,7 @@
 import { Vector, clamp, pointInsideBox } from "./math";
 import Renderer from "./renderer";
 import Sprite from "./sprite";
-import { IBox, ICell } from "./interfaces";
+import { IBox, ICell, ICellHash } from "./interfaces";
 import Person from "./person";
 import Gull from "./gull";
 import PersonFlock from "./person_flock";
@@ -25,6 +25,7 @@ export default class Stage {
   public bumpables: Sprite[];
   public size: Vector;
   public cells: ICell[][] = [];
+  public cellHash: ICellHash = {};
   public numCellsTall: number;
   public numCellsWide: number;
   public cellSize = Stage.CELL_SIZE;
@@ -151,6 +152,7 @@ export default class Stage {
     for (let i = 0; i < this.numCellsTall; i++) {
       this.cells[i] = [];
       for (let j = 0; j < this.numCellsWide; j++) {
+        const id = crypto.randomUUID();
         const cell: ICell = {
           x: j,
           y: i,
@@ -160,8 +162,10 @@ export default class Stage {
           cost: DEFAULT_COST,
           sprite: null,
           hasRallyPoint: false,
+          id,
         };
         this.cells[i].push(cell);
+        this.cellHash[id] = cell;
       }
     }
   }
@@ -309,20 +313,20 @@ export default class Stage {
   //   );
   // }
 
-  // strokeCell(cell, color) {
-  //   const y = (this.numCellsTall - 1) * this.cellSize;
-  //   const scale = this.renderer.offset.z;
+  strokeCell(cell, color) {
+    const y = (this.numCellsTall - 1) * this.cellSize;
+    const scale = this.renderer.offset.z;
 
-  //   this.renderer.ctx.strokeStyle = color;
-  //   this.renderer.ctx.strokeRect(
-  //     (cell.x * this.cellSize - this.renderer.offset.x) * scale,
-  //     (y - cell.y * this.cellSize - this.renderer.offset.y) * scale,
-  //     this.cellSize * scale,
-  //     this.cellSize * scale
-  //   );
-  // }
+    this.renderer.ctx.strokeStyle = color;
+    this.renderer.ctx.strokeRect(
+      (cell.x * this.cellSize - this.renderer.offset.x) * scale,
+      (y - cell.y * this.cellSize - this.renderer.offset.y) * scale,
+      this.cellSize * scale,
+      this.cellSize * scale
+    );
+  }
 
-  neighbors(cell) {
+  neighbors(cell: ICell): ICell[] {
     const result = [];
     if (cell.x > 0) {
       const left = this.cells[cell.y][cell.x - 1];
