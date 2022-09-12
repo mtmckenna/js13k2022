@@ -98,7 +98,7 @@ function generateStage2(): Stage {
     new Vector(stage.center.x - C * 13, stage.center.y + C * 5, 0),
     stage
   );
-  const personFlock1 = generatePersonFlock(stage.topLeft, 3, stage);
+  const personFlock1 = generatePersonFlock(stage.topLeft, 5, stage);
   const personFlock2 = generatePersonFlock(stage.topRight, 5, stage);
 
   const trashCan1 = new Trash(
@@ -126,7 +126,7 @@ function generateStage2(): Stage {
     cars: [stage1Car1, stage1Car2, stage1Car3, stage1Car4],
     safeHouse: stageHouse,
     personFlocks: [personFlock1, personFlock2],
-    gulls: generateGulls(4, stage),
+    gulls: generateGulls(10, stage),
     index: 1,
   };
 
@@ -179,14 +179,14 @@ function generateStage3(): Stage {
   const stageCar3 = new Car(car3Pos, stage);
   const stageCar4 = new Car(car4Pos, stage);
 
-  const personFlock1 = generatePersonFlock(stage.leftCenter, 12, stage);
+  const personFlock1 = generatePersonFlock(stage.leftCenter, 20, stage);
 
   const stageProps: IStageProps = {
     trashCans: [],
     cars: [stageCar1, stageCar2, stageCar3, stageCar4],
     safeHouse: stageHouse,
     personFlocks: [personFlock1],
-    gulls: generateGulls(8, stage),
+    gulls: generateGulls(12, stage),
     index: 2,
   };
 
@@ -267,9 +267,9 @@ function generateStage5(): Stage {
 
   const stageHouse = new SafeHouse(housePos, stage);
 
-  const personFlock1 = generatePersonFlock(stage.topLeft, 15, stage);
-  const personFlock2 = generatePersonFlock(stage.topRight, 15, stage);
-  const personFlock3 = generatePersonFlock(stage.bottomRight, 15, stage);
+  const personFlock1 = generatePersonFlock(stage.topLeft, 8, stage);
+  const personFlock2 = generatePersonFlock(stage.topRight, 8, stage);
+  const personFlock3 = generatePersonFlock(stage.bottomRight, 8, stage);
 
   const trashCans = [];
 
@@ -293,7 +293,7 @@ function generateStage5(): Stage {
     cars: [car1, car2, car3, car4],
     safeHouse: stageHouse,
     personFlocks: [personFlock1, personFlock2, personFlock3],
-    gulls: generateGulls(50, stage),
+    gulls: generateGulls(25, stage),
     index: 4,
   };
 
