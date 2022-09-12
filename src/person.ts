@@ -28,7 +28,6 @@ export default class Person extends Sprite implements Damagable {
   public pos: Vector;
 
   bloods: Blood[];
-  maxBleedBloods = Sprite.MAX_HEALTH;
   maxDeathBloods = 50;
   bloodTimeDelta = 5;
   safeHouse: SafeHouse;
