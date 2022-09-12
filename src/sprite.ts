@@ -6,7 +6,7 @@ import {
   Updatable,
   ICell,
 } from "./interfaces";
-import { Vector, randomIntBetween, overlaps, clamp } from "./math";
+import { Vector, randomIntBetween, overlaps, clamp, uuid } from "./math";
 import Renderer from "./renderer";
 import SpriteAnimation from "./sprite_animation";
 import Blood, { COLOR_MAP } from "./blood";
@@ -70,7 +70,8 @@ export default class Sprite implements Drawable, Updatable, Damagable {
     this.numFrames = props.numFrames;
     this.renderer = Renderer.getInstance();
     this.timeOffset = randomIntBetween(0, 999999999);
-    this.id = crypto.randomUUID();
+    // this.id = crypto.randomUUID();
+    this.id = uuid();
     this.stage = props.stage;
     this.spriteAnimations = props.spriteAnimations;
     this.changeAnimation(this.spriteAnimations.default);

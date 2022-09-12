@@ -57,7 +57,7 @@ export default class SafeHouse extends Sprite implements Drawable, IBox {
 
     bottomMiddle.set(
       bottomMiddle.x + doorSize.x,
-      bottomMiddle.y - this.size.y + doorSize.y / 2,
+      bottomMiddle.y - this.size.y + doorSize.y,
       0
     );
 

@@ -31,6 +31,7 @@
         padding: 0;
         position: fixed;
         overflow: hidden;
+        z-index: 1;
       }
 
       body {
@@ -49,6 +50,7 @@
 
       #title-screen {
         text-align: left;
+        pointer-events: none;
       }
 
       #results {
@@ -67,14 +69,13 @@
         text-shadow: 1px 1px 1px black;
         top: 50%;
         text-align: left;
-        pointer-events: none;
-
       }
 
       #game-title {
         margin: 25px;
         text-align: center;
         font-size: 40px;
+
       }
 
       #click-to-play {
@@ -106,7 +107,12 @@
       #ui-wrapper-top {
         top: 0;
         user-select: none;
+      }
 
+      #ui-wrapper-middle {
+        /* transform: translate(-50%, -50%);
+        text-shadow: 1px 1px 1px black;
+        top: 50%; */
       }
 
       #ui-wrapper-bottom {
@@ -144,6 +150,7 @@
         min-height: 23px;
         padding: 0 12px;
         margin: 0 5px;
+        z-index:3;
       }
 
       button:not(:disabled):active {
@@ -207,7 +214,9 @@
       <p>General Bird</p>
       <div id="click-to-play" class="blink">Click or tap to play</div>
     </div>
-    <div id="results" class="ui overlay"></div>
+    <div id="results" class="ui overlay">
+      <div id="ui-wrapper-middle" class="ui"><div id="ui-middle-text"></div></div>
+      </div>
     <div id="ui-wrapper-top" class="ui"></div>
     <div id="ui-wrapper-bottom" class="ui">
     </div>

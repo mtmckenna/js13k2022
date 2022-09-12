@@ -1,4 +1,4 @@
-import { Vector, clamp, pointInsideBox } from "./math";
+import { Vector, clamp, pointInsideBox, uuid } from "./math";
 import Renderer from "./renderer";
 import Sprite from "./sprite";
 import { IBox, ICell, ICellHash } from "./interfaces";
@@ -115,11 +115,12 @@ export default class Stage {
     this.numPeopleSafe = 0;
   }
 
-  selectFlock(flock: GullFlock) {
+  selectFlock(flock: GullFlock | null) {
     this.gullFlocks.forEach(
       (gullFlock) => (gullFlock.rallyPoint.color = COLOR_MAP.dark_gray)
     );
     this.selectedFlock = flock;
+    if (flock === null) return;
     this.selectedFlock.rallyPoint.color = COLOR_MAP.pink;
   }
 
@@ -152,7 +153,8 @@ export default class Stage {
     for (let i = 0; i < this.numCellsTall; i++) {
       this.cells[i] = [];
       for (let j = 0; j < this.numCellsWide; j++) {
-        const id = crypto.randomUUID();
+        const id = uuid();
+        // const id = crypto.randomUUID();
         const cell: ICell = {
           x: j,
           y: i,

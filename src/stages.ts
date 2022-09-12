@@ -44,7 +44,10 @@ function generateStage1(): Stage {
     new Vector(stage.center.x - C * 6, stage.center.y + C * 5, 0),
     stage
   );
-  const stage1PersonFlock = generatePersonFlock(stage.bottomCenter, 3, stage);
+
+  const personPos = stage.bottomLeft.copy();
+  personPos.set(personPos.x, personPos.y + C * 4, personPos.z);
+  const stage1PersonFlock = generatePersonFlock(personPos, 3, stage);
 
   const trashCan1 = new Trash(
     new Vector(stage.center.x, stage.center.y + C * 3, 0),
@@ -283,14 +286,21 @@ function generateStage5(): Stage {
   const car4Pos = stage.center.copy();
   car4Pos.set(car4Pos.x - Car.SIZE.x, car4Pos.y - Car.SIZE.y, 0);
 
+  const car5Pos = stage.center.copy();
+  car5Pos.set(car5Pos.x, car5Pos.y + Car.SIZE.y, 0);
+  const car6Pos = stage.center.copy();
+  car6Pos.set(car6Pos.x - Car.SIZE.x, car6Pos.y + Car.SIZE.y, 0);
+
   const car1 = new Car(car1Pos, stage);
   const car2 = new Car(car2Pos, stage);
   const car3 = new Car(car3Pos, stage);
   const car4 = new Car(car4Pos, stage);
+  const car5 = new Car(car5Pos, stage);
+  const car6 = new Car(car6Pos, stage);
 
   const stageProps: IStageProps = {
     trashCans: [...trashCans],
-    cars: [car1, car2, car3, car4],
+    cars: [car1, car2, car3, car4, car5, car6],
     safeHouse: stageHouse,
     personFlocks: [personFlock1, personFlock2, personFlock3],
     gulls: generateGulls(25, stage),

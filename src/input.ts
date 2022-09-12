@@ -28,7 +28,7 @@ export default class Input {
 
   addEventListeners(element: HTMLElement) {
     element.addEventListener("mousedown", this.mousePressed.bind(this));
-    element.addEventListener("mousemove", this.mouseMoved.bind(this));
+    document.body.addEventListener("mousemove", this.mouseMoved.bind(this));
     element.addEventListener("mouseup", this.inputReleased.bind(this));
 
     element.addEventListener("touchstart", this.touchPressed.bind(this), {
@@ -116,7 +116,7 @@ export default class Input {
 
     const currPos = this.positionFromEvent(e);
 
-    this.clickCallbacks.forEach((callback) =>
+    this.releaseCallbacks.forEach((callback) =>
       callback(new Vector(currPos.x, currPos.y, 0))
     );
 

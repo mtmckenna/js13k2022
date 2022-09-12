@@ -6,6 +6,7 @@ import BloodSystem from "./blood_system";
 import { AttackState, UI_INPUTS } from "./ui_states";
 import { stages, stageGenerators } from "./stages";
 import RallyPoint from "./rally_point";
+import { GAME_STATES } from "./interfaces";
 
 const bloodSystem = BloodSystem.getInstance();
 
@@ -13,14 +14,6 @@ const canvas: HTMLCanvasElement = document.getElementById(
   "game"
 ) as HTMLCanvasElement;
 const ctx: CanvasRenderingContext2D = canvas.getContext("2d");
-
-enum GAME_STATES {
-  TITLE = "TITLE",
-  PLAYING = "PLAYING",
-  WAITING_FOR_RETRY = "WAITING_FOR_RETRY",
-  WAITING_FOR_NEXT = "WAITING_FOR_NEXT",
-  WON = "WON",
-}
 
 const desiredWidth = 640;
 const desiredHeight = 480;
@@ -30,7 +23,7 @@ canvas.height = desiredHeight;
 const desiredAspectRatio = desiredWidth / desiredHeight;
 let aspectRatio = null;
 let canvasWindowScale = 0;
-let gameState: GAME_STATES = GAME_STATES.TITLE;
+// let gameState: GAME_STATES = GAME_STATES.TITLE;
 
 const renderer = Renderer.getInstance();
 
@@ -40,7 +33,7 @@ const input = Input.getInstance();
 input.addEventListeners(canvas);
 
 const ui = Ui.getInstance();
-ui.createUi(currentStage, stages);
+ui.createUi(currentStage, stages, regenerateStage, goToNextStage);
 
 function tick(t: number) {
   requestAnimationFrame(tick);
@@ -61,15 +54,15 @@ function tick(t: number) {
   if (numPeopleLeft <= 0) {
     if (currentStage.percentKilled < 0.5) {
       ui.showRetryResults();
-      gameState = GAME_STATES.WAITING_FOR_RETRY;
+      renderer.gameState = GAME_STATES.WAITING_FOR_RETRY;
     } else {
       const curr = stages.indexOf(currentStage) + 1;
       let wonGame = false;
       if (curr === stages.length) {
-        gameState = GAME_STATES.WON;
+        renderer.gameState = GAME_STATES.WON;
         wonGame = true;
       } else {
-        gameState = GAME_STATES.WAITING_FOR_NEXT;
+        renderer.gameState = GAME_STATES.WAITING_FOR_NEXT;
       }
 
       ui.showWinResults(curr, stages.length, wonGame);
@@ -159,17 +152,13 @@ function moveCallback(pos: Vector) {
 }
 
 function rallyPointClickCallback(pos: Vector) {
-  if (gameState === GAME_STATES.TITLE) {
+  if (renderer.gameState === GAME_STATES.TITLE) {
     startGame();
     return;
-  } else if (gameState === GAME_STATES.WAITING_FOR_RETRY) {
-    ui.hideResults();
-    regenerateStage(currentStage.index);
-    gameState = GAME_STATES.PLAYING;
-  } else if (gameState === GAME_STATES.WAITING_FOR_NEXT) {
-    ui.hideResults();
-    goToNextStage();
-    gameState = GAME_STATES.PLAYING;
+  } else if (renderer.gameState === GAME_STATES.WAITING_FOR_RETRY) {
+    return;
+  } else if (renderer.gameState === GAME_STATES.WAITING_FOR_NEXT) {
+    return;
   }
 
   const gamePos = screenToGameCoordinates(pos);
@@ -268,7 +257,7 @@ function goToNextStage() {
 function startGame() {
   ui.showUi();
   ui.hideTitle();
-  gameState = GAME_STATES.PLAYING;
+  renderer.gameState = GAME_STATES.PLAYING;
 }
 
 function showMainMenu() {

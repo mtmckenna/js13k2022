@@ -1,8 +1,10 @@
 import Sprite from "./sprite";
 import { Vector } from "./math";
 import Stage from "./stage";
+import { GAME_STATES } from "./interfaces";
 
 export default class Renderer {
+  public gameState: GAME_STATES = GAME_STATES.TITLE;
   private static instance: Renderer;
 
   canvas: HTMLCanvasElement;

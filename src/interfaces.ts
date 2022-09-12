@@ -1,5 +1,4 @@
 import { Vector } from "./math";
-import RallyPoint from "./rally_point";
 import Renderer from "./renderer";
 import Sprite from "./sprite";
 
@@ -11,6 +10,14 @@ export interface IState<BThing, BInputEnum> {
     thing: BThing,
     inputs: BInputEnum
   ) => IState<BThing, BInputEnum>;
+}
+
+export enum GAME_STATES {
+  TITLE = "TITLE",
+  PLAYING = "PLAYING",
+  WAITING_FOR_RETRY = "WAITING_FOR_RETRY",
+  WAITING_FOR_NEXT = "WAITING_FOR_NEXT",
+  WON = "WON",
 }
 
 export interface Drawable {

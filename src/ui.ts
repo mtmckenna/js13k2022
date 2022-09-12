@@ -6,6 +6,10 @@ import {
 } from "./ui_states";
 import { IState } from "./interfaces";
 import Stage from "./stage";
+import Renderer from "./renderer";
+import { GAME_STATES } from "./interfaces";
+
+const renderer = Renderer.getInstance();
 
 export default class Ui {
   private static instance: Ui;
@@ -15,11 +19,16 @@ export default class Ui {
   addBirdButton: HTMLButtonElement;
   removeBirdButton: HTMLButtonElement;
   doneWithFlock: HTMLButtonElement;
+  retryButton: HTMLButtonElement;
+  nextStage: HTMLButtonElement;
   topDiv: HTMLDivElement;
   bottomWrapper: HTMLElement;
   topWrapper: HTMLElement;
   titleDiv: HTMLElement;
   resultsDiv: HTMLElement;
+  middleTextDiv: HTMLElement;
+  regenCallback: (number) => void;
+  nextCallback: () => void;
 
   state: IState<Ui, UI_INPUTS>;
   public stage: Stage;
@@ -32,22 +41,33 @@ export default class Ui {
     return Ui.instance;
   }
 
-  createUi(stage: Stage, stages: Stage[]) {
+  createUi(
+    stage: Stage,
+    stages: Stage[],
+    regenCallback: (index: number) => void,
+    nextCallback: () => void
+  ) {
     this.state = new DefaultState();
     this.stage = stage;
     this.stages = stages;
     this.numStages = this.stages.length;
+    this.regenCallback = regenCallback;
+    this.nextCallback = nextCallback;
 
     const title = document.getElementById("title-screen");
     const results = document.getElementById("results");
 
     const uiWrapperBottom = document.getElementById("ui-wrapper-bottom");
     const uiWrapperTop = document.getElementById("ui-wrapper-top");
+    const uiWrapperMiddle = document.getElementById("ui-wrapper-middle");
+    const uiMiddleText = document.getElementById("ui-middle-text");
     const attack = createButton("Attack", uiWrapperBottom);
     const createFlock = createButton("Create flock", uiWrapperBottom);
     const addBird = createButton("Add bird", uiWrapperBottom);
     const removeBird = createButton("Remove bird", uiWrapperBottom);
     const done = createButton("Done", uiWrapperBottom);
+    const retry = createButton("Retry", uiWrapperMiddle);
+    const nextStage = createButton("Next Stage", uiWrapperMiddle);
 
     const top = createDiv("Killed: 0 Escaped 0% \n 1", uiWrapperTop, [
       "inline",
@@ -73,6 +93,20 @@ export default class Ui {
       this.stage.removeBird(this.stage.selectedFlock)
     );
 
+    retry.addEventListener("click", () => {
+      this.hideResults();
+      // regenerateStage(currentStage.index);
+      this.regenCallback(this.stage.index);
+      renderer.gameState = GAME_STATES.PLAYING;
+    });
+
+    nextStage.addEventListener("click", () => {
+      this.hideResults();
+      // regenerateStage(currentStage.index);
+      this.nextCallback();
+      renderer.gameState = GAME_STATES.PLAYING;
+    });
+
     this.attackButton = attack;
     this.createFlockButton = createFlock;
     this.addBirdButton = addBird;
@@ -83,40 +117,63 @@ export default class Ui {
     this.bottomWrapper = uiWrapperBottom;
     this.titleDiv = title;
     this.resultsDiv = results;
+    this.nextStage = nextStage;
+    this.retryButton = retry;
+    this.middleTextDiv = uiMiddleText;
+    console.log(this.middleTextDiv);
   }
 
   hideUi() {
     hide(this.topWrapper);
     hide(this.bottomWrapper);
+    hide(this.resultsDiv);
   }
 
   showUi() {
     show(this.topWrapper);
     show(this.bottomWrapper);
+    show(this.resultsDiv);
   }
 
   hideTitle() {
     hide(this.titleDiv);
   }
 
-  showRetryResults() {
-    const text = `You didn't eliminate enough targets. Try again, Commander.`;
-    if (this.resultsDiv.innerText !== text) {
-      this.resultsDiv.innerText = text;
+  replaceResultsText(text: string) {
+    // if (this.resultsDiv.childNodes[0].textContent !== text) {
+    //   this.resultsDiv.childNodes[0].textContent = text;
+    // }
+
+    if (this.middleTextDiv.innerText !== text) {
+      this.middleTextDiv.innerText = text;
     }
+  }
+
+  showRetryResults() {
+    hide(this.nextStage);
+    show(this.retryButton);
+
+    const text = `You didn't eliminate enough targets. Try again, Commander.`;
+
+    this.replaceResultsText(text);
+
     show(this.resultsDiv);
   }
 
   showWinResults(currentNum, finalNum, wonGame) {
+    show(this.resultsDiv);
+    show(this.nextStage);
+    hide(this.retryButton);
+
     let text = `You eliminated enough targets to proceed to stage ${currentNum} of ${finalNum}. Proceed!`;
 
     if (wonGame) {
       text = `Congratulations, Commander Bird. We will all sleep easier tonight knowing you have eliminated so many targets. \n\nChirp chirp,\n\n General Bird`;
+      hide(this.nextStage);
     }
 
-    if (this.resultsDiv.innerText !== text) {
-      this.resultsDiv.innerText = text;
-    }
+    this.replaceResultsText(text);
+
     show(this.resultsDiv);
   }
 
@@ -137,6 +194,7 @@ export default class Ui {
     if (this.state instanceof DefaultState) {
       show(this.attackButton);
       show(this.createFlockButton);
+      hide(this.resultsDiv);
 
       if (this.stage.gullFlocks.length > 0) {
         enable(this.attackButton);
