@@ -258,57 +258,42 @@ function generateStage4(): Stage {
 
 function generateStage5(): Stage {
   const stage = new Stage(stageSize);
-  const housePos = stage.center.copy();
+  const housePos = stage.bottomLeft.copy();
   housePos.set(
     housePos.x - SafeHouse.SIZE.x / 2,
-    housePos.y + SafeHouse.SIZE.y / 2,
+    housePos.y + SafeHouse.SIZE.y,
     housePos.z
   );
 
   const stageHouse = new SafeHouse(housePos, stage);
 
-  const personFlock1 = generatePersonFlock(stage.leftCenter, 12, stage);
-  const personFlock2 = generatePersonFlock(stage.topRight, 12, stage);
+  const personFlock1 = generatePersonFlock(stage.topLeft, 15, stage);
+  const personFlock2 = generatePersonFlock(stage.topRight, 15, stage);
+  const personFlock3 = generatePersonFlock(stage.bottomRight, 15, stage);
 
   const trashCans = [];
-  for (let i = 0; i < 7; i++) {
-    const trashCan = new Trash(
-      new Vector(C * 5 + C * 2 + i * C * 4, C * 8, 0),
-      stage
-    );
-    trashCans.push(trashCan);
-  }
 
-  for (let i = 0; i < 7; i++) {
-    const trashCan = new Trash(
-      new Vector(C * 5 + C * 2 + i * C * 4, C * 22, 0),
-      stage
-    );
-    trashCans.push(trashCan);
-  }
+  const car1Pos = stage.center.copy();
+  car1Pos.set(car1Pos.x - Car.SIZE.x, car1Pos.y, 0);
+  const car2Pos = stage.center.copy();
+  car2Pos.set(car2Pos.x, car2Pos.y, 0);
 
-  for (let i = 0; i < 7; i++) {
-    const trashCan = new Trash(
-      new Vector(C * 9 + C * 2, C * 20 - i * C * 2, 0),
-      stage
-    );
-    trashCans.push(trashCan);
-  }
+  const car3Pos = stage.center.copy();
+  car3Pos.set(car3Pos.x, car3Pos.y - Car.SIZE.y, 0);
+  const car4Pos = stage.center.copy();
+  car4Pos.set(car4Pos.x - Car.SIZE.x, car4Pos.y - Car.SIZE.y, 0);
 
-  for (let i = 0; i < 7; i++) {
-    const trashCan = new Trash(
-      new Vector(C * 25 + C * 2, C * 20 - i * C * 2, 0),
-      stage
-    );
-    trashCans.push(trashCan);
-  }
+  const car1 = new Car(car1Pos, stage);
+  const car2 = new Car(car2Pos, stage);
+  const car3 = new Car(car3Pos, stage);
+  const car4 = new Car(car4Pos, stage);
 
   const stageProps: IStageProps = {
     trashCans: [...trashCans],
-    cars: [],
+    cars: [car1, car2, car3, car4],
     safeHouse: stageHouse,
-    personFlocks: [personFlock1, personFlock2],
-    gulls: generateGulls(100, stage),
+    personFlocks: [personFlock1, personFlock2, personFlock3],
+    gulls: generateGulls(50, stage),
     index: 4,
   };
 
