@@ -3,7 +3,7 @@ import { Vector } from "./math";
 import Renderer from "./renderer";
 import { IBox } from "./interfaces";
 
-const POOL_SIZE = 100000;
+const POOL_SIZE = 10000;
 
 export default class BloodSystem {
   private static instance: BloodSystem;
@@ -18,7 +18,14 @@ export default class BloodSystem {
   }
 
   regenBlood(box: IBox, color: COLOR_MAP) {
-    const blood = this.bloods.find((blood) => !blood.inUse());
+    let blood = this.bloods.find((blood) => !blood.inUse());
+    if (!blood) {
+      for (let i = 0; i < Math.floor(POOL_SIZE / 2); i++) {
+        const bloodToUpdate = this.bloods[i];
+        bloodToUpdate.timeLeft = 0;
+      }
+      blood = this.bloods[0];
+    }
     blood.regen(box, color);
     return blood;
   }
