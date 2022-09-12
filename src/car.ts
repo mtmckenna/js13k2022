@@ -8,6 +8,14 @@ import houseImageDataUrl from "../assets/spritesheet.png";
 import SpriteAnimation from "./sprite_animation";
 
 export default class Car extends Sprite implements Drawable, IBox {
+  public static ORIGINAL_SIZE = new Vector(32, 32, 1);
+  public static DEFAULT_SCALE = 3;
+  public static SIZE = new Vector(
+    Car.DEFAULT_SCALE * Car.ORIGINAL_SIZE.x,
+    Car.DEFAULT_SCALE * Car.ORIGINAL_SIZE.y,
+    1
+  );
+
   canBump = true;
   canBreak = true;
   startOffset = 0;

@@ -16,12 +16,15 @@ export const stages = [];
 export const stageGenerators = [];
 const stage1 = generateStage1();
 const stage2 = generateStage2();
+const stage3 = generateStage3();
 
 stageGenerators.push(generateStage1);
 stageGenerators.push(generateStage2);
+stageGenerators.push(generateStage3);
 
 stages.push(stage1);
 stages.push(stage2);
+stages.push(stage3);
 
 function generateStage1(): Stage {
   const stage = new Stage(stageSize);
@@ -118,6 +121,66 @@ function generateStage2(): Stage {
     safeHouse: stageHouse,
     personFlocks: [personFlock1, personFlock2],
     gulls: generateGulls(4, stage),
+    index: 0,
+  };
+
+  stage.processStageProps(stageProps);
+
+  return stage;
+}
+
+function generateStage3(): Stage {
+  const stage = new Stage(stageSize);
+  const housePos = stage.center.copy();
+  housePos.set(
+    housePos.x - SafeHouse.SIZE.x / 2,
+    housePos.y + SafeHouse.SIZE.y / 2,
+    housePos.z
+  );
+
+  const stageHouse = new SafeHouse(housePos, stage);
+
+  const car1Pos = stage.center.copy();
+  car1Pos.set(
+    car1Pos.x - C * 8 - SafeHouse.SIZE.x / 2,
+    car1Pos.y + C * 8 + SafeHouse.SIZE.y / 2,
+    0
+  );
+
+  const car2Pos = stage.center.copy();
+  car2Pos.set(
+    car2Pos.x + C * 8 - SafeHouse.SIZE.x / 2,
+    car2Pos.y + C * 8 + SafeHouse.SIZE.y / 2,
+    0
+  );
+
+  const car3Pos = stage.center.copy();
+  car3Pos.set(
+    car3Pos.x - C * 8 - SafeHouse.SIZE.x / 2,
+    car3Pos.y - C * 8 + SafeHouse.SIZE.y / 2,
+    0
+  );
+
+  const car4Pos = stage.center.copy();
+  car4Pos.set(
+    car4Pos.x + C * 8 - SafeHouse.SIZE.x / 2,
+    car4Pos.y - C * 8 + SafeHouse.SIZE.y / 2,
+    0
+  );
+
+  const stageCar1 = new Car(car1Pos, stage);
+  const stageCar2 = new Car(car2Pos, stage);
+  const stageCar3 = new Car(car3Pos, stage);
+  const stageCar4 = new Car(car4Pos, stage);
+
+  const personFlock1 = generatePersonFlock(stage.leftCenter, 12, stage);
+
+  const stageProps: IStageProps = {
+    trashCans: [],
+    cars: [stageCar1, stageCar2, stageCar3, stageCar4],
+    safeHouse: stageHouse,
+    personFlocks: [personFlock1],
+    gulls: generateGulls(8, stage),
     index: 0,
   };
 

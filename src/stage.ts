@@ -40,6 +40,7 @@ export default class Stage {
   public bottomRight: Vector;
   public bottomCenter: Vector;
   public bottomLeft: Vector;
+  public leftCenter: Vector;
   public selectedFlock: GullFlock;
   public numPeopleSafe = 0;
   public numPeopleKilled = 0;
@@ -56,7 +57,6 @@ export default class Stage {
   private lot: IBox;
 
   constructor(size: Vector) {
-    const C = Stage.CELL_SIZE;
     const C2 = Stage.CELL_SIZE * 2;
 
     this.size = size;
@@ -72,6 +72,7 @@ export default class Stage {
     this.bottomRight = new Vector((this.size.x * 3) / 4, 0 + C2, 0);
     this.bottomCenter = new Vector(this.size.x / 2, 0 + C2, 0);
     this.bottomLeft = new Vector(this.size.x / 4, 0 + C2, 0);
+    this.leftCenter = new Vector(C2, this.size.y / 2, 0);
 
     this.renderer = Renderer.getInstance();
 
